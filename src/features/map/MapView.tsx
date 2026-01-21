@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import './MapView.css';
 import { GPXData, Run } from '../../utils/gpxParser';
@@ -21,6 +20,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const layersRef = useRef<any[]>([]);
   const [mapType, setMapType] = useState<'streets' | 'satellite' | 'terrain'>('streets');
   const [showRuns, setShowRuns] = useState(true);
+  const [showRunMarkers, setShowRunMarkers] = useState(true);
+  const [showKmMarkers, setShowKmMarkers] = useState(false);
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
@@ -41,6 +42,33 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         maxLon: Math.max(...lons),
       }
     };
+  }, [data.points]);
+
+  // Calculate kilometer markers
+  const kmMarkers = useMemo(() => {
+    const markers: { lat: number; lon: number; km: number }[] = [];
+    let cumulativeDistance = 0;
+    let nextKm = 1;
+
+    for (let i = 1; i < data.points.length; i++) {
+      const prev = data.points[i - 1];
+      const curr = data.points[i];
+      const dist = haversineDistance(prev.lat, prev.lon, curr.lat, curr.lon);
+      cumulativeDistance += dist;
+
+      while (cumulativeDistance >= nextKm * 1000) {
+        // Interpolate position for exact km point
+        const overshoot = cumulativeDistance - nextKm * 1000;
+        const ratio = 1 - (overshoot / dist);
+        const lat = prev.lat + (curr.lat - prev.lat) * ratio;
+        const lon = prev.lon + (curr.lon - prev.lon) * ratio;
+        
+        markers.push({ lat, lon, km: nextKm });
+        nextKm++;
+      }
+    }
+
+    return markers;
   }, [data.points]);
 
   // Check if Leaflet is loaded
@@ -69,9 +97,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     const L = window.L;
 
     try {
-      // Initialize map if not already created
       if (!mapRef.current) {
-        // Clear container first
         if (mapContainerRef.current) {
           mapContainerRef.current.innerHTML = '';
         }
@@ -82,7 +108,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           attributionControl: true,
         });
 
-        // Set initial view
         const centerLat = (bounds.minLat + bounds.maxLat) / 2;
         const centerLon = (bounds.minLon + bounds.maxLon) / 2;
         mapRef.current.setView([centerLat, centerLon], 13);
@@ -92,9 +117,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       setMapError('Failed to initialize map.');
     }
 
-    return () => {
-      // Cleanup on unmount only
-    };
+    return () => {};
   }, [bounds, isLeafletReady]);
 
   // Update map layers when dependencies change
@@ -154,12 +177,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             .slice(run.startIndex, run.endIndex + 1)
             .map(p => [p.lat, p.lon]);
 
-          // Color runs by speed (green to red)
           const speedRatio = Math.min(run.maxSpeed / 80, 1);
-          const hue = (1 - speedRatio) * 120; // 120 = green, 0 = red
+          const hue = (1 - speedRatio) * 120;
           const color = `hsl(${hue}, 80%, 50%)`;
           
-          // Highlight selected run
           const isSelected = selectedRun && selectedRun.id === run.id;
           const weight = isSelected ? 8 : 5;
           const opacity = isSelected ? 1 : 0.9;
@@ -192,6 +213,79 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         });
       }
 
+      // Add run start/end markers if enabled
+      if (showRunMarkers && data.runs.length > 0) {
+        data.runs.forEach((run, idx) => {
+          const startPoint = data.points[run.startIndex];
+          const endPoint = data.points[run.endIndex];
+          
+          // Run start marker
+          const startIcon = L.divIcon({
+            className: 'custom-marker run-start-marker',
+            html: `<div class="marker-inner run-marker">${idx + 1}</div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+          });
+
+          const startMarker = L.marker([startPoint.lat, startPoint.lon], { icon: startIcon })
+            .addTo(map)
+            .bindPopup(`
+              <div class="run-popup">
+                <strong>Run ${idx + 1} Start</strong><br>
+                Elevation: ${run.startElevation.toFixed(0)} m<br>
+                Time: ${run.startTime.toLocaleTimeString()}
+              </div>
+            `);
+          
+          if (onRunSelect) {
+            startMarker.on('click', () => onRunSelect(run));
+          }
+          layersRef.current.push(startMarker);
+
+          // Run end marker
+          const endIcon = L.divIcon({
+            className: 'custom-marker run-end-marker',
+            html: `<div class="marker-inner run-marker-end">⛷</div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+          });
+
+          const endMarker = L.marker([endPoint.lat, endPoint.lon], { icon: endIcon })
+            .addTo(map)
+            .bindPopup(`
+              <div class="run-popup">
+                <strong>Run ${idx + 1} End</strong><br>
+                Elevation: ${run.endElevation.toFixed(0)} m<br>
+                Time: ${run.endTime.toLocaleTimeString()}<br>
+                Duration: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
+              </div>
+            `);
+          
+          if (onRunSelect) {
+            endMarker.on('click', () => onRunSelect(run));
+          }
+          layersRef.current.push(endMarker);
+        });
+      }
+
+      // Add kilometer markers if enabled
+      if (showKmMarkers && kmMarkers.length > 0) {
+        kmMarkers.forEach((marker) => {
+          const kmIcon = L.divIcon({
+            className: 'custom-marker km-marker',
+            html: `<div class="marker-inner km-marker-inner">${marker.km}</div>`,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+          });
+
+          const kmMarker = L.marker([marker.lat, marker.lon], { icon: kmIcon })
+            .addTo(map)
+            .bindPopup(`<strong>${marker.km} km</strong>`);
+          
+          layersRef.current.push(kmMarker);
+        });
+      }
+
       // Add start marker
       if (data.points.length > 0) {
         const startIcon = L.divIcon({
@@ -221,7 +315,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         layersRef.current.push(endMarker);
       }
 
-      // Fit bounds - zoom to selected run if available
+      // Fit bounds
       if (selectedRun) {
         const runPoints = data.points.slice(selectedRun.startIndex, selectedRun.endIndex + 1);
         const runLats = runPoints.map(p => p.lat);
@@ -240,7 +334,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     } catch (err) {
       console.error('Error updating map layers:', err);
     }
-  }, [data, bounds, mapType, showRuns, selectedRun, isLeafletReady, onRunSelect]);
+  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -306,14 +400,33 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             </button>
           </div>
         </div>
-        <label className="toggle-label">
-          <input
-            type="checkbox"
-            checked={showRuns}
-            onChange={(e) => setShowRuns(e.target.checked)}
-          />
-          <span>Highlight Runs</span>
-        </label>
+        
+        <div className="control-group toggles">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showRuns}
+              onChange={(e) => setShowRuns(e.target.checked)}
+            />
+            <span>Highlight Runs</span>
+          </label>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showRunMarkers}
+              onChange={(e) => setShowRunMarkers(e.target.checked)}
+            />
+            <span>Run Markers</span>
+          </label>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showKmMarkers}
+              onChange={(e) => setShowKmMarkers(e.target.checked)}
+            />
+            <span>KM Markers</span>
+          </label>
+        </div>
       </div>
 
       <div className="map-container" ref={mapContainerRef} />
@@ -337,13 +450,25 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               <span className="legend-line fast" />
               <span>Fast Run</span>
             </div>
-            {selectedRun && (
-              <div className="legend-item">
-                <span className="legend-line selected" />
-                <span>Selected Run</span>
-              </div>
-            )}
           </>
+        )}
+        {showRunMarkers && data.runs.length > 0 && (
+          <div className="legend-item">
+            <span className="legend-marker run-number">1</span>
+            <span>Run Start</span>
+          </div>
+        )}
+        {showKmMarkers && (
+          <div className="legend-item">
+            <span className="legend-marker km">1</span>
+            <span>Kilometer</span>
+          </div>
+        )}
+        {selectedRun && (
+          <div className="legend-item">
+            <span className="legend-line selected" />
+            <span>Selected Run</span>
+          </div>
         )}
       </div>
 
@@ -356,6 +481,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           <span className="label">Runs</span>
           <span className="value">{data.runs.length}</span>
         </div>
+        <div className="map-stat">
+          <span className="label">Distance</span>
+          <span className="value">{(data.stats.totalDistance / 1000).toFixed(1)} km</span>
+        </div>
         {bounds && (
           <div className="map-stat">
             <span className="label">Area</span>
@@ -367,4 +496,15 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       </div>
     </div>
   );
+}
+
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }
