@@ -12,6 +12,9 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
   const [useMetric, setUseMetric] = useState(true);
   const { stats } = data;
 
+  // Calculate lift distance (total distance minus ski distance)
+  const liftDistance = stats.totalDistance - stats.skiDistance;
+
   const formatSpeed = (kmh: number) => {
     if (useMetric) {
       return `${kmh.toFixed(1)} km/h`;
@@ -84,8 +87,8 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
               <span className="big-stat-unit">{useMetric ? 'km' : 'mi'}</span>
             </div>
             <div className="big-stat-sub">
-              <span>▲ ASCENT</span>
-              <span>{useMetric ? (stats.totalAscent / 1000).toFixed(1) : metersToMiles(stats.totalAscent).toFixed(1)}</span>
+              <span>▲ LIFT</span>
+              <span>{useMetric ? (liftDistance / 1000).toFixed(1) : metersToMiles(liftDistance).toFixed(1)}</span>
             </div>
             <div className="big-stat-sub">
               <span>TOTAL</span>
