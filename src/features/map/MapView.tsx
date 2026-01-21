@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import './MapView.css';
 import { GPXData, Run } from '../../utils/gpxParser';
@@ -44,6 +45,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     };
   }, [data.points]);
 
+  // Calculate dynamic speed thresholds based on actual data
+  const speedStats = useMemo(() => {
+    const runSpeeds = data.runs.map(r => r.maxSpeed).filter(s => s > 0);
+    if (runSpeeds.length === 0) {
+      return { maxRunSpeed: 60, avgMaxSpeed: 40 };
+    }
+    
+    const maxRunSpeed = Math.max(...runSpeeds);
+    const avgMaxSpeed = runSpeeds.reduce((a, b) => a + b, 0) / runSpeeds.length;
+    
+    return { maxRunSpeed, avgMaxSpeed };
+  }, [data.runs]);
+
   // Calculate kilometer markers
   const kmMarkers = useMemo(() => {
     const markers: { lat: number; lon: number; km: number }[] = [];
@@ -57,7 +71,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       cumulativeDistance += dist;
 
       while (cumulativeDistance >= nextKm * 1000) {
-        // Interpolate position for exact km point
         const overshoot = cumulativeDistance - nextKm * 1000;
         const ratio = 1 - (overshoot / dist);
         const lat = prev.lat + (curr.lat - prev.lat) * ratio;
@@ -70,6 +83,29 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
     return markers;
   }, [data.points]);
+
+  // Function to get color based on speed with dynamic thresholds
+  const getSpeedColor = (speed: number, maxSpeed: number): string => {
+    // Use the actual max speed from runs to set the scale
+    // This ensures the fastest run is red, and others are distributed
+    const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 50);
+    
+    // Apply a logarithmic-ish scale to spread colors better
+    // Slow runs (< 30% of max) are green
+    // Medium runs (30-60% of max) are yellow/orange
+    // Fast runs (> 60% of max) are orange/red
+    
+    const ratio = Math.min(speed / threshold, 1);
+    
+    // Use a curve to make the transition more gradual
+    // This gives more green/yellow and less red
+    const adjustedRatio = Math.pow(ratio, 1.5);
+    
+    // Hue: 120 (green) -> 60 (yellow) -> 30 (orange) -> 0 (red)
+    const hue = 120 * (1 - adjustedRatio);
+    
+    return `hsl(${hue}, 75%, 50%)`;
+  };
 
   // Check if Leaflet is loaded
   useEffect(() => {
@@ -170,6 +206,11 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       }).addTo(map);
       layersRef.current.push(trackLine);
 
+      // Find the max speed across all runs for color scaling
+      const maxRunSpeed = data.runs.length > 0 
+        ? Math.max(...data.runs.map(r => r.maxSpeed))
+        : 60;
+
       // Add run overlays if enabled
       if (showRuns && data.runs.length > 0) {
         data.runs.forEach((run, idx) => {
@@ -177,9 +218,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             .slice(run.startIndex, run.endIndex + 1)
             .map(p => [p.lat, p.lon]);
 
-          const speedRatio = Math.min(run.maxSpeed / 80, 1);
-          const hue = (1 - speedRatio) * 120;
-          const color = `hsl(${hue}, 80%, 50%)`;
+          // Use dynamic color based on this run's max speed relative to all runs
+          const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
           
           const isSelected = selectedRun && selectedRun.id === run.id;
           const weight = isSelected ? 8 : 5;
@@ -191,9 +231,16 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             opacity: opacity,
           }).addTo(map);
           
+          // Speed category label
+          let speedCategory = 'Casual';
+          const speedRatio = run.maxSpeed / maxRunSpeed;
+          if (speedRatio > 0.8) speedCategory = 'Fast! 🔥';
+          else if (speedRatio > 0.6) speedCategory = 'Quick';
+          else if (speedRatio > 0.4) speedCategory = 'Moderate';
+          
           runLine.bindPopup(`
             <div class="run-popup">
-              <strong>Run ${idx + 1}</strong><br>
+              <strong>Run ${idx + 1}</strong> <span style="color: ${color}">● ${speedCategory}</span><br>
               Distance: ${(run.distance / 1000).toFixed(2)} km<br>
               Vertical: ${run.verticalDrop.toFixed(0)} m<br>
               Max Speed: ${run.maxSpeed.toFixed(1)} km/h<br>
@@ -218,11 +265,12 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         data.runs.forEach((run, idx) => {
           const startPoint = data.points[run.startIndex];
           const endPoint = data.points[run.endIndex];
+          const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
           
-          // Run start marker
+          // Run start marker with speed-based color
           const startIcon = L.divIcon({
             className: 'custom-marker run-start-marker',
-            html: `<div class="marker-inner run-marker">${idx + 1}</div>`,
+            html: `<div class="marker-inner run-marker" style="background: ${color}">${idx + 1}</div>`,
             iconSize: [24, 24],
             iconAnchor: [12, 12],
           });
@@ -233,7 +281,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               <div class="run-popup">
                 <strong>Run ${idx + 1} Start</strong><br>
                 Elevation: ${run.startElevation.toFixed(0)} m<br>
-                Time: ${run.startTime.toLocaleTimeString()}
+                Time: ${run.startTime.toLocaleTimeString()}<br>
+                Max Speed: ${run.maxSpeed.toFixed(1)} km/h
               </div>
             `);
           
@@ -334,7 +383,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     } catch (err) {
       console.error('Error updating map layers:', err);
     }
-  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers]);
+  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -373,6 +422,11 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       </div>
     );
   }
+
+  // Calculate speed legend values based on actual data
+  const maxRunSpeed = data.runs.length > 0 
+    ? Math.max(...data.runs.map(r => r.maxSpeed))
+    : 60;
 
   return (
     <div className="map-view">
@@ -441,16 +495,13 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           <span>End</span>
         </div>
         {showRuns && (
-          <>
-            <div className="legend-item">
-              <span className="legend-line slow" />
-              <span>Slow Run</span>
+          <div className="legend-item speed-scale">
+            <div className="speed-gradient" />
+            <div className="speed-labels">
+              <span>Slow</span>
+              <span>{Math.round(maxRunSpeed)} km/h</span>
             </div>
-            <div className="legend-item">
-              <span className="legend-line fast" />
-              <span>Fast Run</span>
-            </div>
-          </>
+          </div>
         )}
         {showRunMarkers && data.runs.length > 0 && (
           <div className="legend-item">
@@ -485,12 +536,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           <span className="label">Distance</span>
           <span className="value">{(data.stats.totalDistance / 1000).toFixed(1)} km</span>
         </div>
-        {bounds && (
+        {data.runs.length > 0 && (
           <div className="map-stat">
-            <span className="label">Area</span>
-            <span className="value">
-              {((bounds.maxLat - bounds.minLat) * 111).toFixed(1)} × {((bounds.maxLon - bounds.minLon) * 111 * Math.cos(bounds.minLat * Math.PI / 180)).toFixed(1)} km
-            </span>
+            <span className="label">Top Speed</span>
+            <span className="value">{maxRunSpeed.toFixed(1)} km/h</span>
           </div>
         )}
       </div>

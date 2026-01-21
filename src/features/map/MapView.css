@@ -71,6 +71,12 @@
   gap: 1rem;
 }
 
+.control-group.toggles {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .map-label {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
@@ -132,6 +138,7 @@
   padding: 1rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
+  align-items: center;
 }
 
 .legend-item {
@@ -140,6 +147,33 @@
   gap: 0.5rem;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.legend-item.speed-scale {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.speed-gradient {
+  width: 100px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, 
+    hsl(120, 75%, 50%) 0%, 
+    hsl(90, 75%, 50%) 25%, 
+    hsl(60, 75%, 50%) 50%, 
+    hsl(30, 75%, 50%) 75%, 
+    hsl(0, 75%, 50%) 100%
+  );
+}
+
+.speed-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .legend-marker {
@@ -163,6 +197,21 @@
   background: #ff0044;
 }
 
+.legend-marker.run-number {
+  background: linear-gradient(135deg, hsl(90, 75%, 50%), hsl(60, 75%, 50%));
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.legend-marker.km {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  border: 2px solid white;
+}
+
 .legend-line {
   width: 30px;
   height: 4px;
@@ -170,11 +219,11 @@
 }
 
 .legend-line.slow {
-  background: hsl(120, 80%, 50%);
+  background: hsl(120, 75%, 50%);
 }
 
 .legend-line.fast {
-  background: hsl(0, 80%, 50%);
+  background: hsl(0, 75%, 50%);
 }
 
 .legend-line.selected {
@@ -235,6 +284,33 @@
   background: #ff0044;
 }
 
+/* Run markers */
+.run-start-marker .marker-inner.run-marker {
+  width: 24px;
+  height: 24px;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+.run-end-marker .marker-inner.run-marker-end {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 12px;
+}
+
+/* Kilometer markers */
+.km-marker .marker-inner.km-marker-inner {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
 /* Override Leaflet popup styles */
 .leaflet-popup-content-wrapper {
   background: rgba(26, 26, 46, 0.95) !important;
@@ -275,65 +351,16 @@
     align-items: flex-start;
   }
 
+  .control-group.toggles {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   .map-legend {
     gap: 1rem;
   }
 
   .map-stats {
     flex-direction: column;
-  }
-}
-
-/* Add to existing MapView.css */
-
-.control-group.toggles {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-/* Run markers */
-.run-start-marker .marker-inner.run-marker {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6);
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.run-end-marker .marker-inner.run-marker-end {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
-  font-size: 12px;
-}
-
-/* Kilometer markers */
-.km-marker .marker-inner.km-marker-inner {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
-  border: 2px solid white;
-}
-
-/* Legend additions */
-.legend-marker.run-number {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6);
-  width: 20px;
-  height: 20px;
-  font-size: 11px;
-}
-
-.legend-marker.km {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  width: 20px;
-  height: 20px;
-  font-size: 11px;
-  border: 2px solid white;
-}
-
-@media (max-width: 600px) {
-  .control-group.toggles {
-    flex-direction: column;
-    gap: 0.5rem;
   }
 }
