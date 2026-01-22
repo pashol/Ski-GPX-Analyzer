@@ -24,7 +24,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const [showRuns, setShowRuns] = useState(true);
   const [showRunMarkers, setShowRunMarkers] = useState(true);
   const [showKmMarkers, setShowKmMarkers] = useState(false);
-  const [showPisteOverlay, setShowPisteOverlay] = useState(false);
+  const [showPisteOverlay, setShowPisteOverlay] = useState(true);
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
