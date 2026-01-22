@@ -530,7 +530,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           </label>
         </div>
       </div>
-
+      
+      <div className="map-container" ref={mapContainerRef} />
+      
       {showPisteOverlay && (
         <div className="piste-overlay-info">
           <div className="piste-info-content">
@@ -557,8 +559,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           </div>
         </div>
       )}
-
-      <div className="map-container" ref={mapContainerRef} />
 
       <div className="map-legend">
         <div className="legend-item">
