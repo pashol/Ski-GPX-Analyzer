@@ -115,6 +115,15 @@
   border: 1px solid rgba(124, 58, 237, 0.3);
 }
 
+.run-stat-card.heart-rate {
+  background: linear-gradient(135deg, rgba(255, 0, 85, 0.15), rgba(255, 107, 157, 0.15));
+  border: 1px solid rgba(255, 0, 85, 0.3);
+}
+
+.run-stat-card.heart-rate .stat-value {
+  color: #ff6b9d;
+}
+
 .run-stat-card .stat-icon {
   font-size: 1.75rem;
 }

@@ -1,39 +1,36 @@
 
 import React, { useRef, useState } from 'react';
 import './FileUpload.css';
+import { parseFile, isSupportedFile, GPXData } from '../utils/parser';
 
 interface FileUploadProps {
-  onFileUpload: (content: string, fileName: string) => void;
+  onFileUpload: (data: GPXData, fileName: string) => void;
 }
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     setError(null);
 
-    if (!file.name.toLowerCase().endsWith('.gpx')) {
-      setError('Please upload a valid GPX file');
+    if (!isSupportedFile(file.name)) {
+      setError('Please upload a valid GPX or FIT file');
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      if (content) {
-        try {
-          onFileUpload(content, file.name);
-        } catch (err) {
-          setError('Failed to parse GPX file. Please check the file format.');
-        }
-      }
-    };
-    reader.onerror = () => {
-      setError('Failed to read file');
-    };
-    reader.readAsText(file);
+    setIsLoading(true);
+    try {
+      const data = await parseFile(file);
+      onFileUpload(data, file.name);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to parse file: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -71,7 +68,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       <div className="upload-hero">
         <div className="hero-icon">🎿</div>
         <h2>Analyze Your Ski Adventure</h2>
-        <p>Upload your GPX file to get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.</p>
+        <p>Upload your GPX or FIT file to get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.</p>
       </div>
 
       <div
@@ -84,14 +81,24 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".gpx"
+          accept=".gpx,.fit"
           onChange={handleInputChange}
           style={{ display: 'none' }}
         />
-        <div className="upload-icon">📁</div>
-        <h3>Drop your GPX file here</h3>
-        <p>or click to browse</p>
-        <span className="file-hint">Supports .gpx files from Strava, Garmin, and other GPS devices</span>
+        {isLoading ? (
+          <>
+            <div className="upload-icon loading">⏳</div>
+            <h3>Processing file...</h3>
+            <p>Please wait</p>
+          </>
+        ) : (
+          <>
+            <div className="upload-icon">📁</div>
+            <h3>Drop your GPX or FIT file here</h3>
+            <p>or click to browse</p>
+            <span className="file-hint">Supports .gpx and .fit files from Strava, Garmin, and other GPS devices</span>
+          </>
+        )}
       </div>
 
       {error && <div className="upload-error">{error}</div>}

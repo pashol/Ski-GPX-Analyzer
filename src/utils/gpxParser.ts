@@ -9,6 +9,7 @@ export interface TrackPoint {
   cumulativeDistance?: number;
   slope?: number;
   isDescending?: boolean;
+  heartRate?: number;
 }
 
 export interface GPXData {
@@ -36,6 +37,8 @@ export interface GPXStats {
   runCount: number;
   startTime: Date;
   endTime: Date;
+  avgHeartRate?: number;
+  maxHeartRate?: number;
 }
 
 export interface Run {
@@ -52,30 +55,12 @@ export interface Run {
   avgSlope: number;
   startTime: Date;
   endTime: Date;
+  avgHeartRate?: number;
+  maxHeartRate?: number;
 }
 
-export function parseGPX(content: string): GPXData {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(content, 'application/xml');
-
-  const nameEl = doc.querySelector('trk > name') || doc.querySelector('name');
-  const name = nameEl?.textContent || 'Unnamed Track';
-
-  const trkpts = doc.querySelectorAll('trkpt');
-  const points: TrackPoint[] = [];
-
-  trkpts.forEach((pt) => {
-    const lat = parseFloat(pt.getAttribute('lat') || '0');
-    const lon = parseFloat(pt.getAttribute('lon') || '0');
-    const eleEl = pt.querySelector('ele');
-    const timeEl = pt.querySelector('time');
-
-    const ele = eleEl ? parseFloat(eleEl.textContent || '0') : 0;
-    const time = timeEl ? new Date(timeEl.textContent || '') : new Date();
-
-    points.push({ lat, lon, ele, time });
-  });
-
+// Calculate stats and runs from track points - used by both GPX and FIT parsers
+export function calculateStatsAndRuns(points: TrackPoint[]): { stats: GPXStats; runs: Run[] } {
   // Calculate derived data with smoothing for speed
   let totalDistance = 0;
   let totalAscent = 0;
@@ -90,6 +75,9 @@ export function parseGPX(content: string): GPXData {
   let slopeSum = 0;
   let slopeCount = 0;
   let maxSlope = 0;
+  let heartRateSum = 0;
+  let heartRateCount = 0;
+  let maxHeartRate = 0;
 
   // First pass: calculate basic metrics
   for (let i = 1; i < points.length; i++) {
@@ -114,7 +102,7 @@ export function parseGPX(content: string): GPXData {
 
   // Second pass: calculate speed with smoothing window
   const windowSize = 5; // Use 5-point window for smoothing
-  
+
   for (let i = 0; i < points.length; i++) {
     if (i < windowSize) {
       // Not enough points for smoothing, use simple calculation
@@ -133,7 +121,7 @@ export function parseGPX(content: string): GPXData {
       // Use smoothing window
       const startPoint = points[i - windowSize];
       const endPoint = points[i];
-      
+
       let windowDist = 0;
       for (let j = i - windowSize + 1; j <= i; j++) {
         windowDist += haversineDistance(
@@ -141,7 +129,7 @@ export function parseGPX(content: string): GPXData {
           points[j].lat, points[j].lon
         );
       }
-      
+
       const timeDiff = (endPoint.time.getTime() - startPoint.time.getTime()) / 1000;
       if (timeDiff > 0) {
         endPoint.speed = (windowDist / timeDiff) * 3.6;
@@ -150,7 +138,7 @@ export function parseGPX(content: string): GPXData {
 
     const curr = points[i];
     const speed = curr.speed || 0;
-    
+
     // Track max speed - allow up to 150 km/h for skiing
     if (speed > 0 && speed < 150) {
       if (speed > maxSpeed) maxSpeed = speed;
@@ -158,12 +146,19 @@ export function parseGPX(content: string): GPXData {
       speedCount++;
     }
 
+    // Track heart rate
+    if (curr.heartRate && curr.heartRate > 0) {
+      heartRateSum += curr.heartRate;
+      heartRateCount++;
+      if (curr.heartRate > maxHeartRate) maxHeartRate = curr.heartRate;
+    }
+
     // Calculate slope
     if (i > 0) {
       const prev = points[i - 1];
       const dist = haversineDistance(prev.lat, prev.lon, curr.lat, curr.lon);
       const eleDiff = curr.ele - prev.ele;
-      
+
       if (dist > 1) {
         const slope = Math.atan2(-eleDiff, dist) * (180 / Math.PI); // Positive for descending
         curr.slope = slope;
@@ -173,7 +168,7 @@ export function parseGPX(content: string): GPXData {
           if (slope > maxSlope) maxSlope = slope;
         }
       }
-      
+
       // Mark as descending if going downhill with reasonable speed
       curr.isDescending = eleDiff < -0.5 && speed > 3;
     }
@@ -198,17 +193,31 @@ export function parseGPX(content: string): GPXData {
   runs.forEach(run => {
     skiDistance += run.distance;
     skiVertical += run.verticalDrop;
-    
+
     const runPoints = points.slice(run.startIndex, run.endIndex + 1);
+    let runHRSum = 0;
+    let runHRCount = 0;
+    let runMaxHR = 0;
+
     runPoints.forEach(p => {
       if (p.speed && p.speed > 0) {
         skiSpeedSum += p.speed;
         skiSpeedCount++;
       }
+      if (p.heartRate && p.heartRate > 0) {
+        runHRSum += p.heartRate;
+        runHRCount++;
+        if (p.heartRate > runMaxHR) runMaxHR = p.heartRate;
+      }
     });
+
+    // Set heart rate stats for this run
+    run.avgHeartRate = runHRCount > 0 ? runHRSum / runHRCount : undefined;
+    run.maxHeartRate = runMaxHR > 0 ? runMaxHR : undefined;
   });
 
   const avgSkiSpeed = skiSpeedCount > 0 ? skiSpeedSum / skiSpeedCount : 0;
+  const avgHeartRate = heartRateCount > 0 ? heartRateSum / heartRateCount : undefined;
 
   const stats: GPXStats = {
     totalDistance,
@@ -228,12 +237,53 @@ export function parseGPX(content: string): GPXData {
     runCount: runs.length,
     startTime,
     endTime,
+    avgHeartRate,
+    maxHeartRate: maxHeartRate > 0 ? maxHeartRate : undefined,
   };
+
+  return { stats, runs };
+}
+
+export function parseGPX(content: string): GPXData {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, 'application/xml');
+
+  const nameEl = doc.querySelector('trk > name') || doc.querySelector('name');
+  const name = nameEl?.textContent || 'Unnamed Track';
+
+  const trkpts = doc.querySelectorAll('trkpt');
+  const points: TrackPoint[] = [];
+
+  trkpts.forEach((pt) => {
+    const lat = parseFloat(pt.getAttribute('lat') || '0');
+    const lon = parseFloat(pt.getAttribute('lon') || '0');
+    const eleEl = pt.querySelector('ele');
+    const timeEl = pt.querySelector('time');
+
+    const ele = eleEl ? parseFloat(eleEl.textContent || '0') : 0;
+    const time = timeEl ? new Date(timeEl.textContent || '') : new Date();
+
+    // Parse heart rate from GPX extensions (Garmin and other formats)
+    let heartRate: number | undefined;
+    const hrEl = pt.querySelector('extensions hr') ||
+                 pt.querySelector('extensions heartrate') ||
+                 pt.querySelector('extensions gpxtpx\\:hr') ||
+                 pt.querySelector('extensions ns3\\:hr');
+    if (hrEl && hrEl.textContent) {
+      heartRate = parseInt(hrEl.textContent, 10);
+      if (isNaN(heartRate) || heartRate <= 0) heartRate = undefined;
+    }
+
+    points.push({ lat, lon, ele, time, heartRate });
+  });
+
+  // Use shared stats calculation
+  const { stats, runs } = calculateStatsAndRuns(points);
 
   return { name, points, stats, runs };
 }
 
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371000; // Earth's radius in meters
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
@@ -244,7 +294,7 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 }
 
-function toRad(deg: number): number {
+export function toRad(deg: number): number {
   return deg * (Math.PI / 180);
 }
 
@@ -257,7 +307,7 @@ interface RawRun {
   endTime: Date;
 }
 
-function detectRuns(points: TrackPoint[]): Run[] {
+export function detectRuns(points: TrackPoint[]): Run[] {
   // Parameters tuned for ski run detection with window-based approach
   const minVerticalDrop = 30; // Minimum 30m vertical drop for a run
   const minSpeed = 5; // Minimum 5 km/h to be considered skiing (not lift)

@@ -53,6 +53,21 @@
   margin-bottom: 1rem;
 }
 
+.upload-icon.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
 .upload-zone h3 {
   margin: 0 0 0.5rem;
   font-size: 1.25rem;

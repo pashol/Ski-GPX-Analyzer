@@ -153,6 +153,25 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
             </div>
           </div>
         </div>
+
+        {stats.avgHeartRate && (
+          <div className="stats-grid main-stats">
+            <div className="big-stat-card heart-rate">
+              <span className="big-stat-label">AVG HEART RATE</span>
+              <div className="big-stat-value-row">
+                <span className="big-stat-value">{Math.round(stats.avgHeartRate)}</span>
+                <span className="big-stat-unit">bpm</span>
+              </div>
+            </div>
+            <div className="big-stat-card heart-rate">
+              <span className="big-stat-label">MAX HEART RATE</span>
+              <div className="big-stat-value-row">
+                <span className="big-stat-value">{stats.maxHeartRate}</span>
+                <span className="big-stat-unit">bpm</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {data.runs.length > 0 && (
@@ -201,12 +220,20 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
                   <div className="run-stat">
                     <span className="run-stat-label">Elevation</span>
                     <span className="run-stat-value">
-                      {useMetric 
+                      {useMetric
                         ? `${run.startElevation.toFixed(0)}→${run.endElevation.toFixed(0)}m`
                         : `${metersToFeet(run.startElevation).toFixed(0)}→${metersToFeet(run.endElevation).toFixed(0)}ft`
                       }
                     </span>
                   </div>
+                  {run.avgHeartRate && (
+                    <div className="run-stat heart-rate">
+                      <span className="run-stat-label">Heart Rate</span>
+                      <span className="run-stat-value">
+                        {Math.round(run.avgHeartRate)} / {run.maxHeartRate} bpm
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

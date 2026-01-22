@@ -6,6 +6,7 @@ import { GPXData, Run, formatDurationLong, metersToFeet, kmhToMph } from '../../
 interface ProfileViewProps {
   data: GPXData;
   selectedRun?: Run | null;
+  onRunSelect?: (run: Run) => void;
 }
 
 interface ZoomState {
@@ -13,10 +14,11 @@ interface ZoomState {
   endIndex: number;
 }
 
-export function ProfileView({ data, selectedRun }: ProfileViewProps) {
+export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps) {
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [hoveredRun, setHoveredRun] = useState<Run | null>(null);
   const [showSpeed, setShowSpeed] = useState(false);
+  const [showHeartRate, setShowHeartRate] = useState(false);
   const [showRuns, setShowRuns] = useState(true);
   const [xAxis, setXAxis] = useState<'time' | 'distance'>('distance');
   const [zoom, setZoom] = useState<ZoomState | null>(null);
@@ -67,6 +69,7 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
         globalIndex: data.points.indexOf(p),
         elevation: p.ele,
         speed: p.speed || 0,
+        heartRate: p.heartRate || 0,
         time: p.time,
         distance: cumulativeDist,
         lat: p.lat,
@@ -74,6 +77,11 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
       };
     });
   }, [basePoints, zoom, data.points]);
+
+  // Check if heart rate data is available
+  const hasHeartRateData = useMemo(() => {
+    return chartData.some(d => d.heartRate > 0);
+  }, [chartData]);
 
   // Reset hoveredPoint if it's out of bounds after chartData changes
   useEffect(() => {
@@ -141,22 +149,24 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
     }>;
   }, [data.runs, selectedRun, showRuns, chartData, zoom, basePoints.length]);
 
-  const { minEle, maxEle, maxSpeed, maxDistance, totalDuration } = useMemo(() => {
+  const { minEle, maxEle, maxSpeed, maxHeartRate, maxDistance, totalDuration } = useMemo(() => {
     if (chartData.length === 0) {
-      return { minEle: 0, maxEle: 100, maxSpeed: 50, maxDistance: 1000, totalDuration: 0 };
+      return { minEle: 0, maxEle: 100, maxSpeed: 50, maxHeartRate: 200, maxDistance: 1000, totalDuration: 0 };
     }
-    
+
     const elevations = chartData.map(d => d.elevation);
     const speeds = chartData.map(d => d.speed);
+    const heartRates = chartData.map(d => d.heartRate).filter(hr => hr > 0);
     const distances = chartData.map(d => d.distance);
-    
+
     const startTime = chartData[0]?.time.getTime() || 0;
     const endTime = chartData[chartData.length - 1]?.time.getTime() || 0;
-    
+
     return {
       minEle: Math.min(...elevations),
       maxEle: Math.max(...elevations),
       maxSpeed: Math.max(...speeds, 1),
+      maxHeartRate: heartRates.length > 0 ? Math.max(...heartRates) * 1.1 : 200,
       maxDistance: Math.max(...distances, 1),
       totalDuration: (endTime - startTime) / 1000,
     };
@@ -191,6 +201,10 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
     return svgDimensions.padding.top + chartHeight - (speed / (maxSpeed || 1)) * chartHeight;
   }, [maxSpeed, chartHeight]);
 
+  const scaleYHeartRate = useCallback((hr: number) => {
+    return svgDimensions.padding.top + chartHeight - (hr / (maxHeartRate || 200)) * chartHeight;
+  }, [maxHeartRate, chartHeight]);
+
   const getIndexFromX = useCallback((clientX: number): number => {
     if (!svgRef.current || chartData.length === 0) return 0;
     const rect = svgRef.current.getBoundingClientRect();
@@ -219,6 +233,13 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
 
   const speedPath = chartData.length > 0
     ? chartData.map((d, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleYSpeed(d.speed)}`).join(' ')
+    : '';
+
+  const heartRatePath = chartData.length > 0
+    ? chartData.filter(d => d.heartRate > 0).map((d, i, arr) => {
+        const originalIndex = chartData.indexOf(d);
+        return `${i === 0 ? 'M' : 'L'} ${scaleX(originalIndex)} ${scaleYHeartRate(d.heartRate)}`;
+      }).join(' ')
     : '';
 
   const areaPath = chartData.length > 0
@@ -380,6 +401,16 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
             />
             <span className="toggle-text">Show Speed</span>
           </label>
+          {hasHeartRateData && (
+            <label className="toggle-label">
+              <input
+                type="checkbox"
+                checked={showHeartRate}
+                onChange={(e) => setShowHeartRate(e.target.checked)}
+              />
+              <span className="toggle-text">Show Heart Rate</span>
+            </label>
+          )}
           {!selectedRun && (
             <label className="toggle-label">
               <input
@@ -403,7 +434,7 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
 
       <div className="zoom-hint">
         💡 Click and drag on the chart to zoom into a section
-        {showRuns && !selectedRun && data.runs.length > 0 && ' • Colored regions indicate ski runs'}
+        {showRuns && !selectedRun && data.runs.length > 0 && ' • Click a colored run region to view it on the map'}
       </div>
 
       <div className="chart-container">
@@ -422,9 +453,20 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
               <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.05" />
             </linearGradient>
-            <linearGradient id="speedGradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient
+              id="speedGradientLine"
+              x1="0%"
+              x2="0%"
+              gradientUnits="userSpaceOnUse"
+              y1={svgDimensions.padding.top + chartHeight}
+              y2={svgDimensions.padding.top}
+            >
               <stop offset="0%" stopColor="#00ff88" />
               <stop offset="100%" stopColor="#ff0044" />
+            </linearGradient>
+            <linearGradient id="heartRateGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#ff6b9d" />
+              <stop offset="100%" stopColor="#ff0055" />
             </linearGradient>
             <linearGradient id="selectionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.3" />
@@ -566,9 +608,19 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
             const isHovered = hoveredRun?.id === region.run.id;
             const runAreaPath = getRunAreaPath(region.chartStartIdx, region.chartEndIdx);
             if (!runAreaPath) return null;
-            
+
             return (
-              <g key={`run${idx}`} className={`run-region ${isHovered ? 'hovered' : ''}`}>
+              <g
+                key={`run${idx}`}
+                className={`run-region ${isHovered ? 'hovered' : ''}`}
+                style={{ cursor: onRunSelect ? 'pointer' : 'default' }}
+                onClick={(e) => {
+                  if (onRunSelect) {
+                    e.stopPropagation();
+                    onRunSelect(region.run);
+                  }
+                }}
+              >
                 {/* Run area fill */}
                 <path
                   d={runAreaPath}
@@ -663,6 +715,17 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
             />
           )}
 
+          {/* Heart rate line */}
+          {showHeartRate && heartRatePath && (
+            <path
+              d={heartRatePath}
+              fill="none"
+              stroke="#ff0055"
+              strokeWidth="2"
+              opacity="0.9"
+            />
+          )}
+
           {/* Selection overlay */}
           {selectionStart !== null && selectionEnd !== null && (
             <rect
@@ -706,6 +769,16 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
                   strokeWidth="2"
                 />
               )}
+              {showHeartRate && hoveredData.heartRate > 0 && (
+                <circle
+                  cx={scaleX(hoveredPoint!)}
+                  cy={scaleYHeartRate(hoveredData.heartRate)}
+                  r="5"
+                  fill="#ff0055"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              )}
             </>
           )}
         </svg>
@@ -725,6 +798,12 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
               <span className="tooltip-label">Speed</span>
               <span className="tooltip-value">{hoveredData.speed.toFixed(1)} km/h</span>
             </div>
+            {hoveredData.heartRate > 0 && (
+              <div className="tooltip-row">
+                <span className="tooltip-label">Heart Rate</span>
+                <span className="tooltip-value">{hoveredData.heartRate} bpm</span>
+              </div>
+            )}
             <div className="tooltip-row">
               <span className="tooltip-label">Distance</span>
               <span className="tooltip-value">{(hoveredData.distance / 1000).toFixed(2)} km</span>
@@ -759,8 +838,14 @@ export function ProfileView({ data, selectedRun }: ProfileViewProps) {
         </div>
         {showSpeed && (
           <div className="legend-item">
-            <span className="legend-color" style={{ background: 'linear-gradient(90deg, #00ff88, #ff0044)' }} />
-            <span>Speed</span>
+            <span className="legend-color" style={{ background: 'linear-gradient(0deg, #00ff88, #ff0044)' }} />
+            <span>Speed (low→high)</span>
+          </div>
+        )}
+        {showHeartRate && hasHeartRateData && (
+          <div className="legend-item">
+            <span className="legend-color" style={{ background: '#ff0055' }} />
+            <span>Heart Rate</span>
           </div>
         )}
         {showRuns && runRegions.length > 0 && (
