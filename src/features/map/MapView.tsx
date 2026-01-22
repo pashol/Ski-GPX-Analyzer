@@ -19,10 +19,12 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layersRef = useRef<any[]>([]);
-  const [mapType, setMapType] = useState<'streets' | 'satellite' | 'terrain' | 'opensnowmap'>('streets');
+  const pisteLayerRef = useRef<any>(null);
+  const [mapType, setMapType] = useState<'streets' | 'satellite' | 'terrain'>('streets');
   const [showRuns, setShowRuns] = useState(true);
   const [showRunMarkers, setShowRunMarkers] = useState(true);
   const [showKmMarkers, setShowKmMarkers] = useState(false);
+  const [showPisteOverlay, setShowPisteOverlay] = useState(false);
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
@@ -146,15 +148,51 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     return () => {};
   }, [bounds, isLeafletReady]);
 
-  // Update map layers when dependencies change
+  // Handle piste overlay toggle
   useEffect(() => {
-    if (!mapRef.current || !bounds || !isLeafletReady || mapType === 'opensnowmap') return;
+    if (!mapRef.current || !isLeafletReady) return;
 
     const L = window.L;
     const map = mapRef.current;
 
     try {
-      // Clear existing layers
+      // Remove existing piste layer if it exists
+      if (pisteLayerRef.current) {
+        if (map.hasLayer(pisteLayerRef.current)) {
+          map.removeLayer(pisteLayerRef.current);
+        }
+        pisteLayerRef.current = null;
+      }
+
+      // Add piste overlay if enabled
+      if (showPisteOverlay) {
+        pisteLayerRef.current = L.tileLayer('https://tiles.opensnowmap.org/pistes/{z}/{x}/{y}.png', {
+          attribution: '| Ski data © <a href="https://www.opensnowmap.org" target="_blank">OpenSnowMap</a>',
+          maxZoom: 18,
+          opacity: 0.9,
+        }).addTo(map);
+        
+        // Bring track layers to front
+        layersRef.current.forEach(layer => {
+          if (layer.bringToFront) {
+            layer.bringToFront();
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling piste overlay:', err);
+    }
+  }, [showPisteOverlay, isLeafletReady]);
+
+  // Update map layers when dependencies change
+  useEffect(() => {
+    if (!mapRef.current || !bounds || !isLeafletReady) return;
+
+    const L = window.L;
+    const map = mapRef.current;
+
+    try {
+      // Clear existing layers (except piste overlay)
       layersRef.current.forEach(layer => {
         if (map.hasLayer(layer)) {
           map.removeLayer(layer);
@@ -185,6 +223,11 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         maxZoom: 18,
       }).addTo(map);
       layersRef.current.push(tileLayer);
+
+      // Re-add piste overlay on top of base layer if enabled
+      if (showPisteOverlay && pisteLayerRef.current) {
+        pisteLayerRef.current.bringToFront();
+      }
 
       // Create the main track polyline
       const trackCoords: [number, number][] = data.points.map(p => [p.lat, p.lon]);
@@ -365,6 +408,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         ], { padding: [30, 30] });
       }
 
+      // Ensure piste overlay stays on top of base layer but below track
+      if (showPisteOverlay && pisteLayerRef.current) {
+        pisteLayerRef.current.bringToFront();
+        // Then bring track layers to front
+        layersRef.current.forEach(layer => {
+          if (layer.bringToFront && layer !== tileLayer) {
+            layer.bringToFront();
+          }
+        });
+      }
+
     } catch (err) {
       console.error('Error updating map layers:', err);
     }
@@ -382,31 +436,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         mapRef.current = null;
       }
       layersRef.current = [];
+      pisteLayerRef.current = null;
     };
   }, []);
-
-  // Calculate zoom level for OpenSnowMap based on bounds
-  const getOpenSnowMapZoom = useMemo(() => {
-    if (!bounds) return 13;
-    
-    const latDiff = bounds.maxLat - bounds.minLat;
-    const lonDiff = bounds.maxLon - bounds.minLon;
-    const maxDiff = Math.max(latDiff, lonDiff);
-    
-    if (maxDiff > 1) return 9;
-    if (maxDiff > 0.5) return 10;
-    if (maxDiff > 0.2) return 11;
-    if (maxDiff > 0.1) return 12;
-    if (maxDiff > 0.05) return 13;
-    if (maxDiff > 0.02) return 14;
-    return 15;
-  }, [bounds]);
-
-  // Generate OpenSnowMap embed URL
-  const openSnowMapUrl = useMemo(() => {
-    if (!center) return '';
-    return `https://www.opensnowmap.org/embed.html?zoom=${getOpenSnowMapZoom}&lat=${center.lat.toFixed(6)}&lon=${center.lon.toFixed(6)}`;
-  }, [center, getOpenSnowMapZoom]);
 
   if (mapError) {
     return (
@@ -420,7 +452,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     );
   }
 
-  if (!isLeafletReady && mapType !== 'opensnowmap') {
+  if (!isLeafletReady) {
     return (
       <div className="map-view">
         <div className="map-loading">
@@ -459,164 +491,133 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             >
               Terrain
             </button>
-            <button
-              className={`opensnowmap-btn ${mapType === 'opensnowmap' ? 'active' : ''}`}
-              onClick={() => setMapType('opensnowmap')}
-            >
-              <span className="snowmap-icon">🎿</span>
-              OpenSnowMap
-            </button>
           </div>
         </div>
         
-        {mapType !== 'opensnowmap' && (
-          <div className="control-group toggles">
-            <label className="toggle-label">
-              <input
-                type="checkbox"
-                checked={showRuns}
-                onChange={(e) => setShowRuns(e.target.checked)}
-              />
-              <span>Highlight Runs</span>
-            </label>
-            <label className="toggle-label">
-              <input
-                type="checkbox"
-                checked={showRunMarkers}
-                onChange={(e) => setShowRunMarkers(e.target.checked)}
-              />
-              <span>Run Markers</span>
-            </label>
-            <label className="toggle-label">
-              <input
-                type="checkbox"
-                checked={showKmMarkers}
-                onChange={(e) => setShowKmMarkers(e.target.checked)}
-              />
-              <span>KM Markers</span>
-            </label>
+        <div className="control-group toggles">
+          <label className="toggle-label piste-toggle">
+            <input
+              type="checkbox"
+              checked={showPisteOverlay}
+              onChange={(e) => setShowPisteOverlay(e.target.checked)}
+            />
+            <span className="toggle-icon">🎿</span>
+            <span>Ski Pistes</span>
+          </label>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showRuns}
+              onChange={(e) => setShowRuns(e.target.checked)}
+            />
+            <span>Highlight Runs</span>
+          </label>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showRunMarkers}
+              onChange={(e) => setShowRunMarkers(e.target.checked)}
+            />
+            <span>Run Markers</span>
+          </label>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={showKmMarkers}
+              onChange={(e) => setShowKmMarkers(e.target.checked)}
+            />
+            <span>KM Markers</span>
+          </label>
+        </div>
+      </div>
+
+      {showPisteOverlay && (
+        <div className="piste-overlay-info">
+          <div className="piste-info-content">
+            <span className="piste-badge">🎿 OpenSnowMap Overlay Active</span>
+            <span className="piste-hint">Showing ski pistes and lifts from OpenSnowMap</span>
+          </div>
+          <div className="piste-legend">
+            <div className="piste-legend-item">
+              <span className="piste-color easy"></span>
+              <span>Easy</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color intermediate"></span>
+              <span>Intermediate</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color advanced"></span>
+              <span>Advanced</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color expert"></span>
+              <span>Expert</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="map-container" ref={mapContainerRef} />
+
+      <div className="map-legend">
+        <div className="legend-item">
+          <span className="legend-marker start">S</span>
+          <span>Start</span>
+        </div>
+        <div className="legend-item">
+          <span className="legend-marker end">E</span>
+          <span>End</span>
+        </div>
+        {showRuns && (
+          <div className="legend-item speed-scale">
+            <div className="speed-gradient" />
+            <div className="speed-labels">
+              <span>Slow</span>
+              <span>{Math.round(maxRunSpeed)} km/h</span>
+            </div>
+          </div>
+        )}
+        {showRunMarkers && data.runs.length > 0 && (
+          <div className="legend-item">
+            <span className="legend-marker run-number">1</span>
+            <span>Run Start</span>
+          </div>
+        )}
+        {showKmMarkers && (
+          <div className="legend-item">
+            <span className="legend-marker km">1</span>
+            <span>Kilometer</span>
+          </div>
+        )}
+        {selectedRun && (
+          <div className="legend-item">
+            <span className="legend-line selected" />
+            <span>Selected Run</span>
           </div>
         )}
       </div>
 
-      {mapType === 'opensnowmap' ? (
-        <div className="opensnowmap-container">
-          <div className="opensnowmap-info">
-            <div className="opensnowmap-badge">
-              <span className="badge-icon">🎿</span>
-              <span className="badge-text">OpenSnowMap</span>
-            </div>
-            <p className="opensnowmap-description">
-              Interactive ski resort map showing pistes, lifts, and ski routes. 
-              Centered on your track location.
-            </p>
-            <div className="opensnowmap-coords">
-              <span>📍 {center?.lat.toFixed(4)}°, {center?.lon.toFixed(4)}°</span>
-              <span>🔍 Zoom: {getOpenSnowMapZoom}</span>
-            </div>
-          </div>
-          <div className="opensnowmap-frame-container">
-            <iframe
-              src={openSnowMapUrl}
-              className="opensnowmap-frame"
-              title="OpenSnowMap"
-              allowFullScreen
-            />
-          </div>
-          <div className="opensnowmap-legend">
-            <h4>OpenSnowMap Legend</h4>
-            <div className="legend-grid">
-              <div className="legend-row">
-                <span className="piste-color easy"></span>
-                <span>Easy (Green/Blue)</span>
-              </div>
-              <div className="legend-row">
-                <span className="piste-color intermediate"></span>
-                <span>Intermediate (Red)</span>
-              </div>
-              <div className="legend-row">
-                <span className="piste-color advanced"></span>
-                <span>Advanced (Black)</span>
-              </div>
-              <div className="legend-row">
-                <span className="lift-icon">🚡</span>
-                <span>Ski Lifts</span>
-              </div>
-            </div>
-            <a 
-              href={`https://www.opensnowmap.org/?zoom=${getOpenSnowMapZoom}&lat=${center?.lat}&lon=${center?.lon}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opensnowmap-link"
-            >
-              Open full map in new tab →
-            </a>
-          </div>
+      <div className="map-stats">
+        <div className="map-stat">
+          <span className="label">Points</span>
+          <span className="value">{data.points.length.toLocaleString()}</span>
         </div>
-      ) : (
-        <>
-          <div className="map-container" ref={mapContainerRef} />
-
-          <div className="map-legend">
-            <div className="legend-item">
-              <span className="legend-marker start">S</span>
-              <span>Start</span>
-            </div>
-            <div className="legend-item">
-              <span className="legend-marker end">E</span>
-              <span>End</span>
-            </div>
-            {showRuns && (
-              <div className="legend-item speed-scale">
-                <div className="speed-gradient" />
-                <div className="speed-labels">
-                  <span>Slow</span>
-                  <span>{Math.round(maxRunSpeed)} km/h</span>
-                </div>
-              </div>
-            )}
-            {showRunMarkers && data.runs.length > 0 && (
-              <div className="legend-item">
-                <span className="legend-marker run-number">1</span>
-                <span>Run Start</span>
-              </div>
-            )}
-            {showKmMarkers && (
-              <div className="legend-item">
-                <span className="legend-marker km">1</span>
-                <span>Kilometer</span>
-              </div>
-            )}
-            {selectedRun && (
-              <div className="legend-item">
-                <span className="legend-line selected" />
-                <span>Selected Run</span>
-              </div>
-            )}
+        <div className="map-stat">
+          <span className="label">Runs</span>
+          <span className="value">{data.runs.length}</span>
+        </div>
+        <div className="map-stat">
+          <span className="label">Distance</span>
+          <span className="value">{(data.stats.totalDistance / 1000).toFixed(1)} km</span>
+        </div>
+        {data.runs.length > 0 && (
+          <div className="map-stat">
+            <span className="label">Top Speed</span>
+            <span className="value">{maxRunSpeed.toFixed(1)} km/h</span>
           </div>
-
-          <div className="map-stats">
-            <div className="map-stat">
-              <span className="label">Points</span>
-              <span className="value">{data.points.length.toLocaleString()}</span>
-            </div>
-            <div className="map-stat">
-              <span className="label">Runs</span>
-              <span className="value">{data.runs.length}</span>
-            </div>
-            <div className="map-stat">
-              <span className="label">Distance</span>
-              <span className="value">{(data.stats.totalDistance / 1000).toFixed(1)} km</span>
-            </div>
-            {data.runs.length > 0 && (
-              <div className="map-stat">
-                <span className="label">Top Speed</span>
-                <span className="value">{maxRunSpeed.toFixed(1)} km/h</span>
-              </div>
-            )}
-          </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

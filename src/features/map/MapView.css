@@ -108,27 +108,6 @@
   border-color: transparent;
 }
 
-.map-type-buttons button.opensnowmap-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(56, 189, 248, 0.15);
-  border-color: rgba(56, 189, 248, 0.4);
-}
-
-.map-type-buttons button.opensnowmap-btn:hover {
-  background: rgba(56, 189, 248, 0.25);
-}
-
-.map-type-buttons button.opensnowmap-btn.active {
-  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-  border-color: transparent;
-}
-
-.snowmap-icon {
-  font-size: 1rem;
-}
-
 .toggle-label {
   display: flex;
   align-items: center;
@@ -144,6 +123,99 @@
   accent-color: #7c3aed;
 }
 
+.toggle-label.piste-toggle {
+  background: rgba(56, 189, 248, 0.15);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  transition: all 0.2s;
+}
+
+.toggle-label.piste-toggle:hover {
+  background: rgba(56, 189, 248, 0.25);
+}
+
+.toggle-label.piste-toggle input:checked + .toggle-icon {
+  animation: skiWiggle 0.5s ease;
+}
+
+@keyframes skiWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.toggle-icon {
+  font-size: 1.1rem;
+}
+
+/* Piste Overlay Info */
+.piste-overlay-info {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(56, 189, 248, 0.1));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.piste-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.piste-badge {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #38bdf8;
+}
+
+.piste-hint {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.piste-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.piste-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.piste-color {
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.piste-color.easy {
+  background: #22c55e;
+}
+
+.piste-color.intermediate {
+  background: #3b82f6;
+}
+
+.piste-color.advanced {
+  background: #ef4444;
+}
+
+.piste-color.expert {
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
 .map-container {
   height: 500px;
   border-radius: 12px;
@@ -151,139 +223,6 @@
   background: #1a1a2e;
   position: relative;
   z-index: 1;
-}
-
-/* OpenSnowMap Container */
-.opensnowmap-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.opensnowmap-info {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(56, 189, 248, 0.1));
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 12px;
-  padding: 1.25rem;
-}
-
-.opensnowmap-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  margin-bottom: 0.75rem;
-}
-
-.badge-icon {
-  font-size: 1.25rem;
-}
-
-.badge-text {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.opensnowmap-description {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.opensnowmap-coords {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-  font-family: monospace;
-}
-
-.opensnowmap-frame-container {
-  border-radius: 12px;
-  overflow: hidden;
-  background: #1a1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.opensnowmap-frame {
-  width: 100%;
-  height: 550px;
-  border: none;
-  display: block;
-}
-
-.opensnowmap-legend {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.25rem;
-}
-
-.opensnowmap-legend h4 {
-  margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.legend-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.legend-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.piste-color {
-  width: 24px;
-  height: 6px;
-  border-radius: 3px;
-}
-
-.piste-color.easy {
-  background: linear-gradient(90deg, #22c55e, #3b82f6);
-}
-
-.piste-color.intermediate {
-  background: #ef4444;
-}
-
-.piste-color.advanced {
-  background: #1f2937;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.lift-icon {
-  font-size: 1.1rem;
-  width: 24px;
-  text-align: center;
-}
-
-.opensnowmap-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #38bdf8;
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: all 0.2s;
-  padding: 0.5rem 1rem;
-  background: rgba(56, 189, 248, 0.1);
-  border-radius: 6px;
-}
-
-.opensnowmap-link:hover {
-  background: rgba(56, 189, 248, 0.2);
-  color: #7dd3fc;
 }
 
 .map-legend {
@@ -501,13 +440,14 @@
     flex-wrap: wrap;
   }
 
-  .map-type-buttons button.opensnowmap-btn {
-    flex: 1 1 100%;
-    justify-content: center;
+  .piste-overlay-info {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .opensnowmap-frame {
-    height: 450px;
+  .piste-legend {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 
@@ -534,16 +474,11 @@
     flex-direction: column;
   }
 
-  .opensnowmap-frame {
-    height: 400px;
+  .piste-legend {
+    gap: 0.75rem;
   }
 
-  .opensnowmap-coords {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .legend-grid {
-    grid-template-columns: 1fr 1fr;
+  .piste-legend-item {
+    font-size: 0.75rem;
   }
 }
