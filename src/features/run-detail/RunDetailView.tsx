@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './RunDetailView.css';
 import { GPXData, Run, formatDurationLong, metersToFeet, metersToMiles, kmhToMph } from '../../utils/gpxParser';
 
@@ -10,12 +10,228 @@ interface RunDetailViewProps {
   onViewOnMap: () => void;
 }
 
+interface ChartDataPoint {
+  index: number;
+  elevation: number;
+  speed: number;
+  distance: number;
+  time: Date;
+  lat: number;
+  lon: number;
+}
+
 export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewProps) {
   const [useMetric, setUseMetric] = useState(true);
+  const [xAxis, setXAxis] = useState<'distance' | 'time'>('distance');
+  const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   const runPoints = useMemo(() => {
     return data.points.slice(run.startIndex, run.endIndex + 1);
   }, [data.points, run]);
+
+  const chartData = useMemo((): ChartDataPoint[] => {
+    const sampledPoints = samplePoints(runPoints, 200);
+    let cumulativeDist = 0;
+    
+    return sampledPoints.map((p, i, arr) => {
+      if (i > 0) {
+        const prev = arr[i - 1];
+        cumulativeDist += haversineDistance(prev.lat, prev.lon, p.lat, p.lon);
+      }
+      return {
+        index: i,
+        elevation: p.ele,
+        speed: p.speed || 0,
+        distance: cumulativeDist,
+        time: p.time,
+        lat: p.lat,
+        lon: p.lon,
+      };
+    });
+  }, [runPoints]);
+
+  const { minEle, maxEle, maxSpeed, maxDistance, totalDuration } = useMemo(() => {
+    if (chartData.length === 0) {
+      return { minEle: 0, maxEle: 100, maxSpeed: 50, maxDistance: 1000, totalDuration: 0 };
+    }
+    
+    const elevations = chartData.map(d => d.elevation);
+    const speeds = chartData.map(d => d.speed);
+    const distances = chartData.map(d => d.distance);
+    
+    const startTime = chartData[0]?.time.getTime() || 0;
+    const endTime = chartData[chartData.length - 1]?.time.getTime() || 0;
+    
+    // Add padding to elevation range
+    const minE = Math.min(...elevations);
+    const maxE = Math.max(...elevations);
+    const elePadding = (maxE - minE) * 0.1 || 10;
+    
+    return {
+      minEle: minE - elePadding,
+      maxEle: maxE + elePadding,
+      maxSpeed: Math.max(...speeds, 1) * 1.1,
+      maxDistance: Math.max(...distances, 1),
+      totalDuration: (endTime - startTime) / 1000,
+    };
+  }, [chartData]);
+
+  const svgDimensions = {
+    width: 900,
+    height: 400,
+    padding: { top: 40, right: 80, bottom: 60, left: 80 },
+  };
+
+  const chartWidth = svgDimensions.width - svgDimensions.padding.left - svgDimensions.padding.right;
+  const chartHeight = svgDimensions.height - svgDimensions.padding.top - svgDimensions.padding.bottom;
+
+  const scaleX = useCallback((i: number) => {
+    if (chartData.length <= 1) return svgDimensions.padding.left;
+    
+    if (xAxis === 'distance') {
+      const dist = chartData[i]?.distance || 0;
+      return svgDimensions.padding.left + (dist / (maxDistance || 1)) * chartWidth;
+    }
+    return svgDimensions.padding.left + (i / (chartData.length - 1 || 1)) * chartWidth;
+  }, [chartData, maxDistance, xAxis, chartWidth]);
+
+  const scaleYEle = useCallback((ele: number) => {
+    const range = maxEle - minEle || 1;
+    return svgDimensions.padding.top + chartHeight - ((ele - minEle) / range) * chartHeight;
+  }, [maxEle, minEle, chartHeight]);
+
+  const scaleYSpeed = useCallback((speed: number) => {
+    return svgDimensions.padding.top + chartHeight - (speed / (maxSpeed || 1)) * chartHeight;
+  }, [maxSpeed, chartHeight]);
+
+  const getIndexFromX = useCallback((clientX: number): number => {
+    if (!svgRef.current || chartData.length === 0) return 0;
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * svgDimensions.width;
+    const ratio = Math.max(0, Math.min(1, (x - svgDimensions.padding.left) / chartWidth));
+    
+    if (xAxis === 'distance') {
+      const targetDist = ratio * maxDistance;
+      let closestIdx = 0;
+      let closestDiff = Infinity;
+      chartData.forEach((d, i) => {
+        const diff = Math.abs(d.distance - targetDist);
+        if (diff < closestDiff) {
+          closestDiff = diff;
+          closestIdx = i;
+        }
+      });
+      return Math.min(closestIdx, chartData.length - 1);
+    }
+    return Math.min(Math.round(ratio * (chartData.length - 1)), chartData.length - 1);
+  }, [chartData, maxDistance, xAxis, chartWidth]);
+
+  // Generate path for elevation
+  const elevationPath = chartData.length > 0
+    ? chartData.map((d, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleYEle(d.elevation)}`).join(' ')
+    : '';
+
+  // Generate area path for elevation fill
+  const elevationAreaPath = chartData.length > 0
+    ? elevationPath + 
+      ` L ${scaleX(chartData.length - 1)} ${svgDimensions.padding.top + chartHeight}` +
+      ` L ${svgDimensions.padding.left} ${svgDimensions.padding.top + chartHeight} Z`
+    : '';
+
+  // Generate segmented speed path with colors based on intensity
+  const speedSegments = useMemo(() => {
+    if (chartData.length < 2) return [];
+    
+    const segments: { path: string; color: string }[] = [];
+    
+    for (let i = 1; i < chartData.length; i++) {
+      const prev = chartData[i - 1];
+      const curr = chartData[i];
+      const avgSpeed = (prev.speed + curr.speed) / 2;
+      const speedRatio = Math.min(avgSpeed / (maxSpeed * 0.9), 1);
+      
+      // Green (120) -> Yellow (60) -> Red (0)
+      const hue = 120 * (1 - Math.pow(speedRatio, 1.5));
+      const color = `hsl(${hue}, 75%, 50%)`;
+      
+      segments.push({
+        path: `M ${scaleX(i - 1)} ${scaleYSpeed(prev.speed)} L ${scaleX(i)} ${scaleYSpeed(curr.speed)}`,
+        color,
+      });
+    }
+    
+    return segments;
+  }, [chartData, maxSpeed, scaleX, scaleYSpeed]);
+
+  // Generate Y-axis labels for elevation
+  const yAxisEleLabels = useMemo(() => {
+    const labels = [];
+    const range = maxEle - minEle;
+    const step = getNiceStep(range, 5);
+    const startValue = Math.ceil(minEle / step) * step;
+    
+    for (let value = startValue; value <= maxEle; value += step) {
+      const y = scaleYEle(value);
+      if (y >= svgDimensions.padding.top && y <= svgDimensions.padding.top + chartHeight) {
+        labels.push({ y, value });
+      }
+    }
+    return labels;
+  }, [minEle, maxEle, scaleYEle, chartHeight]);
+
+  // Generate Y-axis labels for speed
+  const yAxisSpeedLabels = useMemo(() => {
+    const labels = [];
+    const step = getNiceStep(maxSpeed, 5);
+    
+    for (let value = 0; value <= maxSpeed; value += step) {
+      const y = scaleYSpeed(value);
+      if (y >= svgDimensions.padding.top && y <= svgDimensions.padding.top + chartHeight) {
+        labels.push({ y, value });
+      }
+    }
+    return labels;
+  }, [maxSpeed, scaleYSpeed, chartHeight]);
+
+  // Generate X-axis labels
+  const xAxisLabels = useMemo(() => {
+    const labels = [];
+    const numLabels = 6;
+    
+    for (let i = 0; i < numLabels; i++) {
+      const ratio = i / (numLabels - 1);
+      const x = svgDimensions.padding.left + ratio * chartWidth;
+      
+      if (xAxis === 'distance') {
+        const dist = ratio * maxDistance;
+        const value = useMetric 
+          ? `${(dist / 1000).toFixed(1)} km`
+          : `${metersToMiles(dist).toFixed(2)} mi`;
+        labels.push({ x, value });
+      } else {
+        const idx = Math.min(Math.round(ratio * (chartData.length - 1)), chartData.length - 1);
+        const time = chartData[idx]?.time;
+        const value = time ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+        labels.push({ x, value });
+      }
+    }
+    return labels;
+  }, [xAxis, maxDistance, chartData, chartWidth, useMetric]);
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (chartData.length === 0) return;
+    const index = getIndexFromX(e.clientX);
+    setHoveredPoint(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredPoint(null);
+  };
+
+  const hoveredData = hoveredPoint !== null && hoveredPoint >= 0 && hoveredPoint < chartData.length
+    ? chartData[hoveredPoint]
+    : null;
 
   const speedDistribution = useMemo(() => {
     const buckets = [
@@ -37,32 +253,6 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
 
     const max = Math.max(...buckets.map(b => b.count));
     return buckets.map(b => ({ ...b, percentage: max > 0 ? (b.count / max) * 100 : 0 }));
-  }, [runPoints]);
-
-  const elevationProfile = useMemo(() => {
-    const sampledPoints = samplePoints(runPoints, 50);
-    const elevations = sampledPoints.map(p => p.ele);
-    const min = Math.min(...elevations);
-    const max = Math.max(...elevations);
-    const range = max - min || 1;
-    
-    return sampledPoints.map((p, i) => ({
-      x: (i / (sampledPoints.length - 1)) * 100,
-      y: 100 - ((p.ele - min) / range) * 100,
-      ele: p.ele,
-    }));
-  }, [runPoints]);
-
-  const speedProfile = useMemo(() => {
-    const sampledPoints = samplePoints(runPoints, 50);
-    const speeds = sampledPoints.map(p => p.speed || 0);
-    const max = Math.max(...speeds) || 1;
-    
-    return sampledPoints.map((p, i) => ({
-      x: (i / (sampledPoints.length - 1)) * 100,
-      y: 100 - ((p.speed || 0) / max) * 100,
-      speed: p.speed || 0,
-    }));
   }, [runPoints]);
 
   const formatSpeed = (kmh: number) => {
@@ -161,58 +351,373 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
         </div>
       </div>
 
-      <div className="run-charts">
-        <div className="mini-chart-card">
-          <h3>Elevation Profile</h3>
-          <div className="mini-chart">
-            <svg viewBox="0 0 100 60" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="eleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.1" />
-                </linearGradient>
-              </defs>
-              <path
-                d={`M 0 60 ${elevationProfile.map(p => `L ${p.x} ${p.y}`).join(' ')} L 100 60 Z`}
-                fill="url(#eleGradient)"
-              />
-              <path
-                d={`M ${elevationProfile.map((p, i) => `${i === 0 ? '' : 'L'} ${p.x} ${p.y}`).join(' ')}`}
-                fill="none"
-                stroke="#7c3aed"
-                strokeWidth="1.5"
-              />
-            </svg>
-            <div className="chart-labels">
-              <span>{formatAltitude(run.startElevation)}</span>
-              <span>{formatAltitude(run.endElevation)}</span>
+      {/* Combined Elevation & Speed Profile Chart */}
+      <div className="combined-chart-card">
+        <div className="chart-header">
+          <h3>Elevation & Speed Profile</h3>
+          <div className="chart-controls">
+            <div className="axis-toggle">
+              <button 
+                className={xAxis === 'distance' ? 'active' : ''} 
+                onClick={() => setXAxis('distance')}
+              >
+                Distance
+              </button>
+              <button 
+                className={xAxis === 'time' ? 'active' : ''} 
+                onClick={() => setXAxis('time')}
+              >
+                Time
+              </button>
             </div>
           </div>
         </div>
+        
+        <div className="chart-container">
+          <svg
+            ref={svgRef}
+            viewBox={`0 0 ${svgDimensions.width} ${svgDimensions.height}`}
+            preserveAspectRatio="xMidYMid meet"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="profile-chart"
+          >
+            <defs>
+              {/* Elevation gradient fill */}
+              <linearGradient id="runElevationGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.5" />
+                <stop offset="50%" stopColor="#7c3aed" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.05" />
+              </linearGradient>
+              
+              {/* Speed gradient for legend */}
+              <linearGradient id="speedLegendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="hsl(120, 75%, 50%)" />
+                <stop offset="50%" stopColor="hsl(60, 75%, 50%)" />
+                <stop offset="100%" stopColor="hsl(0, 75%, 50%)" />
+              </linearGradient>
+            </defs>
 
-        <div className="mini-chart-card">
-          <h3>Speed Profile</h3>
-          <div className="mini-chart">
-            <svg viewBox="0 0 100 60" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#00ff88" />
-                  <stop offset="50%" stopColor="#00d4ff" />
-                  <stop offset="100%" stopColor="#ff0044" />
-                </linearGradient>
-              </defs>
+            {/* Grid lines - horizontal */}
+            <g className="grid-lines">
+              {yAxisEleLabels.map((label, i) => (
+                <line
+                  key={`h-ele-${i}`}
+                  x1={svgDimensions.padding.left}
+                  y1={label.y}
+                  x2={svgDimensions.width - svgDimensions.padding.right}
+                  y2={label.y}
+                  stroke="rgba(255, 255, 255, 0.08)"
+                  strokeDasharray="4,4"
+                />
+              ))}
+              
+              {/* Vertical grid lines */}
+              {xAxisLabels.map((label, i) => (
+                <line
+                  key={`v-${i}`}
+                  x1={label.x}
+                  y1={svgDimensions.padding.top}
+                  x2={label.x}
+                  y2={svgDimensions.padding.top + chartHeight}
+                  stroke="rgba(255, 255, 255, 0.08)"
+                  strokeDasharray="4,4"
+                />
+              ))}
+            </g>
+
+            {/* Chart area background */}
+            <rect
+              x={svgDimensions.padding.left}
+              y={svgDimensions.padding.top}
+              width={chartWidth}
+              height={chartHeight}
+              fill="rgba(0, 0, 0, 0.1)"
+              rx="4"
+            />
+
+            {/* Elevation area fill */}
+            {elevationAreaPath && (
               <path
-                d={`M ${speedProfile.map((p, i) => `${i === 0 ? '' : 'L'} ${p.x} ${p.y}`).join(' ')}`}
-                fill="none"
-                stroke="url(#speedGradient)"
-                strokeWidth="1.5"
+                d={elevationAreaPath}
+                fill="url(#runElevationGradient)"
               />
-            </svg>
-            <div className="chart-labels">
-              <span>0</span>
-              <span>{formatSpeed(run.maxSpeed)}</span>
+            )}
+
+            {/* Elevation line */}
+            {elevationPath && (
+              <path
+                d={elevationPath}
+                fill="none"
+                stroke="#7c3aed"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+
+            {/* Speed line segments with gradient colors */}
+            {speedSegments.map((segment, i) => (
+              <path
+                key={`speed-${i}`}
+                d={segment.path}
+                fill="none"
+                stroke={segment.color}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
+
+            {/* Y-axis (Elevation) - Left */}
+            <line
+              x1={svgDimensions.padding.left}
+              y1={svgDimensions.padding.top}
+              x2={svgDimensions.padding.left}
+              y2={svgDimensions.padding.top + chartHeight}
+              stroke="rgba(255, 255, 255, 0.3)"
+            />
+            
+            {/* Y-axis labels (Elevation) */}
+            {yAxisEleLabels.map((label, i) => (
+              <g key={`ele-label-${i}`}>
+                <line
+                  x1={svgDimensions.padding.left - 5}
+                  y1={label.y}
+                  x2={svgDimensions.padding.left}
+                  y2={label.y}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                />
+                <text
+                  x={svgDimensions.padding.left - 10}
+                  y={label.y + 4}
+                  fill="#a78bfa"
+                  fontSize="11"
+                  textAnchor="end"
+                  fontWeight="500"
+                >
+                  {useMetric ? label.value.toFixed(0) : metersToFeet(label.value).toFixed(0)}
+                </text>
+              </g>
+            ))}
+            
+            {/* Y-axis title (Elevation) */}
+            <text
+              x={20}
+              y={svgDimensions.height / 2}
+              fill="#a78bfa"
+              fontSize="12"
+              textAnchor="middle"
+              fontWeight="600"
+              transform={`rotate(-90, 20, ${svgDimensions.height / 2})`}
+            >
+              Elevation ({useMetric ? 'm' : 'ft'})
+            </text>
+
+            {/* Y-axis (Speed) - Right */}
+            <line
+              x1={svgDimensions.width - svgDimensions.padding.right}
+              y1={svgDimensions.padding.top}
+              x2={svgDimensions.width - svgDimensions.padding.right}
+              y2={svgDimensions.padding.top + chartHeight}
+              stroke="rgba(255, 255, 255, 0.3)"
+            />
+            
+            {/* Y-axis labels (Speed) */}
+            {yAxisSpeedLabels.map((label, i) => (
+              <g key={`speed-label-${i}`}>
+                <line
+                  x1={svgDimensions.width - svgDimensions.padding.right}
+                  y1={label.y}
+                  x2={svgDimensions.width - svgDimensions.padding.right + 5}
+                  y2={label.y}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                />
+                <text
+                  x={svgDimensions.width - svgDimensions.padding.right + 10}
+                  y={label.y + 4}
+                  fill="#4ade80"
+                  fontSize="11"
+                  textAnchor="start"
+                  fontWeight="500"
+                >
+                  {useMetric ? label.value.toFixed(0) : kmhToMph(label.value).toFixed(0)}
+                </text>
+              </g>
+            ))}
+            
+            {/* Y-axis title (Speed) */}
+            <text
+              x={svgDimensions.width - 15}
+              y={svgDimensions.height / 2}
+              fill="#4ade80"
+              fontSize="12"
+              textAnchor="middle"
+              fontWeight="600"
+              transform={`rotate(90, ${svgDimensions.width - 15}, ${svgDimensions.height / 2})`}
+            >
+              Speed ({useMetric ? 'km/h' : 'mph'})
+            </text>
+
+            {/* X-axis */}
+            <line
+              x1={svgDimensions.padding.left}
+              y1={svgDimensions.padding.top + chartHeight}
+              x2={svgDimensions.width - svgDimensions.padding.right}
+              y2={svgDimensions.padding.top + chartHeight}
+              stroke="rgba(255, 255, 255, 0.3)"
+            />
+            
+            {/* X-axis labels */}
+            {xAxisLabels.map((label, i) => (
+              <g key={`x-label-${i}`}>
+                <line
+                  x1={label.x}
+                  y1={svgDimensions.padding.top + chartHeight}
+                  x2={label.x}
+                  y2={svgDimensions.padding.top + chartHeight + 5}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                />
+                <text
+                  x={label.x}
+                  y={svgDimensions.padding.top + chartHeight + 20}
+                  fill="rgba(255, 255, 255, 0.7)"
+                  fontSize="11"
+                  textAnchor="middle"
+                >
+                  {label.value}
+                </text>
+              </g>
+            ))}
+            
+            {/* X-axis title */}
+            <text
+              x={svgDimensions.width / 2}
+              y={svgDimensions.height - 10}
+              fill="rgba(255, 255, 255, 0.7)"
+              fontSize="12"
+              textAnchor="middle"
+              fontWeight="600"
+            >
+              {xAxis === 'distance' ? `Distance (${useMetric ? 'km' : 'mi'})` : 'Time'}
+            </text>
+
+            {/* Hover indicator */}
+            {hoveredData && (
+              <>
+                {/* Vertical line */}
+                <line
+                  x1={scaleX(hoveredPoint!)}
+                  y1={svgDimensions.padding.top}
+                  x2={scaleX(hoveredPoint!)}
+                  y2={svgDimensions.padding.top + chartHeight}
+                  stroke="rgba(255, 255, 255, 0.6)"
+                  strokeWidth="1"
+                  strokeDasharray="4,4"
+                />
+                
+                {/* Elevation point */}
+                <circle
+                  cx={scaleX(hoveredPoint!)}
+                  cy={scaleYEle(hoveredData.elevation)}
+                  r="6"
+                  fill="#7c3aed"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+                
+                {/* Speed point */}
+                <circle
+                  cx={scaleX(hoveredPoint!)}
+                  cy={scaleYSpeed(hoveredData.speed)}
+                  r="6"
+                  fill={`hsl(${120 * (1 - Math.pow(hoveredData.speed / maxSpeed, 1.5))}, 75%, 50%)`}
+                  stroke="white"
+                  strokeWidth="2"
+                />
+                
+                {/* Horizontal line to elevation axis */}
+                <line
+                  x1={svgDimensions.padding.left}
+                  y1={scaleYEle(hoveredData.elevation)}
+                  x2={scaleX(hoveredPoint!)}
+                  y2={scaleYEle(hoveredData.elevation)}
+                  stroke="#7c3aed"
+                  strokeWidth="1"
+                  strokeDasharray="2,2"
+                  opacity="0.5"
+                />
+                
+                {/* Horizontal line to speed axis */}
+                <line
+                  x1={scaleX(hoveredPoint!)}
+                  y1={scaleYSpeed(hoveredData.speed)}
+                  x2={svgDimensions.width - svgDimensions.padding.right}
+                  y2={scaleYSpeed(hoveredData.speed)}
+                  stroke="#4ade80"
+                  strokeWidth="1"
+                  strokeDasharray="2,2"
+                  opacity="0.5"
+                />
+              </>
+            )}
+
+            {/* Legend */}
+            <g className="chart-legend" transform={`translate(${svgDimensions.padding.left + 10}, ${svgDimensions.padding.top + 10})`}>
+              <rect
+                x="0"
+                y="0"
+                width="180"
+                height="50"
+                fill="rgba(0, 0, 0, 0.6)"
+                rx="6"
+              />
+              <line x1="10" y1="18" x2="30" y2="18" stroke="#7c3aed" strokeWidth="3" />
+              <text x="40" y="22" fill="white" fontSize="11">Elevation</text>
+              
+              <rect x="10" y="30" width="20" height="8" fill="url(#speedLegendGradient)" rx="2" />
+              <text x="40" y="38" fill="white" fontSize="11">Speed (by intensity)</text>
+            </g>
+          </svg>
+
+          {/* Hover Tooltip */}
+          {hoveredData && (
+            <div className="chart-tooltip">
+              <div className="tooltip-header">
+                Point {hoveredPoint! + 1} of {chartData.length}
+              </div>
+              <div className="tooltip-grid">
+                <div className="tooltip-item elevation">
+                  <span className="tooltip-icon">⛰️</span>
+                  <div className="tooltip-data">
+                    <span className="tooltip-label">Elevation</span>
+                    <span className="tooltip-value">{formatAltitude(hoveredData.elevation)}</span>
+                  </div>
+                </div>
+                <div className="tooltip-item speed">
+                  <span className="tooltip-icon">🚀</span>
+                  <div className="tooltip-data">
+                    <span className="tooltip-label">Speed</span>
+                    <span className="tooltip-value">{formatSpeed(hoveredData.speed)}</span>
+                  </div>
+                </div>
+                <div className="tooltip-item distance">
+                  <span className="tooltip-icon">📏</span>
+                  <div className="tooltip-data">
+                    <span className="tooltip-label">Distance</span>
+                    <span className="tooltip-value">{formatDistance(hoveredData.distance)}</span>
+                  </div>
+                </div>
+                <div className="tooltip-item time">
+                  <span className="tooltip-icon">🕐</span>
+                  <div className="tooltip-data">
+                    <span className="tooltip-label">Time</span>
+                    <span className="tooltip-value">{hoveredData.time.toLocaleTimeString()}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -244,7 +749,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
             <span className="comparison-label">Speed vs Avg</span>
             <span className={`comparison-value ${run.avgSpeed > data.stats.avgSkiSpeed ? 'positive' : 'negative'}`}>
               {run.avgSpeed > data.stats.avgSkiSpeed ? '+' : ''}
-              {(((run.avgSpeed - data.stats.avgSkiSpeed) / data.stats.avgSkiSpeed) * 100).toFixed(0)}%
+              {data.stats.avgSkiSpeed > 0 ? (((run.avgSpeed - data.stats.avgSkiSpeed) / data.stats.avgSkiSpeed) * 100).toFixed(0) : 0}%
             </span>
           </div>
           <div className="comparison-item">
@@ -275,4 +780,29 @@ function samplePoints<T>(points: T[], maxPoints: number): T[] {
   if (points.length <= maxPoints) return points;
   const step = Math.ceil(points.length / maxPoints);
   return points.filter((_, i) => i % step === 0 || i === points.length - 1);
+}
+
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function getNiceStep(range: number, targetSteps: number): number {
+  const roughStep = range / targetSteps;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const residual = roughStep / magnitude;
+  
+  let niceStep: number;
+  if (residual <= 1.5) niceStep = 1;
+  else if (residual <= 3) niceStep = 2;
+  else if (residual <= 7) niceStep = 5;
+  else niceStep = 10;
+  
+  return niceStep * magnitude;
 }

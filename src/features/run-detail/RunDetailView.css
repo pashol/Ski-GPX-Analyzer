@@ -137,40 +137,176 @@
   font-weight: 700;
 }
 
-.run-charts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+/* Combined Chart Card */
+.combined-chart-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
-.mini-chart-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.25rem;
+.chart-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.mini-chart-card h3 {
-  margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.mini-chart {
-  height: 120px;
-  position: relative;
-}
-
-.mini-chart svg {
-  width: 100%;
-  height: 100%;
-}
-
-.chart-labels {
+.chart-controls {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.axis-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.axis-toggle button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.axis-toggle button:hover {
+  color: white;
+}
+
+.axis-toggle button.active {
+  background: linear-gradient(135deg, #7c3aed, #00d4ff);
+  color: white;
+}
+
+.chart-container {
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.profile-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Chart Tooltip */
+.chart-tooltip {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  min-width: 220px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.tooltip-header {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
-  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tooltip-icon {
+  font-size: 1.25rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-item.elevation .tooltip-icon {
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.tooltip-item.speed .tooltip-icon {
+  background: rgba(74, 222, 128, 0.3);
+}
+
+.tooltip-item.distance .tooltip-icon {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+.tooltip-item.time .tooltip-icon {
+  background: rgba(251, 191, 36, 0.3);
+}
+
+.tooltip-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tooltip-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tooltip-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+.tooltip-item.elevation .tooltip-value {
+  color: #a78bfa;
+}
+
+.tooltip-item.speed .tooltip-value {
+  color: #4ade80;
+}
+
+.tooltip-item.distance .tooltip-value {
+  color: #00d4ff;
+}
+
+.tooltip-item.time .tooltip-value {
+  color: #fbbf24;
 }
 
 .speed-distribution-card {
@@ -271,6 +407,26 @@
   color: #ff6b6b;
 }
 
+@media (max-width: 768px) {
+  .combined-chart-card {
+    padding: 1rem;
+  }
+
+  .chart-container {
+    padding: 0.5rem;
+  }
+
+  .chart-tooltip {
+    position: static;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .tooltip-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 600px) {
   .run-detail-header {
     flex-direction: column;
@@ -293,5 +449,10 @@
 
   .comparison-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
