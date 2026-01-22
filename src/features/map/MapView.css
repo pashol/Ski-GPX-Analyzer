@@ -85,6 +85,7 @@
 .map-type-buttons {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .map-type-buttons button {
@@ -120,6 +121,99 @@
   width: 18px;
   height: 18px;
   accent-color: #7c3aed;
+}
+
+.toggle-label.piste-toggle {
+  background: rgba(56, 189, 248, 0.15);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  transition: all 0.2s;
+}
+
+.toggle-label.piste-toggle:hover {
+  background: rgba(56, 189, 248, 0.25);
+}
+
+.toggle-label.piste-toggle input:checked + .toggle-icon {
+  animation: skiWiggle 0.5s ease;
+}
+
+@keyframes skiWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.toggle-icon {
+  font-size: 1.1rem;
+}
+
+/* Piste Overlay Info */
+.piste-overlay-info {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(56, 189, 248, 0.1));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.piste-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.piste-badge {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #38bdf8;
+}
+
+.piste-hint {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.piste-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.piste-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.piste-color {
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.piste-color.easy {
+  background: #22c55e;
+}
+
+.piste-color.intermediate {
+  background: #3b82f6;
+}
+
+.piste-color.advanced {
+  background: #ef4444;
+}
+
+.piste-color.expert {
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .map-container {
@@ -341,6 +435,22 @@
   font-size: 0.9em;
 }
 
+@media (max-width: 768px) {
+  .map-type-buttons {
+    flex-wrap: wrap;
+  }
+
+  .piste-overlay-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .piste-legend {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 600px) {
   .map-container {
     height: 400px;
@@ -362,5 +472,13 @@
 
   .map-stats {
     flex-direction: column;
+  }
+
+  .piste-legend {
+    gap: 0.75rem;
+  }
+
+  .piste-legend-item {
+    font-size: 0.75rem;
   }
 }

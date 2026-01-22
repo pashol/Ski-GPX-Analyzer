@@ -19,17 +19,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layersRef = useRef<any[]>([]);
+  const pisteLayerRef = useRef<any>(null);
   const [mapType, setMapType] = useState<'streets' | 'satellite' | 'terrain'>('streets');
   const [showRuns, setShowRuns] = useState(true);
   const [showRunMarkers, setShowRunMarkers] = useState(true);
   const [showKmMarkers, setShowKmMarkers] = useState(false);
+  const [showPisteOverlay, setShowPisteOverlay] = useState(true);
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
-  const { bounds } = useMemo(() => {
+  const { bounds, center } = useMemo(() => {
     const points = data.points;
     if (points.length === 0) {
-      return { bounds: null };
+      return { bounds: null, center: null };
     }
 
     const lats = points.map(p => p.lat);
@@ -41,6 +43,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         maxLat: Math.max(...lats),
         minLon: Math.min(...lons),
         maxLon: Math.max(...lons),
+      },
+      center: {
+        lat: (Math.min(...lats) + Math.max(...lats)) / 2,
+        lon: (Math.min(...lons) + Math.max(...lons)) / 2,
       }
     };
   }, [data.points]);
@@ -86,24 +92,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
   // Function to get color based on speed with dynamic thresholds
   const getSpeedColor = (speed: number, maxSpeed: number): string => {
-    // Use the actual max speed from runs to set the scale
-    // This ensures the fastest run is red, and others are distributed
     const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 50);
-    
-    // Apply a logarithmic-ish scale to spread colors better
-    // Slow runs (< 30% of max) are green
-    // Medium runs (30-60% of max) are yellow/orange
-    // Fast runs (> 60% of max) are orange/red
-    
     const ratio = Math.min(speed / threshold, 1);
-    
-    // Use a curve to make the transition more gradual
-    // This gives more green/yellow and less red
     const adjustedRatio = Math.pow(ratio, 1.5);
-    
-    // Hue: 120 (green) -> 60 (yellow) -> 30 (orange) -> 0 (red)
     const hue = 120 * (1 - adjustedRatio);
-    
     return `hsl(${hue}, 75%, 50%)`;
   };
 
@@ -156,6 +148,42 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     return () => {};
   }, [bounds, isLeafletReady]);
 
+  // Handle piste overlay toggle
+  useEffect(() => {
+    if (!mapRef.current || !isLeafletReady) return;
+
+    const L = window.L;
+    const map = mapRef.current;
+
+    try {
+      // Remove existing piste layer if it exists
+      if (pisteLayerRef.current) {
+        if (map.hasLayer(pisteLayerRef.current)) {
+          map.removeLayer(pisteLayerRef.current);
+        }
+        pisteLayerRef.current = null;
+      }
+
+      // Add piste overlay if enabled
+      if (showPisteOverlay) {
+        pisteLayerRef.current = L.tileLayer('https://tiles.opensnowmap.org/pistes/{z}/{x}/{y}.png', {
+          attribution: '| Ski data © <a href="https://www.opensnowmap.org" target="_blank">OpenSnowMap</a>',
+          maxZoom: 18,
+          opacity: 0.9,
+        }).addTo(map);
+        
+        // Bring track layers to front
+        layersRef.current.forEach(layer => {
+          if (layer.bringToFront) {
+            layer.bringToFront();
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling piste overlay:', err);
+    }
+  }, [showPisteOverlay, isLeafletReady]);
+
   // Update map layers when dependencies change
   useEffect(() => {
     if (!mapRef.current || !bounds || !isLeafletReady) return;
@@ -164,7 +192,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     const map = mapRef.current;
 
     try {
-      // Clear existing layers
+      // Clear existing layers (except piste overlay)
       layersRef.current.forEach(layer => {
         if (map.hasLayer(layer)) {
           map.removeLayer(layer);
@@ -196,6 +224,11 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       }).addTo(map);
       layersRef.current.push(tileLayer);
 
+      // Re-add piste overlay on top of base layer if enabled
+      if (showPisteOverlay && pisteLayerRef.current) {
+        pisteLayerRef.current.bringToFront();
+      }
+
       // Create the main track polyline
       const trackCoords: [number, number][] = data.points.map(p => [p.lat, p.lon]);
       
@@ -218,7 +251,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             .slice(run.startIndex, run.endIndex + 1)
             .map(p => [p.lat, p.lon]);
 
-          // Use dynamic color based on this run's max speed relative to all runs
           const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
           
           const isSelected = selectedRun && selectedRun.id === run.id;
@@ -231,7 +263,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             opacity: opacity,
           }).addTo(map);
           
-          // Speed category label
           let speedCategory = 'Casual';
           const speedRatio = run.maxSpeed / maxRunSpeed;
           if (speedRatio > 0.8) speedCategory = 'Fast! 🔥';
@@ -267,7 +298,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           const endPoint = data.points[run.endIndex];
           const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
           
-          // Run start marker with speed-based color
           const startIcon = L.divIcon({
             className: 'custom-marker run-start-marker',
             html: `<div class="marker-inner run-marker" style="background: ${color}">${idx + 1}</div>`,
@@ -291,7 +321,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           }
           layersRef.current.push(startMarker);
 
-          // Run end marker
           const endIcon = L.divIcon({
             className: 'custom-marker run-end-marker',
             html: `<div class="marker-inner run-marker-end">⛷</div>`,
@@ -349,7 +378,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           .bindPopup('Start');
         layersRef.current.push(startMarker);
 
-        // Add end marker
         const endPoint = data.points[data.points.length - 1];
         const endIcon = L.divIcon({
           className: 'custom-marker end-marker',
@@ -380,6 +408,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         ], { padding: [30, 30] });
       }
 
+      // Ensure piste overlay stays on top of base layer but below track
+      if (showPisteOverlay && pisteLayerRef.current) {
+        pisteLayerRef.current.bringToFront();
+        // Then bring track layers to front
+        layersRef.current.forEach(layer => {
+          if (layer.bringToFront && layer !== tileLayer) {
+            layer.bringToFront();
+          }
+        });
+      }
+
     } catch (err) {
       console.error('Error updating map layers:', err);
     }
@@ -397,6 +436,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         mapRef.current = null;
       }
       layersRef.current = [];
+      pisteLayerRef.current = null;
     };
   }, []);
 
@@ -423,7 +463,6 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     );
   }
 
-  // Calculate speed legend values based on actual data
   const maxRunSpeed = data.runs.length > 0 
     ? Math.max(...data.runs.map(r => r.maxSpeed))
     : 60;
@@ -456,6 +495,15 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         </div>
         
         <div className="control-group toggles">
+          <label className="toggle-label piste-toggle">
+            <input
+              type="checkbox"
+              checked={showPisteOverlay}
+              onChange={(e) => setShowPisteOverlay(e.target.checked)}
+            />
+            <span className="toggle-icon">🎿</span>
+            <span>Ski Pistes</span>
+          </label>
           <label className="toggle-label">
             <input
               type="checkbox"
@@ -482,8 +530,35 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           </label>
         </div>
       </div>
-
+      
       <div className="map-container" ref={mapContainerRef} />
+      
+      {showPisteOverlay && (
+        <div className="piste-overlay-info">
+          <div className="piste-info-content">
+            <span className="piste-badge">🎿 OpenSnowMap Overlay Active</span>
+            <span className="piste-hint">Showing ski pistes and lifts from OpenSnowMap</span>
+          </div>
+          <div className="piste-legend">
+            <div className="piste-legend-item">
+              <span className="piste-color easy"></span>
+              <span>Easy</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color intermediate"></span>
+              <span>Intermediate</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color advanced"></span>
+              <span>Advanced</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color expert"></span>
+              <span>Expert</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="map-legend">
         <div className="legend-item">
