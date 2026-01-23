@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './MapView.css';
 import { GPXData, Run } from '../../utils/gpxParser';
+import { useTranslation } from '../../i18n';
+import { useUnits } from '../../contexts/UnitsContext';
 
 interface MapViewProps {
   data: GPXData;
@@ -16,6 +18,8 @@ declare global {
 }
 
 export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
+  const { t } = useTranslation();
+  const { formatSpeed, formatDistance, formatAltitude } = useUnits();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layersRef = useRef<any[]>([]);
@@ -314,21 +318,26 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             opacity: opacity,
           }).addTo(map);
           
-          let speedCategory = 'Casual';
+          let speedCategory = t('map.speedCategories.casual');
           const speedRatio = run.maxSpeed / maxRunSpeed;
-          if (speedRatio > 0.8) speedCategory = 'Fast! 🔥';
-          else if (speedRatio > 0.6) speedCategory = 'Quick';
-          else if (speedRatio > 0.4) speedCategory = 'Moderate';
-          
+          if (speedRatio > 0.8) speedCategory = t('map.speedCategories.fast') + ' 🔥';
+          else if (speedRatio > 0.6) speedCategory = t('map.speedCategories.quick');
+          else if (speedRatio > 0.4) speedCategory = t('map.speedCategories.moderate');
+
+          const distanceStr = formatDistance(run.distance / 1000, 2);
+          const verticalStr = formatAltitude(run.verticalDrop, 0);
+          const maxSpeedStr = formatSpeed(run.maxSpeed, 1);
+          const avgSpeedStr = formatSpeed(run.avgSpeed, 1);
+
           runLine.bindPopup(`
             <div class="run-popup">
-              <strong>Run ${idx + 1}</strong> <span style="color: ${color}">● ${speedCategory}</span><br>
-              Distance: ${(run.distance / 1000).toFixed(2)} km<br>
-              Vertical: ${run.verticalDrop.toFixed(0)} m<br>
-              Max Speed: ${run.maxSpeed.toFixed(1)} km/h<br>
-              Avg Speed: ${run.avgSpeed.toFixed(1)} km/h<br>
-              Duration: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
-              ${onRunSelect ? '<br><em>Click for details</em>' : ''}
+              <strong>${t('track.run')} ${idx + 1}</strong> <span style="color: ${color}">● ${speedCategory}</span><br>
+              ${t('map.runPopup.distance')}: ${distanceStr}<br>
+              ${t('map.runPopup.vertical')}: ${verticalStr}<br>
+              ${t('map.runPopup.maxSpeed')}: ${maxSpeedStr}<br>
+              ${t('map.runPopup.avgSpeed')}: ${avgSpeedStr}<br>
+              ${t('map.runPopup.duration')}: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
+              ${onRunSelect ? `<br><em>${t('map.clickForDetails')}</em>` : ''}
             </div>
           `);
           
@@ -356,14 +365,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             iconAnchor: [12, 12],
           });
 
+          const startElevStr = formatAltitude(run.startElevation, 0);
+          const maxSpeedStrMarker = formatSpeed(run.maxSpeed, 1);
+
           const startMarker = L.marker([startPoint.lat, startPoint.lon], { icon: startIcon })
             .addTo(map)
             .bindPopup(`
               <div class="run-popup">
-                <strong>Run ${idx + 1} Start</strong><br>
-                Elevation: ${run.startElevation.toFixed(0)} m<br>
-                Time: ${run.startTime.toLocaleTimeString()}<br>
-                Max Speed: ${run.maxSpeed.toFixed(1)} km/h
+                <strong>${t('track.run')} ${idx + 1} ${t('map.start')}</strong><br>
+                ${t('map.runPopup.elevation')}: ${startElevStr}<br>
+                ${t('map.runPopup.time')}: ${run.startTime.toLocaleTimeString()}<br>
+                ${t('map.runPopup.maxSpeed')}: ${maxSpeedStrMarker}
               </div>
             `);
           
@@ -379,14 +391,16 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             iconAnchor: [12, 12],
           });
 
+          const endElevStr = formatAltitude(run.endElevation, 0);
+
           const endMarker = L.marker([endPoint.lat, endPoint.lon], { icon: endIcon })
             .addTo(map)
             .bindPopup(`
               <div class="run-popup">
-                <strong>Run ${idx + 1} End</strong><br>
-                Elevation: ${run.endElevation.toFixed(0)} m<br>
-                Time: ${run.endTime.toLocaleTimeString()}<br>
-                Duration: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
+                <strong>${t('track.run')} ${idx + 1} ${t('map.end')}</strong><br>
+                ${t('map.runPopup.elevation')}: ${endElevStr}<br>
+                ${t('map.runPopup.time')}: ${run.endTime.toLocaleTimeString()}<br>
+                ${t('map.runPopup.duration')}: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
               </div>
             `);
           
@@ -426,7 +440,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
         const startMarker = L.marker([data.points[0].lat, data.points[0].lon], { icon: startIcon })
           .addTo(map)
-          .bindPopup('Start');
+          .bindPopup(t('map.start'));
         layersRef.current.push(startMarker);
 
         const endPoint = data.points[data.points.length - 1];
@@ -439,7 +453,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
         const endMarker = L.marker([endPoint.lat, endPoint.lon], { icon: endIcon })
           .addTo(map)
-          .bindPopup('End');
+          .bindPopup(t('map.end'));
         layersRef.current.push(endMarker);
       }
 
@@ -496,8 +510,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       <div className="map-view">
         <div className="map-error">
           <span className="error-icon">⚠️</span>
-          <p>{mapError}</p>
-          <button onClick={() => window.location.reload()}>Refresh Page</button>
+          <p>{t('map.mapError')}</p>
+          <button onClick={() => window.location.reload()}>{t('common.refreshPage')}</button>
         </div>
       </div>
     );
@@ -508,7 +522,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       <div className="map-view">
         <div className="map-loading">
           <div className="loading-spinner"></div>
-          <p>Loading map...</p>
+          <p>{t('map.loadingMap')}</p>
         </div>
       </div>
     );
@@ -522,29 +536,29 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     <div className="map-view">
       <div className="map-controls">
         <div className="control-group">
-          <span className="map-label">Map Type:</span>
+          <span className="map-label">{t('map.mapType')}</span>
           <div className="map-type-buttons">
             <button
               className={mapType === 'streets' ? 'active' : ''}
               onClick={() => setMapType('streets')}
             >
-              Streets
+              {t('map.streets')}
             </button>
             <button
               className={mapType === 'satellite' ? 'active' : ''}
               onClick={() => setMapType('satellite')}
             >
-              Satellite
+              {t('map.satellite')}
             </button>
             <button
               className={mapType === 'terrain' ? 'active' : ''}
               onClick={() => setMapType('terrain')}
             >
-              Terrain
+              {t('map.terrain')}
             </button>
           </div>
         </div>
-        
+
         <div className="control-group toggles">
           <label className="toggle-label piste-toggle">
             <input
@@ -553,7 +567,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               onChange={(e) => setShowPisteOverlay(e.target.checked)}
             />
             <span className="toggle-icon">🎿</span>
-            <span>Ski Pistes</span>
+            <span>{t('map.skiPistes')}</span>
           </label>
           <label className="toggle-label">
             <input
@@ -561,7 +575,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               checked={showRuns}
               onChange={(e) => setShowRuns(e.target.checked)}
             />
-            <span>Highlight Runs</span>
+            <span>{t('map.highlightRuns')}</span>
           </label>
           <label className="toggle-label">
             <input
@@ -569,7 +583,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               checked={showRunMarkers}
               onChange={(e) => setShowRunMarkers(e.target.checked)}
             />
-            <span>Run Markers</span>
+            <span>{t('map.runMarkers')}</span>
           </label>
           <label className="toggle-label">
             <input
@@ -577,74 +591,47 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               checked={showKmMarkers}
               onChange={(e) => setShowKmMarkers(e.target.checked)}
             />
-            <span>KM Markers</span>
+            <span>{t('map.kmMarkers')}</span>
           </label>
         </div>
       </div>
       
       <div className="map-container" ref={mapContainerRef} />
-      
-      {showPisteOverlay && (
-        <div className="piste-overlay-info">
-          <div className="piste-info-content">
-            <span className="piste-badge">🎿 OpenSnowMap Overlay Active</span>
-            <span className="piste-hint">Showing ski pistes and lifts from OpenSnowMap</span>
-          </div>
-          <div className="piste-legend">
-            <div className="piste-legend-item">
-              <span className="piste-color easy"></span>
-              <span>Easy</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color intermediate"></span>
-              <span>Intermediate</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color advanced"></span>
-              <span>Advanced</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color expert"></span>
-              <span>Expert</span>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="map-legend">
         <div className="legend-item">
           <span className="legend-marker start">S</span>
-          <span>Start</span>
+          <span>{t('map.start')}</span>
         </div>
         <div className="legend-item">
           <span className="legend-marker end">E</span>
-          <span>End</span>
+          <span>{t('map.end')}</span>
         </div>
         {showRuns && (
           <div className="legend-item speed-scale">
             <div className="speed-gradient" />
             <div className="speed-labels">
-              <span>Slow</span>
-              <span>{Math.round(maxRunSpeed)} km/h</span>
+              <span>{t('map.slow')}</span>
+              <span>{Math.round(maxRunSpeed)} {t('units.kmh')}</span>
             </div>
           </div>
         )}
         {showRunMarkers && data.runs.length > 0 && (
           <div className="legend-item">
             <span className="legend-marker run-number">1</span>
-            <span>Run Start</span>
+            <span>{t('map.runStart')}</span>
           </div>
         )}
         {showKmMarkers && (
           <div className="legend-item">
             <span className="legend-marker km">1</span>
-            <span>Kilometer</span>
+            <span>{t('map.kilometer')}</span>
           </div>
         )}
         {activeRunIndex !== null && (
           <div className="legend-item">
             <span className="legend-line selected" />
-            <span>Selected Run</span>
+            <span>{t('map.selectedRun')}</span>
           </div>
         )}
         {data.runs.length > 0 && (
@@ -652,19 +639,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             <button
               className="cycle-btn"
               onClick={handlePrevRun}
-              title="Previous run (←)"
+              title={t('map.previousRun')}
             >
               ◀
             </button>
             <span className="run-indicator">
               {activeRunIndex !== null
-                ? `Run ${activeRunIndex + 1} of ${data.runs.length}`
-                : `${data.runs.length} Runs`}
+                ? t('map.runOf', { current: activeRunIndex + 1, total: data.runs.length })
+                : t('map.runsLabel', { count: data.runs.length })}
             </span>
             <button
               className="cycle-btn"
               onClick={handleNextRun}
-              title="Next run (→)"
+              title={t('map.nextRun')}
             >
               ▶
             </button>
@@ -672,23 +659,50 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         )}
       </div>
 
+      {showPisteOverlay && (
+        <div className="piste-overlay-info">
+          <div className="piste-info-content">
+            <span className="piste-badge">🎿 {t('map.pisteOverlayActive')}</span>
+            <span className="piste-hint">{t('map.pisteOverlayHint')}</span>
+          </div>
+          <div className="piste-legend">
+            <div className="piste-legend-item">
+              <span className="piste-color easy"></span>
+              <span>{t('map.easy')}</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color intermediate"></span>
+              <span>{t('map.intermediate')}</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color advanced"></span>
+              <span>{t('map.advanced')}</span>
+            </div>
+            <div className="piste-legend-item">
+              <span className="piste-color expert"></span>
+              <span>{t('map.expert')}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="map-stats">
         <div className="map-stat">
-          <span className="label">Points</span>
+          <span className="label">{t('map.points')}</span>
           <span className="value">{data.points.length.toLocaleString()}</span>
         </div>
         <div className="map-stat">
-          <span className="label">Runs</span>
+          <span className="label">{t('track.runs')}</span>
           <span className="value">{data.runs.length}</span>
         </div>
         <div className="map-stat">
-          <span className="label">Distance</span>
-          <span className="value">{(data.stats.totalDistance / 1000).toFixed(1)} km</span>
+          <span className="label">{t('track.distance')}</span>
+          <span className="value">{formatDistance(data.stats.totalDistance / 1000, 1)}</span>
         </div>
         {data.runs.length > 0 && (
           <div className="map-stat">
-            <span className="label">Top Speed</span>
-            <span className="value">{maxRunSpeed.toFixed(1)} km/h</span>
+            <span className="label">{t('map.topSpeed')}</span>
+            <span className="value">{formatSpeed(maxRunSpeed, 1)}</span>
           </div>
         )}
       </div>

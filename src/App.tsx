@@ -3,16 +3,19 @@ import React, { useState } from 'react';
 import './App.css';
 import { FileUpload } from './components/FileUpload';
 import { TabNavigation } from './components/TabNavigation';
+import { SettingsMenu } from './components/SettingsMenu';
 import { TrackView } from './features/track/TrackView';
 import { MapView } from './features/map/MapView';
 import { AnalysisView } from './features/analysis/AnalysisView';
 import { ProfileView } from './features/profile/ProfileView';
 import { RunDetailView } from './features/run-detail/RunDetailView';
 import { GPXData, Run } from './utils/gpxParser';
+import { useTranslation } from './i18n';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
 function App() {
+  const { t } = useTranslation();
   const [gpxData, setGpxData] = useState<GPXData | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('track');
   const [fileName, setFileName] = useState<string>('');
@@ -53,16 +56,19 @@ function App() {
         <div className="header-content">
           <div className="logo">
             <span className="logo-icon">⛷️</span>
-            <h1>GPX Ski Analyzer</h1>
+            <h1>{t('header.title')}</h1>
           </div>
-          {gpxData && (
-            <div className="header-actions">
-              <span className="file-name">{fileName}</span>
-              <button className="reset-btn" onClick={handleReset}>
-                New Analysis
-              </button>
-            </div>
-          )}
+          <div className="header-right">
+            <SettingsMenu />
+            {gpxData && (
+              <div className="header-actions">
+                <span className="file-name">{fileName}</span>
+                <button className="reset-btn" onClick={handleReset}>
+                  {t('header.newAnalysis')}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

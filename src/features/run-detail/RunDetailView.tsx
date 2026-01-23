@@ -2,6 +2,8 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './RunDetailView.css';
 import { GPXData, Run, formatDurationLong, metersToFeet, metersToMiles, kmhToMph } from '../../utils/gpxParser';
+import { useTranslation } from '../../i18n';
+import { useUnits } from '../../contexts/UnitsContext';
 
 interface RunDetailViewProps {
   data: GPXData;
@@ -21,7 +23,8 @@ interface ChartDataPoint {
 }
 
 export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewProps) {
-  const [useMetric, setUseMetric] = useState(true);
+  const { t } = useTranslation();
+  const { unitSystem, formatSpeed, formatDistance, formatAltitude } = useUnits();
   const [xAxis, setXAxis] = useState<'distance' | 'time'>('distance');
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -205,7 +208,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       
       if (xAxis === 'distance') {
         const dist = ratio * maxDistance;
-        const value = useMetric 
+        const value = unitSystem === 'metric' 
           ? `${(dist / 1000).toFixed(1)} km`
           : `${metersToMiles(dist).toFixed(2)} mi`;
         labels.push({ x, value });
@@ -217,7 +220,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       }
     }
     return labels;
-  }, [xAxis, maxDistance, chartData, chartWidth, useMetric]);
+  }, [xAxis, maxDistance, chartData, chartWidth, unitSystem === 'metric']);
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (chartData.length === 0) return;
@@ -234,52 +237,56 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
     : null;
 
   const speedDistribution = useMemo(() => {
-    const buckets = [
-      { range: '0-20', count: 0, color: '#00ff88' },
-      { range: '20-40', count: 0, color: '#00d4ff' },
-      { range: '40-60', count: 0, color: '#7c3aed' },
-      { range: '60-80', count: 0, color: '#ff8800' },
-      { range: '80+', count: 0, color: '#ff0044' },
-    ];
+    // Define buckets based on unit system
+    // Metric: 0-20, 20-40, 40-60, 60-80, 80+ km/h
+    // Imperial: 0-12, 12-25, 25-37, 37-50, 50+ mph (approximately equivalent)
+    const buckets = unitSystem === 'imperial'
+      ? [
+          { range: '0-12', count: 0, color: '#00ff88' },
+          { range: '12-25', count: 0, color: '#00d4ff' },
+          { range: '25-37', count: 0, color: '#7c3aed' },
+          { range: '37-50', count: 0, color: '#ff8800' },
+          { range: '50+', count: 0, color: '#ff0044' },
+        ]
+      : [
+          { range: '0-20', count: 0, color: '#00ff88' },
+          { range: '20-40', count: 0, color: '#00d4ff' },
+          { range: '40-60', count: 0, color: '#7c3aed' },
+          { range: '60-80', count: 0, color: '#ff8800' },
+          { range: '80+', count: 0, color: '#ff0044' },
+        ];
 
     runPoints.forEach(p => {
-      const speed = p.speed || 0;
-      if (speed < 20) buckets[0].count++;
-      else if (speed < 40) buckets[1].count++;
-      else if (speed < 60) buckets[2].count++;
-      else if (speed < 80) buckets[3].count++;
-      else buckets[4].count++;
+      const speed = unitSystem === 'imperial' ? kmhToMph(p.speed || 0) : (p.speed || 0);
+      if (unitSystem === 'imperial') {
+        if (speed < 12) buckets[0].count++;
+        else if (speed < 25) buckets[1].count++;
+        else if (speed < 37) buckets[2].count++;
+        else if (speed < 50) buckets[3].count++;
+        else buckets[4].count++;
+      } else {
+        if (speed < 20) buckets[0].count++;
+        else if (speed < 40) buckets[1].count++;
+        else if (speed < 60) buckets[2].count++;
+        else if (speed < 80) buckets[3].count++;
+        else buckets[4].count++;
+      }
     });
 
     const max = Math.max(...buckets.map(b => b.count));
     return buckets.map(b => ({ ...b, percentage: max > 0 ? (b.count / max) * 100 : 0 }));
-  }, [runPoints]);
-
-  const formatSpeed = (kmh: number) => {
-    return useMetric ? `${kmh.toFixed(1)} km/h` : `${kmhToMph(kmh).toFixed(1)} mph`;
-  };
-
-  const formatDistance = (m: number) => {
-    return useMetric ? `${(m / 1000).toFixed(2)} km` : `${metersToMiles(m).toFixed(2)} mi`;
-  };
-
-  const formatAltitude = (m: number) => {
-    return useMetric ? `${m.toFixed(0)} m` : `${metersToFeet(m).toFixed(0)} ft`;
-  };
+  }, [runPoints, unitSystem]);
 
   return (
     <div className="run-detail-view">
       <div className="run-detail-header">
         <button className="back-btn" onClick={onBack}>
-          ← Back to Overview
+          ← {t('runDetail.backToOverview')}
         </button>
-        <h2>Run {run.id} Analysis</h2>
+        <h2>{t('runDetail.runAnalysis', { id: run.id })}</h2>
         <div className="header-actions">
           <button className="map-btn" onClick={onViewOnMap}>
-            🗺️ View on Map
-          </button>
-          <button className="unit-toggle" onClick={() => setUseMetric(!useMetric)}>
-            {useMetric ? 'Imperial' : 'Metric'}
+            🗺️ {t('runDetail.viewOnMap')}
           </button>
         </div>
       </div>
@@ -296,56 +303,56 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
         <div className="run-stat-card highlight">
           <div className="stat-icon">🚀</div>
           <div className="stat-content">
-            <span className="stat-label">Max Speed</span>
+            <span className="stat-label">{t('runDetail.maxSpeed')}</span>
             <span className="stat-value">{formatSpeed(run.maxSpeed)}</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">📊</div>
           <div className="stat-content">
-            <span className="stat-label">Avg Speed</span>
+            <span className="stat-label">{t('runDetail.avgSpeed')}</span>
             <span className="stat-value">{formatSpeed(run.avgSpeed)}</span>
           </div>
         </div>
         <div className="run-stat-card highlight">
           <div className="stat-icon">📏</div>
           <div className="stat-content">
-            <span className="stat-label">Distance</span>
+            <span className="stat-label">{t('runDetail.distance')}</span>
             <span className="stat-value">{formatDistance(run.distance)}</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">⛰️</div>
           <div className="stat-content">
-            <span className="stat-label">Vertical Drop</span>
+            <span className="stat-label">{t('runDetail.verticalDrop')}</span>
             <span className="stat-value">{formatAltitude(run.verticalDrop)}</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">🔝</div>
           <div className="stat-content">
-            <span className="stat-label">Start Elevation</span>
+            <span className="stat-label">{t('runDetail.startElevation')}</span>
             <span className="stat-value">{formatAltitude(run.startElevation)}</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">🔻</div>
           <div className="stat-content">
-            <span className="stat-label">End Elevation</span>
+            <span className="stat-label">{t('runDetail.endElevation')}</span>
             <span className="stat-value">{formatAltitude(run.endElevation)}</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">📐</div>
           <div className="stat-content">
-            <span className="stat-label">Avg Slope</span>
+            <span className="stat-label">{t('runDetail.avgSlope')}</span>
             <span className="stat-value">{run.avgSlope.toFixed(1)}°</span>
           </div>
         </div>
         <div className="run-stat-card">
           <div className="stat-icon">📍</div>
           <div className="stat-content">
-            <span className="stat-label">Data Points</span>
+            <span className="stat-label">{t('runDetail.dataPoints')}</span>
             <span className="stat-value">{runPoints.length}</span>
           </div>
         </div>
@@ -353,8 +360,8 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
           <div className="run-stat-card heart-rate">
             <div className="stat-icon">❤️</div>
             <div className="stat-content">
-              <span className="stat-label">Avg Heart Rate</span>
-              <span className="stat-value">{Math.round(run.avgHeartRate)} bpm</span>
+              <span className="stat-label">{t('runDetail.avgHeartRate')}</span>
+              <span className="stat-value">{Math.round(run.avgHeartRate)} {t('units.bpm')}</span>
             </div>
           </div>
         )}
@@ -362,8 +369,8 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
           <div className="run-stat-card heart-rate">
             <div className="stat-icon">💗</div>
             <div className="stat-content">
-              <span className="stat-label">Max Heart Rate</span>
-              <span className="stat-value">{run.maxHeartRate} bpm</span>
+              <span className="stat-label">{t('runDetail.maxHeartRate')}</span>
+              <span className="stat-value">{run.maxHeartRate} {t('units.bpm')}</span>
             </div>
           </div>
         )}
@@ -372,20 +379,20 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       {/* Combined Elevation & Speed Profile Chart */}
       <div className="combined-chart-card">
         <div className="chart-header">
-          <h3>Elevation & Speed Profile</h3>
+          <h3>{t('runDetail.elevationSpeedProfile')}</h3>
           <div className="chart-controls">
             <div className="axis-toggle">
-              <button 
-                className={xAxis === 'distance' ? 'active' : ''} 
+              <button
+                className={xAxis === 'distance' ? 'active' : ''}
                 onClick={() => setXAxis('distance')}
               >
-                Distance
+                {t('profile.distance')}
               </button>
-              <button 
-                className={xAxis === 'time' ? 'active' : ''} 
+              <button
+                className={xAxis === 'time' ? 'active' : ''}
                 onClick={() => setXAxis('time')}
               >
-                Time
+                {t('profile.time')}
               </button>
             </div>
           </div>
@@ -514,7 +521,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                   textAnchor="end"
                   fontWeight="500"
                 >
-                  {useMetric ? label.value.toFixed(0) : metersToFeet(label.value).toFixed(0)}
+                  {unitSystem === 'metric' ? label.value.toFixed(0) : metersToFeet(label.value).toFixed(0)}
                 </text>
               </g>
             ))}
@@ -529,7 +536,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
               fontWeight="600"
               transform={`rotate(-90, 20, ${svgDimensions.height / 2})`}
             >
-              Elevation ({useMetric ? 'm' : 'ft'})
+              {t('profile.elevation')} ({unitSystem === 'metric' ? t('units.m') : t('units.ft')})
             </text>
 
             {/* Y-axis (Speed) - Right */}
@@ -559,7 +566,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                   textAnchor="start"
                   fontWeight="500"
                 >
-                  {useMetric ? label.value.toFixed(0) : kmhToMph(label.value).toFixed(0)}
+                  {unitSystem === 'metric' ? label.value.toFixed(0) : kmhToMph(label.value).toFixed(0)}
                 </text>
               </g>
             ))}
@@ -574,7 +581,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
               fontWeight="600"
               transform={`rotate(90, ${svgDimensions.width - 15}, ${svgDimensions.height / 2})`}
             >
-              Speed ({useMetric ? 'km/h' : 'mph'})
+              {t('profile.speed')} ({unitSystem === 'metric' ? t('units.kmh') : t('units.mph')})
             </text>
 
             {/* X-axis */}
@@ -617,7 +624,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
               textAnchor="middle"
               fontWeight="600"
             >
-              {xAxis === 'distance' ? `Distance (${useMetric ? 'km' : 'mi'})` : 'Time'}
+              {xAxis === 'distance' ? `${t('profile.distance')} (${unitSystem === 'metric' ? t('units.km') : t('units.mi')})` : t('profile.time')}
             </text>
 
             {/* Hover indicator */}
@@ -691,10 +698,10 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                 rx="6"
               />
               <line x1="10" y1="18" x2="30" y2="18" stroke="#7c3aed" strokeWidth="3" />
-              <text x="40" y="22" fill="white" fontSize="11">Elevation</text>
-              
+              <text x="40" y="22" fill="white" fontSize="11">{t('runDetail.legend.elevation')}</text>
+
               <rect x="10" y="30" width="20" height="8" fill="url(#speedLegendGradient)" rx="2" />
-              <text x="40" y="38" fill="white" fontSize="11">Speed (by intensity)</text>
+              <text x="40" y="38" fill="white" fontSize="11">{t('runDetail.legend.speedByIntensity')}</text>
             </g>
           </svg>
 
@@ -702,34 +709,34 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
           {hoveredData && (
             <div className="chart-tooltip">
               <div className="tooltip-header">
-                Point {hoveredPoint! + 1} of {chartData.length}
+                {t('runDetail.point')} {hoveredPoint! + 1} {t('runDetail.of')} {chartData.length}
               </div>
               <div className="tooltip-grid">
                 <div className="tooltip-item elevation">
                   <span className="tooltip-icon">⛰️</span>
                   <div className="tooltip-data">
-                    <span className="tooltip-label">Elevation</span>
+                    <span className="tooltip-label">{t('runDetail.tooltip.elevation')}</span>
                     <span className="tooltip-value">{formatAltitude(hoveredData.elevation)}</span>
                   </div>
                 </div>
                 <div className="tooltip-item speed">
                   <span className="tooltip-icon">🚀</span>
                   <div className="tooltip-data">
-                    <span className="tooltip-label">Speed</span>
+                    <span className="tooltip-label">{t('runDetail.tooltip.speed')}</span>
                     <span className="tooltip-value">{formatSpeed(hoveredData.speed)}</span>
                   </div>
                 </div>
                 <div className="tooltip-item distance">
                   <span className="tooltip-icon">📏</span>
                   <div className="tooltip-data">
-                    <span className="tooltip-label">Distance</span>
+                    <span className="tooltip-label">{t('runDetail.tooltip.distance')}</span>
                     <span className="tooltip-value">{formatDistance(hoveredData.distance)}</span>
                   </div>
                 </div>
                 <div className="tooltip-item time">
                   <span className="tooltip-icon">🕐</span>
                   <div className="tooltip-data">
-                    <span className="tooltip-label">Time</span>
+                    <span className="tooltip-label">{t('runDetail.tooltip.time')}</span>
                     <span className="tooltip-value">{hoveredData.time.toLocaleTimeString()}</span>
                   </div>
                 </div>
@@ -740,11 +747,11 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       </div>
 
       <div className="speed-distribution-card">
-        <h3>Speed Distribution</h3>
+        <h3>{t('runDetail.speedDistribution')}</h3>
         <div className="speed-bars">
           {speedDistribution.map((bucket, i) => (
             <div key={i} className="speed-bar-item">
-              <span className="bar-range">{bucket.range} {useMetric ? 'km/h' : 'mph'}</span>
+              <span className="bar-range">{bucket.range} {unitSystem === 'metric' ? t('units.kmh') : t('units.mph')}</span>
               <div className="bar-track">
                 <div
                   className="bar-fill"
@@ -754,38 +761,38 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                   }}
                 />
               </div>
-              <span className="bar-count">{bucket.count}</span>
+              <span className="bar-count">{((bucket.count / runPoints.length) * 100).toFixed(1)}%</span>
             </div>
           ))}
         </div>
       </div>
 
       <div className="run-comparison">
-        <h3>Compared to Session Average</h3>
+        <h3>{t('runDetail.comparedToSession')}</h3>
         <div className="comparison-grid">
           <div className="comparison-item">
-            <span className="comparison-label">Speed vs Avg</span>
+            <span className="comparison-label">{t('runDetail.speedVsAvg')}</span>
             <span className={`comparison-value ${run.avgSpeed > data.stats.avgSkiSpeed ? 'positive' : 'negative'}`}>
               {run.avgSpeed > data.stats.avgSkiSpeed ? '+' : ''}
               {data.stats.avgSkiSpeed > 0 ? (((run.avgSpeed - data.stats.avgSkiSpeed) / data.stats.avgSkiSpeed) * 100).toFixed(0) : 0}%
             </span>
           </div>
           <div className="comparison-item">
-            <span className="comparison-label">Distance Rank</span>
+            <span className="comparison-label">{t('runDetail.distanceRank')}</span>
             <span className="comparison-value">
-              #{data.runs.filter(r => r.distance > run.distance).length + 1} of {data.runs.length}
+              #{data.runs.filter(r => r.distance > run.distance).length + 1} {t('runDetail.of')} {data.runs.length}
             </span>
           </div>
           <div className="comparison-item">
-            <span className="comparison-label">Vertical Rank</span>
+            <span className="comparison-label">{t('runDetail.verticalRank')}</span>
             <span className="comparison-value">
-              #{data.runs.filter(r => r.verticalDrop > run.verticalDrop).length + 1} of {data.runs.length}
+              #{data.runs.filter(r => r.verticalDrop > run.verticalDrop).length + 1} {t('runDetail.of')} {data.runs.length}
             </span>
           </div>
           <div className="comparison-item">
-            <span className="comparison-label">Max Speed Rank</span>
+            <span className="comparison-label">{t('runDetail.maxSpeedRank')}</span>
             <span className="comparison-value">
-              #{data.runs.filter(r => r.maxSpeed > run.maxSpeed).length + 1} of {data.runs.length}
+              #{data.runs.filter(r => r.maxSpeed > run.maxSpeed).length + 1} {t('runDetail.of')} {data.runs.length}
             </span>
           </div>
         </div>
