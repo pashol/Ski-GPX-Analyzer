@@ -8,7 +8,7 @@ import { MapView } from './features/map/MapView';
 import { AnalysisView } from './features/analysis/AnalysisView';
 import { ProfileView } from './features/profile/ProfileView';
 import { RunDetailView } from './features/run-detail/RunDetailView';
-import { parseGPX, GPXData, Run } from './utils/gpxParser';
+import { GPXData, Run } from './utils/gpxParser';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
@@ -18,8 +18,7 @@ function App() {
   const [fileName, setFileName] = useState<string>('');
   const [selectedRun, setSelectedRun] = useState<Run | null>(null);
 
-  const handleFileUpload = (content: string, name: string) => {
-    const data = parseGPX(content);
+  const handleFileUpload = (data: GPXData, name: string) => {
     setGpxData(data);
     setFileName(name);
     setActiveTab('track');
@@ -36,6 +35,11 @@ function App() {
   const handleRunSelect = (run: Run) => {
     setSelectedRun(run);
     setActiveTab('run-detail');
+  };
+
+  const handleRunSelectOnMap = (run: Run) => {
+    setSelectedRun(run);
+    setActiveTab('map');
   };
 
   const handleBackFromRun = () => {
@@ -74,7 +78,7 @@ function App() {
               {activeTab === 'track' && <TrackView data={gpxData} onRunSelect={handleRunSelect} />}
               {activeTab === 'map' && <MapView data={gpxData} selectedRun={selectedRun} onRunSelect={handleRunSelect} />}
               {activeTab === 'analysis' && <AnalysisView data={gpxData} />}
-              {activeTab === 'profile' && <ProfileView data={gpxData} selectedRun={selectedRun} />}
+              {activeTab === 'profile' && <ProfileView data={gpxData} selectedRun={selectedRun} onRunSelect={handleRunSelectOnMap} />}
               {activeTab === 'run-detail' && selectedRun && (
                 <RunDetailView 
                   data={gpxData} 

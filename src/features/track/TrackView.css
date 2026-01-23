@@ -220,6 +220,15 @@
   font-weight: 600;
 }
 
+/* Heart Rate Styles */
+.big-stat-card.heart-rate {
+  background: linear-gradient(135deg, #5a1e3f 0%, #8b1e5f 100%);
+}
+
+.run-stat.heart-rate .run-stat-value {
+  color: #ff6b9d;
+}
+
 @media (max-width: 600px) {
   .track-header {
     flex-direction: column;

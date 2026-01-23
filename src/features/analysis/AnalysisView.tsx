@@ -80,6 +80,42 @@ export function AnalysisView({ data }: AnalysisViewProps) {
     return Math.round(speedScore + distanceScore + verticalScore + runScore);
   }, [data]);
 
+  const heartRateZones = useMemo(() => {
+    // Standard heart rate zones (based on % of estimated max HR ~220-age, assuming ~180 max)
+    const zones = [
+      { name: 'Zone 1 (Recovery)', range: '< 110', min: 0, max: 110, count: 0, color: '#00ff88' },
+      { name: 'Zone 2 (Endurance)', range: '110-130', min: 110, max: 130, count: 0, color: '#00d4ff' },
+      { name: 'Zone 3 (Tempo)', range: '130-150', min: 130, max: 150, count: 0, color: '#7c3aed' },
+      { name: 'Zone 4 (Threshold)', range: '150-170', min: 150, max: 170, count: 0, color: '#ff8800' },
+      { name: 'Zone 5 (Max)', range: '> 170', min: 170, max: 999, count: 0, color: '#ff0044' },
+    ];
+
+    data.points.forEach(p => {
+      const hr = p.heartRate;
+      if (hr && hr > 0) {
+        for (const zone of zones) {
+          if (hr >= zone.min && hr < zone.max) {
+            zone.count++;
+            break;
+          }
+        }
+      }
+    });
+
+    const totalWithHR = zones.reduce((sum, z) => sum + z.count, 0);
+    const max = Math.max(...zones.map(z => z.count));
+
+    return {
+      zones: zones.map(z => ({
+        ...z,
+        percentage: max > 0 ? (z.count / max) * 100 : 0,
+        timePercent: totalWithHR > 0 ? (z.count / totalWithHR) * 100 : 0
+      })),
+      hasData: totalWithHR > 0,
+      totalPoints: totalWithHR
+    };
+  }, [data.points]);
+
   return (
     <div className="analysis-view">
       <div className="analysis-header">
@@ -242,6 +278,44 @@ export function AnalysisView({ data }: AnalysisViewProps) {
             <p className="no-runs">No ski runs detected in this track.</p>
           )}
         </div>
+
+        {heartRateZones.hasData && (
+          <div className="analysis-card">
+            <h3>❤️ Heart Rate Zones</h3>
+            <div className="heart-rate-zones">
+              {heartRateZones.zones.map((zone, i) => (
+                <div key={i} className="hr-zone-item">
+                  <div className="hr-zone-header">
+                    <span className="hr-zone-name">{zone.name}</span>
+                    <span className="hr-zone-range">{zone.range} bpm</span>
+                  </div>
+                  <div className="bar-wrapper">
+                    <div
+                      className="bar"
+                      style={{
+                        width: `${zone.percentage}%`,
+                        background: zone.color,
+                      }}
+                    />
+                    <span className="bar-percent">{zone.timePercent.toFixed(0)}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {data.stats.avgHeartRate && (
+              <div className="hr-summary">
+                <div className="hr-stat">
+                  <span className="hr-stat-label">Avg</span>
+                  <span className="hr-stat-value">{Math.round(data.stats.avgHeartRate)} bpm</span>
+                </div>
+                <div className="hr-stat">
+                  <span className="hr-stat-label">Max</span>
+                  <span className="hr-stat-value">{data.stats.maxHeartRate} bpm</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

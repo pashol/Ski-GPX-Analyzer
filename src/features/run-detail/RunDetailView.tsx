@@ -349,6 +349,24 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
             <span className="stat-value">{runPoints.length}</span>
           </div>
         </div>
+        {run.avgHeartRate && (
+          <div className="run-stat-card heart-rate">
+            <div className="stat-icon">❤️</div>
+            <div className="stat-content">
+              <span className="stat-label">Avg Heart Rate</span>
+              <span className="stat-value">{Math.round(run.avgHeartRate)} bpm</span>
+            </div>
+          </div>
+        )}
+        {run.maxHeartRate && (
+          <div className="run-stat-card heart-rate">
+            <div className="stat-icon">💗</div>
+            <div className="stat-content">
+              <span className="stat-label">Max Heart Rate</span>
+              <span className="stat-value">{run.maxHeartRate} bpm</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Combined Elevation & Speed Profile Chart */}

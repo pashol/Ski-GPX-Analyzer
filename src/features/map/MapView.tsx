@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './MapView.css';
 import { GPXData, Run } from '../../utils/gpxParser';
 
@@ -27,6 +27,57 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const [showPisteOverlay, setShowPisteOverlay] = useState(true);
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [cycledRunIndex, setCycledRunIndex] = useState<number | null>(null);
+
+  // Clear cycle state when external selection changes
+  useEffect(() => {
+    setCycledRunIndex(null);
+  }, [selectedRun?.id]);
+
+  // Determine active run index for highlighting (cycle takes precedence when set)
+  const activeRunIndex = useMemo(() => {
+    if (cycledRunIndex !== null) return cycledRunIndex;
+    if (selectedRun) {
+      const idx = data.runs.findIndex(r => r.id === selectedRun.id);
+      return idx >= 0 ? idx : null;
+    }
+    return null;
+  }, [cycledRunIndex, selectedRun, data.runs]);
+
+  // Run cycling handlers
+  const handlePrevRun = useCallback(() => {
+    if (data.runs.length === 0) return;
+    setCycledRunIndex(prev => {
+      if (prev === null) return data.runs.length - 1;
+      return prev > 0 ? prev - 1 : data.runs.length - 1;
+    });
+  }, [data.runs.length]);
+
+  const handleNextRun = useCallback(() => {
+    if (data.runs.length === 0) return;
+    setCycledRunIndex(prev => {
+      if (prev === null) return 0;
+      return prev < data.runs.length - 1 ? prev + 1 : 0;
+    });
+  }, [data.runs.length]);
+
+  // Keyboard navigation for cycling runs
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrevRun();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleNextRun();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handlePrevRun, handleNextRun]);
 
   const { bounds, center } = useMemo(() => {
     const points = data.points;
@@ -252,8 +303,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             .map(p => [p.lat, p.lon]);
 
           const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
-          
-          const isSelected = selectedRun && selectedRun.id === run.id;
+
+          const isSelected = activeRunIndex !== null && idx === activeRunIndex;
           const weight = isSelected ? 8 : 5;
           const opacity = isSelected ? 1 : 0.9;
 
@@ -392,8 +443,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         layersRef.current.push(endMarker);
       }
 
-      // Fit bounds
-      if (selectedRun) {
+      // Fit bounds - only zoom to run when directly selected (not when cycling)
+      if (selectedRun && cycledRunIndex === null) {
         const runPoints = data.points.slice(selectedRun.startIndex, selectedRun.endIndex + 1);
         const runLats = runPoints.map(p => p.lat);
         const runLons = runPoints.map(p => p.lon);
@@ -401,7 +452,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           [Math.min(...runLats), Math.min(...runLons)],
           [Math.max(...runLats), Math.max(...runLons)]
         ], { padding: [50, 50] });
-      } else {
+      } else if (!selectedRun && cycledRunIndex === null) {
         map.fitBounds([
           [bounds.minLat, bounds.minLon],
           [bounds.maxLat, bounds.maxLon]
@@ -422,7 +473,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     } catch (err) {
       console.error('Error updating map layers:', err);
     }
-  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats]);
+  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -590,10 +641,33 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             <span>Kilometer</span>
           </div>
         )}
-        {selectedRun && (
+        {activeRunIndex !== null && (
           <div className="legend-item">
             <span className="legend-line selected" />
             <span>Selected Run</span>
+          </div>
+        )}
+        {data.runs.length > 0 && (
+          <div className="run-cycle-controls">
+            <button
+              className="cycle-btn"
+              onClick={handlePrevRun}
+              title="Previous run (←)"
+            >
+              ◀
+            </button>
+            <span className="run-indicator">
+              {activeRunIndex !== null
+                ? `Run ${activeRunIndex + 1} of ${data.runs.length}`
+                : `${data.runs.length} Runs`}
+            </span>
+            <button
+              className="cycle-btn"
+              onClick={handleNextRun}
+              title="Next run (→)"
+            >
+              ▶
+            </button>
           </div>
         )}
       </div>

@@ -225,6 +225,82 @@
   padding: 2rem;
 }
 
+/* Heart Rate Zones */
+.heart-rate-zones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hr-zone-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.hr-zone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hr-zone-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.hr-zone-range {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hr-zone-item .bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hr-zone-item .bar {
+  height: 20px;
+  border-radius: 4px;
+  min-width: 4px;
+  transition: width 0.5s ease;
+}
+
+.bar-percent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 35px;
+}
+
+.hr-summary {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hr-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hr-stat-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.hr-stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ff0055;
+}
+
 @media (max-width: 768px) {
   .analysis-grid {
     grid-template-columns: 1fr;
