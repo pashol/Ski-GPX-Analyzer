@@ -31,12 +31,12 @@ export async function parseFIT(arrayBuffer: ArrayBuffer): Promise<GPXData> {
     lengthUnit: 'm',
     temperatureUnit: 'celsius',
     elapsedRecordField: true,
-    mode: 'list',  // Use 'list' mode for simpler structure
+    mode: 'list',
   });
 
   return new Promise((resolve, reject) => {
     try {
-      fitParser.parse(arrayBuffer, (error, data: Record<string, unknown>) => {
+      fitParser.parse(arrayBuffer, (error: Error | null, data: Record<string, unknown>) => {
         if (error) {
           reject(new Error(`Failed to parse FIT file: ${error.message}`));
           return;
