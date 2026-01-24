@@ -2,12 +2,14 @@
 import React, { useRef, useState } from 'react';
 import './FileUpload.css';
 import { parseFile, isSupportedFile, GPXData } from '../utils/parser';
+import { useTranslation } from '../i18n';
 
 interface FileUploadProps {
   onFileUpload: (data: GPXData, fileName: string) => void;
 }
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +19,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     setError(null);
 
     if (!isSupportedFile(file.name)) {
-      setError('Please upload a valid GPX or FIT file');
+      setError(t('upload.errorInvalidFile'));
       return;
     }
 
@@ -27,7 +29,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       onFileUpload(data, file.name);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Failed to parse file: ${errorMessage}`);
+      setError(`${t('upload.errorParseFailed')}: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +69,8 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     <div className="upload-container">
       <div className="upload-hero">
         <div className="hero-icon">🎿</div>
-        <h2>Analyze Your Ski Adventure</h2>
-        <p>Upload your GPX or FIT file to get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.</p>
+        <h2>{t('upload.heroTitle')}</h2>
+        <p>{t('upload.heroDescription')}</p>
       </div>
 
       <div
@@ -88,15 +90,15 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         {isLoading ? (
           <>
             <div className="upload-icon loading">⏳</div>
-            <h3>Processing file...</h3>
-            <p>Please wait</p>
+            <h3>{t('upload.processing')}</h3>
+            <p>{t('upload.pleaseWait')}</p>
           </>
         ) : (
           <>
             <div className="upload-icon">📁</div>
-            <h3>Drop your GPX or FIT file here</h3>
-            <p>or click to browse</p>
-            <span className="file-hint">Supports .gpx and .fit files from Strava, Garmin, and other GPS devices</span>
+            <h3>{t('upload.dropzone')}</h3>
+            <p>{t('upload.dropzoneHint')}</p>
+            <span className="file-hint">{t('upload.fileHint')}</span>
           </>
         )}
       </div>
@@ -106,23 +108,23 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       <div className="features-grid">
         <div className="feature-card">
           <span className="feature-icon">📊</span>
-          <h4>Detailed Statistics</h4>
-          <p>Speed, distance, elevation, and more</p>
+          <h4>{t('upload.featureStats')}</h4>
+          <p>{t('upload.featureStatsDesc')}</p>
         </div>
         <div className="feature-card">
           <span className="feature-icon">🗺️</span>
-          <h4>Interactive Map</h4>
-          <p>Visualize your track in satellite view</p>
+          <h4>{t('upload.featureMap')}</h4>
+          <p>{t('upload.featureMapDesc')}</p>
         </div>
         <div className="feature-card">
           <span className="feature-icon">📈</span>
-          <h4>Elevation Profile</h4>
-          <p>See altitude changes over time</p>
+          <h4>{t('upload.featureProfile')}</h4>
+          <p>{t('upload.featureProfileDesc')}</p>
         </div>
         <div className="feature-card">
           <span className="feature-icon">🏔️</span>
-          <h4>Run Detection</h4>
-          <p>Automatic identification of ski runs</p>
+          <h4>{t('upload.featureRuns')}</h4>
+          <p>{t('upload.featureRunsDesc')}</p>
         </div>
       </div>
     </div>

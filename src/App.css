@@ -43,6 +43,12 @@
   background-clip: text;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .header-actions {
   display: flex;
   align-items: center;

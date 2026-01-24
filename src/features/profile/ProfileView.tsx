@@ -2,6 +2,8 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import './ProfileView.css';
 import { GPXData, Run, formatDurationLong, metersToFeet, kmhToMph } from '../../utils/gpxParser';
+import { useTranslation } from '../../i18n';
+import { useUnits } from '../../contexts/UnitsContext';
 
 interface ProfileViewProps {
   data: GPXData;
@@ -15,6 +17,8 @@ interface ZoomState {
 }
 
 export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps) {
+  const { t } = useTranslation();
+  const { unitSystem, formatSpeed, formatDistance, formatAltitude } = useUnits();
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [hoveredRun, setHoveredRun] = useState<Run | null>(null);
   const [showSpeed, setShowSpeed] = useState(false);
@@ -370,11 +374,11 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
     return (
       <div className="profile-view">
         <div className="profile-header">
-          <h2>Elevation Profile</h2>
+          <h2>{t('profile.title')}</h2>
         </div>
         <div className="chart-container">
           <p style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.5)' }}>
-            No data available to display.
+            {t('profile.noData')}
           </p>
         </div>
       </div>
@@ -385,12 +389,12 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
     <div className="profile-view">
       <div className="profile-header">
         <h2>
-          {selectedRun ? `Run ${selectedRun.id} - Elevation Profile` : 'Elevation Profile'}
+          {selectedRun ? t('profile.runProfile', { id: selectedRun.id }) : t('profile.title')}
         </h2>
         <div className="profile-toggles">
           {zoom && (
             <button className="reset-zoom-btn" onClick={handleResetZoom}>
-              Reset Zoom
+              {t('profile.resetZoom')}
             </button>
           )}
           <label className="toggle-label">
@@ -399,7 +403,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
               checked={showSpeed}
               onChange={(e) => setShowSpeed(e.target.checked)}
             />
-            <span className="toggle-text">Show Speed</span>
+            <span className="toggle-text">{t('profile.showSpeed')}</span>
           </label>
           {hasHeartRateData && (
             <label className="toggle-label">
@@ -408,7 +412,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
                 checked={showHeartRate}
                 onChange={(e) => setShowHeartRate(e.target.checked)}
               />
-              <span className="toggle-text">Show Heart Rate</span>
+              <span className="toggle-text">{t('profile.showHeartRate')}</span>
             </label>
           )}
           {!selectedRun && (
@@ -418,23 +422,23 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
                 checked={showRuns}
                 onChange={(e) => setShowRuns(e.target.checked)}
               />
-              <span className="toggle-text">Show Runs</span>
+              <span className="toggle-text">{t('profile.showRuns')}</span>
             </label>
           )}
           <div className="axis-toggle">
             <button className={xAxis === 'distance' ? 'active' : ''} onClick={() => setXAxis('distance')}>
-              Distance
+              {t('profile.distance')}
             </button>
             <button className={xAxis === 'time' ? 'active' : ''} onClick={() => setXAxis('time')}>
-              Time
+              {t('profile.time')}
             </button>
           </div>
         </div>
       </div>
 
       <div className="zoom-hint">
-        💡 Click and drag on the chart to zoom into a section
-        {showRuns && !selectedRun && data.runs.length > 0 && ' • Click a colored run region to view it on the map'}
+        💡 {t('profile.zoomHint')}
+        {showRuns && !selectedRun && data.runs.length > 0 && ` • ${t('profile.clickRunHint')}`}
       </div>
 
       <div className="chart-container">
@@ -513,18 +517,21 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
           </g>
 
           {/* Y-axis labels (elevation) */}
-          {yAxisLabels.map((label, i) => (
-            <text
-              key={`y${i}`}
-              x={svgDimensions.padding.left - 10}
-              y={label.y + 4}
-              fill="rgba(255,255,255,0.5)"
-              fontSize="11"
-              textAnchor="end"
-            >
-              {label.value.toFixed(0)}
-            </text>
-          ))}
+          {yAxisLabels.map((label, i) => {
+            const displayValue = unitSystem === 'imperial' ? metersToFeet(label.value) : label.value;
+            return (
+              <text
+                key={`y${i}`}
+                x={svgDimensions.padding.left - 10}
+                y={label.y + 4}
+                fill="rgba(255,255,255,0.5)"
+                fontSize="11"
+                textAnchor="end"
+              >
+                {displayValue.toFixed(0)}
+              </text>
+            );
+          })}
 
           {/* Y-axis title */}
           <text
@@ -535,7 +542,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
             textAnchor="middle"
             transform={`rotate(-90, 15, ${svgDimensions.height / 2})`}
           >
-            Elevation (m)
+            {t('profile.elevation')} ({unitSystem === 'imperial' ? t('units.ft') : t('units.m')})
           </text>
 
           {/* X-axis labels */}
@@ -560,7 +567,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
             fontSize="11"
             textAnchor="middle"
           >
-            {xAxis === 'distance' ? 'Distance (km)' : 'Time'}
+            {xAxis === 'distance' ? `${t('profile.distance')} (${unitSystem === 'imperial' ? t('units.mi') : t('units.km')})` : t('profile.time')}
           </text>
 
           {/* Speed Y-axis (right side) */}
@@ -568,6 +575,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
             <>
               {[0, 1, 2, 3, 4].map(i => {
                 const value = maxSpeed * (1 - i / 4);
+                const displayValue = unitSystem === 'imperial' ? kmhToMph(value) : value;
                 const y = svgDimensions.padding.top + (i / 4) * chartHeight;
                 return (
                   <text
@@ -578,7 +586,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
                     fontSize="10"
                     textAnchor="start"
                   >
-                    {value.toFixed(0)}
+                    {displayValue.toFixed(0)}
                   </text>
                 );
               })}
@@ -590,7 +598,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
                 textAnchor="middle"
                 transform={`rotate(90, ${svgDimensions.width - 10}, ${svgDimensions.height / 2})`}
               >
-                Speed (km/h)
+                {t('profile.speed')} ({unitSystem === 'imperial' ? t('units.mph') : t('units.kmh')})
               </text>
             </>
           )}
@@ -787,29 +795,29 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
           <div className="hover-tooltip">
             {hoveredRun && (
               <div className="tooltip-run-badge">
-                Run {hoveredRun.id}
+                {t('profile.tooltip.run')} {hoveredRun.id}
               </div>
             )}
             <div className="tooltip-row">
-              <span className="tooltip-label">Elevation</span>
-              <span className="tooltip-value">{hoveredData.elevation.toFixed(0)} m</span>
+              <span className="tooltip-label">{t('profile.tooltip.elevation')}</span>
+              <span className="tooltip-value">{formatAltitude(hoveredData.elevation, 0)}</span>
             </div>
             <div className="tooltip-row">
-              <span className="tooltip-label">Speed</span>
-              <span className="tooltip-value">{hoveredData.speed.toFixed(1)} km/h</span>
+              <span className="tooltip-label">{t('profile.tooltip.speed')}</span>
+              <span className="tooltip-value">{formatSpeed(hoveredData.speed, 1)}</span>
             </div>
             {hoveredData.heartRate > 0 && (
               <div className="tooltip-row">
-                <span className="tooltip-label">Heart Rate</span>
-                <span className="tooltip-value">{hoveredData.heartRate} bpm</span>
+                <span className="tooltip-label">{t('profile.tooltip.heartRate')}</span>
+                <span className="tooltip-value">{hoveredData.heartRate} {t('units.bpm')}</span>
               </div>
             )}
             <div className="tooltip-row">
-              <span className="tooltip-label">Distance</span>
-              <span className="tooltip-value">{(hoveredData.distance / 1000).toFixed(2)} km</span>
+              <span className="tooltip-label">{t('profile.tooltip.distance')}</span>
+              <span className="tooltip-value">{formatDistance(hoveredData.distance / 1000, 2)}</span>
             </div>
             <div className="tooltip-row">
-              <span className="tooltip-label">Time</span>
+              <span className="tooltip-label">{t('profile.tooltip.time')}</span>
               <span className="tooltip-value">
                 {hoveredData.time.toLocaleTimeString()}
               </span>
@@ -818,12 +826,12 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
               <>
                 <div className="tooltip-divider" />
                 <div className="tooltip-row">
-                  <span className="tooltip-label">Run Max</span>
-                  <span className="tooltip-value">{hoveredRun.maxSpeed.toFixed(1)} km/h</span>
+                  <span className="tooltip-label">{t('profile.tooltip.runMax')}</span>
+                  <span className="tooltip-value">{formatSpeed(hoveredRun.maxSpeed, 1)}</span>
                 </div>
                 <div className="tooltip-row">
-                  <span className="tooltip-label">Vertical</span>
-                  <span className="tooltip-value">{hoveredRun.verticalDrop.toFixed(0)} m</span>
+                  <span className="tooltip-label">{t('profile.tooltip.vertical')}</span>
+                  <span className="tooltip-value">{formatAltitude(hoveredRun.verticalDrop, 0)}</span>
                 </div>
               </>
             )}
@@ -834,30 +842,30 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
       <div className="profile-legend">
         <div className="legend-item">
           <span className="legend-color" style={{ background: '#7c3aed' }} />
-          <span>Elevation</span>
+          <span>{t('profile.elevation')}</span>
         </div>
         {showSpeed && (
           <div className="legend-item">
             <span className="legend-color" style={{ background: 'linear-gradient(0deg, #00ff88, #ff0044)' }} />
-            <span>Speed (low→high)</span>
+            <span>{t('profile.speedLowHigh')}</span>
           </div>
         )}
         {showHeartRate && hasHeartRateData && (
           <div className="legend-item">
             <span className="legend-color" style={{ background: '#ff0055' }} />
-            <span>Heart Rate</span>
+            <span>{t('track.heartRate')}</span>
           </div>
         )}
         {showRuns && runRegions.length > 0 && (
           <div className="legend-item">
             <span className="legend-color runs-gradient" />
-            <span>Ski Runs ({runRegions.length})</span>
+            <span>{t('profile.skiRuns')} ({runRegions.length})</span>
           </div>
         )}
         {zoom && (
           <div className="legend-item zoom-indicator">
             <span className="zoom-icon">🔍</span>
-            <span>Zoomed View</span>
+            <span>{t('profile.zoomedView')}</span>
           </div>
         )}
       </div>
@@ -878,7 +886,7 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
                 {region.runNumber}
               </span>
               <span className="run-pill-stats">
-                {region.run.verticalDrop.toFixed(0)}m • {region.run.maxSpeed.toFixed(0)} km/h
+                {formatAltitude(region.run.verticalDrop, 0).split(' ')[0]}{unitSystem === 'imperial' ? 'ft' : 'm'} • {formatSpeed(region.run.maxSpeed, 0).split(' ')[0]} {unitSystem === 'imperial' ? t('units.mph') : t('units.kmh')}
               </span>
             </div>
           ))}
@@ -889,33 +897,29 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
         <div className="profile-stat-card">
           <span className="stat-icon">🔝</span>
           <div className="stat-info">
-            <span className="stat-label">Max Elevation</span>
-            <span className="stat-value">{maxEle.toFixed(0)} m</span>
-            <span className="stat-sub">{metersToFeet(maxEle).toFixed(0)} ft</span>
+            <span className="stat-label">{t('profile.maxElevation')}</span>
+            <span className="stat-value">{formatAltitude(maxEle, 0)}</span>
           </div>
         </div>
         <div className="profile-stat-card">
           <span className="stat-icon">🔻</span>
           <div className="stat-info">
-            <span className="stat-label">Min Elevation</span>
-            <span className="stat-value">{minEle.toFixed(0)} m</span>
-            <span className="stat-sub">{metersToFeet(minEle).toFixed(0)} ft</span>
+            <span className="stat-label">{t('profile.minElevation')}</span>
+            <span className="stat-value">{formatAltitude(minEle, 0)}</span>
           </div>
         </div>
         <div className="profile-stat-card">
           <span className="stat-icon">📊</span>
           <div className="stat-info">
-            <span className="stat-label">Elevation Range</span>
-            <span className="stat-value">{(maxEle - minEle).toFixed(0)} m</span>
-            <span className="stat-sub">{metersToFeet(maxEle - minEle).toFixed(0)} ft</span>
+            <span className="stat-label">{t('profile.elevationRange')}</span>
+            <span className="stat-value">{formatAltitude(maxEle - minEle, 0)}</span>
           </div>
         </div>
         <div className="profile-stat-card">
           <span className="stat-icon">⚡</span>
           <div className="stat-info">
-            <span className="stat-label">Max Speed</span>
-            <span className="stat-value">{maxSpeed.toFixed(1)} km/h</span>
-            <span className="stat-sub">{kmhToMph(maxSpeed).toFixed(1)} mph</span>
+            <span className="stat-label">{t('profile.maxSpeed')}</span>
+            <span className="stat-value">{formatSpeed(maxSpeed, 1)}</span>
           </div>
         </div>
       </div>
