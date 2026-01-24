@@ -318,7 +318,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
           <div className="stat-icon">📏</div>
           <div className="stat-content">
             <span className="stat-label">{t('runDetail.distance')}</span>
-            <span className="stat-value">{formatDistance(run.distance)}</span>
+            <span className="stat-value">{formatDistance(run.distance / 1000)}</span>
           </div>
         </div>
         <div className="run-stat-card">
@@ -730,7 +730,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                   <span className="tooltip-icon">📏</span>
                   <div className="tooltip-data">
                     <span className="tooltip-label">{t('runDetail.tooltip.distance')}</span>
-                    <span className="tooltip-value">{formatDistance(hoveredData.distance)}</span>
+                    <span className="tooltip-value">{formatDistance(hoveredData.distance / 1000)}</span>
                   </div>
                 </div>
                 <div className="tooltip-item time">
