@@ -177,7 +177,7 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
                 <div className="run-stats">
                   <div className="run-stat">
                     <span className="run-stat-label">{t('track.distance')}</span>
-                    <span className="run-stat-value">{formatDistance(run.distance)}</span>
+                    <span className="run-stat-value">{formatDistance(run.distance / 1000)}</span>
                   </div>
                   <div className="run-stat">
                     <span className="run-stat-label">{t('track.vertical')}</span>
