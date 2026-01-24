@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { FileUpload } from './components/FileUpload';
 import { TabNavigation } from './components/TabNavigation';
@@ -11,6 +11,9 @@ import { ProfileView } from './features/profile/ProfileView';
 import { RunDetailView } from './features/run-detail/RunDetailView';
 import { GPXData, Run } from './utils/gpxParser';
 import { useTranslation } from './i18n';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
+import { initNativeApp } from './utils/nativeInit';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
@@ -49,6 +52,40 @@ function App() {
     setSelectedRun(null);
     setActiveTab('track');
   };
+
+  // Initialize native app on mount
+  useEffect(() => {
+    initNativeApp();
+  }, []);
+
+  // Handle Android back button
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let listenerHandle: any;
+
+    CapacitorApp.addListener('backButton', () => {
+      if (activeTab === 'run-detail' && selectedRun) {
+        // Go back to track view from run detail
+        setSelectedRun(null);
+        setActiveTab('track');
+      } else if (activeTab !== 'track') {
+        // Go back to track view from other tabs
+        setActiveTab('track');
+      } else {
+        // On track view - exit app
+        CapacitorApp.exitApp();
+      }
+    }).then(handle => {
+      listenerHandle = handle;
+    });
+
+    return () => {
+      if (listenerHandle) {
+        listenerHandle.remove();
+      }
+    };
+  }, [activeTab, selectedRun]);
 
   return (
     <div className="app">

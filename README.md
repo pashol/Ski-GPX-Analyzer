@@ -1,7 +1,7 @@
 
-# GPX Ski Analyzer ⛷️
+# Ski GPX Analyzer
 
-A modern web application for analyzing ski adventures using GPX files. Get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.
+A cross-platform application for analyzing ski adventures using GPX and FIT files. Available as a web app and native Android application. Get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.
 
 ## Features
 
@@ -39,20 +39,44 @@ A modern web application for analyzing ski adventures using GPX files. Get compr
 - **Point-by-Point Data** - Explore elevation and speed changes throughout the run
 
 ### ⚙️ User Experience
-- **Drag-and-Drop Upload** - Easy file upload with drag-and-drop support
+- **Drag-and-Drop Upload (Web)** - Easy file upload with drag-and-drop support
+- **Native File Picker (Android)** - Touch-friendly file selection with native Android file explorer
 - **Unit System Toggle** - Switch between metric (km, m, km/h) and imperial (mi, ft, mph)
 - **Session Management** - View current file name, start new analysis anytime
-- **Responsive Design** - Works seamlessly on desktop and mobile devices
-- **File Format Support** - Compatible with GPX files from Strava, Garmin, and other GPS devices
+- **Persistent Storage** - Saves session data across app restarts
+- **Responsive Design** - Optimized for desktop browsers and mobile devices
+- **File Format Support** - Compatible with GPX and FIT files from Strava, Garmin, and other GPS devices
+
+### 📱 Mobile & Platform Support
+- **Web Version** - Works on any modern web browser (desktop, tablet, mobile)
+- **Android Native App** - Full-featured native Android application (Android 11+, API 30+)
+- **Intent Filters** - Open GPX/FIT files directly from other apps on Android
+- **Single Codebase** - One React + TypeScript codebase powering both web and Android
 
 ## Tech Stack
 
-- React 18
-- TypeScript
-- Vite
-- Leaflet (maps)
+- **React 18** - UI framework
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tooling
+- **Leaflet** - Interactive mapping
+- **Capacitor** - Cross-platform native features (Android, with future iOS support)
+- **FIT Parser** - Garmin FIT file support
 
-## Development
+## Getting Started
+
+### Prerequisites
+
+**For Web Development:**
+- Node.js (v16+) and npm
+- A modern web browser
+
+**For Android Development:**
+- Node.js (v16+) and npm
+- Android Studio
+- JDK 17+ (or use Android Studio's built-in JDK)
+- Android SDK (API 30+)
+
+### Web Development
 
 ```bash
 # Install dependencies
@@ -64,24 +88,64 @@ npm run dev
 # Build for production
 npm run build
 
-# Preview production build
+# Preview production build locally
 npm run preview
 ```
 
+The web app will be available at `http://localhost:5173` during development.
+
+### Android Development
+
+```bash
+# Build web assets and sync to Android
+npm run build:android
+
+# Build, sync, and run on connected device or emulator
+npm run android:dev
+
+# Open project in Android Studio
+npm run android:studio
+```
+
+For detailed Android setup, build configuration, and release instructions, see [ANDROID_SETUP.md](./ANDROID_SETUP.md).
+
 ## Deployment
 
-This project is configured for Vercel deployment:
+### Web Deployment
 
+This project can be deployed to any static hosting service:
+
+**Vercel (Recommended):**
 1. Push to GitHub
-2. Import the repository in [Vercel](https://vercel.com)
-3. Deploy automatically
+2. Import repository in [Vercel](https://vercel.com)
+3. Automatic deployment on push
 
 Or deploy with Vercel CLI:
-
 ```bash
 npm i -g vercel
 vercel
 ```
+
+**Other Platforms:**
+The `npm run build` command produces a `dist/` folder ready for deployment to:
+- Netlify
+- GitHub Pages
+- AWS S3 + CloudFront
+- Any static hosting service
+
+### Android Deployment
+
+**Development/Testing:**
+- Build and run on device: `npm run android:dev`
+- Or open in Android Studio: `npm run android:studio`
+
+**Release to Play Store:**
+1. Generate signed release APK (see [ANDROID_SETUP.md](./ANDROID_SETUP.md))
+2. Create Play Console account (one-time $25 fee)
+3. Upload APK to Play Console
+4. Complete store listing and submit for review
+
+See [ANDROID_SETUP.md](./ANDROID_SETUP.md) for complete release build instructions, including keystore setup and signing.
 
 ## Usage
 

@@ -1,3 +1,5 @@
+import { Preferences } from '@capacitor/preferences';
+import { Capacitor } from '@capacitor/core';
 
 type Persistence = {
   setItem(key: string, value: string): Promise<void>;
@@ -39,7 +41,40 @@ const localStorageFallback: Persistence = {
   },
 };
 
-export const persistence: Persistence = 
-  typeof window !== 'undefined' && window.persistentStorage 
-    ? window.persistentStorage 
-    : localStorageFallback;
+const capacitorStorage: Persistence = {
+  async setItem(key: string, value: string) {
+    try {
+      await Preferences.set({ key, value });
+    } catch (error) {
+      console.error('Capacitor Preferences setItem failed:', error);
+      throw error;
+    }
+  },
+  async getItem(key: string) {
+    try {
+      const { value } = await Preferences.get({ key });
+      return value;
+    } catch (error) {
+      console.error('Capacitor Preferences getItem failed:', error);
+      return null;
+    }
+  },
+  async removeItem(key: string) {
+    try {
+      await Preferences.remove({ key });
+    } catch (error) {
+      console.error('Capacitor Preferences removeItem failed:', error);
+    }
+  },
+  async clear() {
+    try {
+      await Preferences.clear();
+    } catch (error) {
+      console.error('Capacitor Preferences clear failed:', error);
+    }
+  }
+};
+
+// Platform detection - prefer Capacitor on native, localStorage on web
+export const persistence: Persistence =
+  Capacitor.isNativePlatform() ? capacitorStorage : localStorageFallback;

@@ -3,11 +3,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <meta name="description" content="Analyze your ski adventures with GPX files - get comprehensive statistics, interactive maps, and detailed run analysis" />
   <meta name="theme-color" content="#1a1a2e" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <title>GPX Ski Analyzer</title>
   <style>
     body {
@@ -19,21 +18,34 @@
       -moz-osx-font-smoothing: grayscale;
     }
   </style>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div id="app"></div>
   <script type="module" src="/src/index.tsx"></script>
 
-  <!-- Ko-fi Support Button -->
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+  <!-- Ko-fi Support Button - Web Only -->
   <script>
-    kofiWidgetOverlay.draw('gggentii', {
-      'type': 'floating-chat',
-      'floating-chat.donateButton.text': 'Support me',
-      'floating-chat.donateButton.background-color': '#00bfa5',
-      'floating-chat.donateButton.text-color': '#fff'
-    });
+    // Only load Ko-fi on web, not in native app
+    if (typeof window !== 'undefined' &&
+        !window.matchMedia('(display-mode: standalone)').matches) {
+      // Check if running in Capacitor
+      const isCapacitor = document.URL.indexOf('http://') === -1 &&
+                         document.URL.indexOf('https://') === -1;
+
+      if (!isCapacitor) {
+        const script = document.createElement('script');
+        script.src = 'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js';
+        script.onload = () => {
+          kofiWidgetOverlay.draw('gggentii', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Support me',
+            'floating-chat.donateButton.background-color': '#00bfa5',
+            'floating-chat.donateButton.text-color': '#fff'
+          });
+        };
+        document.head.appendChild(script);
+      }
+    }
   </script>
 </body>
 </html>

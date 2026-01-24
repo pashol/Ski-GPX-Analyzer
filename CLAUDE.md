@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build and Development Commands
 
+### Web Development
 ```bash
 npm install          # Install dependencies
 npm run dev          # Start development server (Vite)
@@ -11,11 +12,30 @@ npm run build        # TypeScript check + production build
 npm run preview      # Preview production build locally
 ```
 
+### Android Development
+```bash
+npm run build:android     # Build web app and sync to Android
+npm run android:dev       # Build, sync, and run on device
+npm run android:studio    # Open project in Android Studio
+npx cap sync android      # Sync web assets to Android
+```
+
+See `ANDROID_SETUP.md` for detailed Android build instructions.
+
 No test framework is configured.
 
 ## Architecture Overview
 
-This is a React 18 + TypeScript + Vite application for analyzing ski GPX files. Leaflet is loaded via CDN (not npm) for maps.
+This is a **React 18 + TypeScript + Vite + Capacitor** application for analyzing ski GPX files on web and Android.
+
+### Platform Support
+- **Web**: Standard web browser deployment
+- **Android**: Native Android app via Capacitor (API 30+, Android 11+)
+  - Portrait-only orientation
+  - Native file picker for GPX/FIT files
+  - Intent filters for opening files from other apps
+  - Capacitor Preferences for persistent storage
+  - Hardware-accelerated WebView
 
 ### Data Flow
 
@@ -45,7 +65,22 @@ This is a React 18 + TypeScript + Vite application for analyzing ski GPX files. 
 
 ### Key Patterns
 
-- Leaflet accessed via `window.L` (CDN-loaded, not bundled)
-- Unit conversion utilities in `gpxParser.ts` (metric/imperial)
-- Speed color gradient: HSL-based, green (slow) to red (fast)
-- Haversine formula used for distance calculations
+- **Leaflet**: Bundled via npm (not CDN), loaded in `src/utils/leafletLoader.ts`, exposed as `window.L`
+- **Platform Detection**: `Capacitor.isNativePlatform()` to differentiate web vs native
+- **File Handling**:
+  - Web: Standard HTML file input
+  - Android: Native file picker via `@capawesome/capacitor-file-picker`
+- **Storage**:
+  - Web: localStorage
+  - Android: Capacitor Preferences API
+- **Unit Conversion**: Utilities in `gpxParser.ts` (metric/imperial)
+- **Speed Color Gradient**: HSL-based, green (slow) to red (fast)
+- **Distance Calculation**: Haversine formula
+
+### Capacitor Integration (`src/utils/`)
+
+- `nativeInit.ts`: Initializes status bar, splash screen, network monitoring
+- `filePicker.ts`: Native file picker abstraction
+- `persistence.ts`: Platform-aware storage (localStorage/Capacitor Preferences)
+- `networkMonitor.ts`: Network connectivity detection
+- `leafletLoader.ts`: Bundles Leaflet and fixes marker icon paths

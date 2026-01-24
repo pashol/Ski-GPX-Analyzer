@@ -424,6 +424,20 @@
 
 .leaflet-container {
   font-family: inherit;
+  touch-action: pan-x pan-y;
+}
+
+/* Better touch targets for map controls */
+.leaflet-control-zoom a {
+  min-width: 44px;
+  min-height: 44px;
+  line-height: 44px;
+}
+
+.leaflet-touch .leaflet-bar a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
 }
 
 .run-popup {

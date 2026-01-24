@@ -26,3 +26,20 @@ Thumbs.db
 
 # Vercel
 .vercel
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# Keystores (CRITICAL: Never commit)
+*.keystore
+*.jks
+.env.android
+KEYSTORE_INFO.txt
+
+# Android local config
+android/local.properties
+
+ANDROID_SETUP.md
+ANDROID_IMPLEMENTATION_SUMMARY.md

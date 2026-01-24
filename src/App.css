@@ -1,8 +1,11 @@
 
 .app {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: #fff;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .app-header {
@@ -11,7 +14,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem 2rem;
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top);
   z-index: 100;
 }
 

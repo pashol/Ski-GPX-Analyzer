@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './utils/leafletLoader'; // Import Leaflet before app
 import App from './App';
 import { LanguageProvider } from './i18n';
 import { UnitsProvider } from './contexts/UnitsContext';

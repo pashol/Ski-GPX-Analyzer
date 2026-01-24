@@ -6,14 +6,32 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:init": "cap init 'Ski GPX Analyzer' 'com.skigpxanalyzer.app'",
+    "cap:add": "cap add android",
+    "cap:sync": "cap sync android",
+    "cap:icons": "capacitor-assets generate --android",
+    "build:android": "npm run build && cap sync android",
+    "android:dev": "npm run build && cap sync android && cap run android",
+    "android:studio": "cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.1",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/cli": "^8.0.1",
+    "@capacitor/core": "^8.0.1",
+    "@capacitor/network": "^8.0.0",
+    "@capacitor/preferences": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0",
+    "@capawesome/capacitor-file-picker": "^8.0.1",
     "fit-file-parser": "^1.9.0",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@types/leaflet": "^1.9.8",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
