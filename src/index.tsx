@@ -13,7 +13,9 @@ if (container) {
     <React.StrictMode>
       <LanguageProvider>
         <UnitsProvider>
-          <App />
+          <div className="app-safe-area">
+            <App />
+          </div>
         </UnitsProvider>
       </LanguageProvider>
     </React.StrictMode>
