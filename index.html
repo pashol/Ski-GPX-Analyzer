@@ -25,10 +25,11 @@
 
   <!-- Ko-fi Support Button - Web Only -->
   <script>
+    const prefersCompactOffset = () => window.matchMedia('(max-width: 480px)').matches || window.innerHeight < 640;
+
     // Only load Ko-fi on web, not in native app
     if (typeof window !== 'undefined' &&
         !window.matchMedia('(display-mode: standalone)').matches) {
-      // Check if running in Capacitor
       const isCapacitor = document.URL.indexOf('http://') === -1 &&
                          document.URL.indexOf('https://') === -1;
 
@@ -37,13 +38,26 @@
         script.src = 'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js';
         script.onload = () => {
           kofiWidgetOverlay.draw('gggentii', {
-            'type': 'floating-chat',
+            type: 'floating-chat',
             'floating-chat.donateButton.text': 'Support me',
             'floating-chat.donateButton.background-color': '#00bfa5',
-            'floating-chat.donateButton.text-color': '#fff'
+            'floating-chat.donateButton.text-color': '#fff',
+            'floating-chat.donateButton.bottom': prefersCompactOffset()
+              ? 'calc(72px + env(safe-area-inset-bottom, 16px))'
+              : 'calc(96px + env(safe-area-inset-bottom, 16px))'
           });
         };
         document.head.appendChild(script);
+
+        window.addEventListener('resize', () => {
+          if (window.kofiWidgetOverlay?.setPosition) {
+            window.kofiWidgetOverlay.setPosition({
+              bottom: prefersCompactOffset()
+                ? 'calc(72px + env(safe-area-inset-bottom, 16px))'
+                : 'calc(96px + env(safe-area-inset-bottom, 16px))'
+            });
+          }
+        });
       }
     }
   </script>
