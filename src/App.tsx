@@ -14,6 +14,7 @@ import { useTranslation } from './i18n';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { initNativeApp } from './utils/nativeInit';
+import { Analytics } from '@vercel/analytics/react';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
@@ -23,6 +24,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabType>('track');
   const [fileName, setFileName] = useState<string>('');
   const [selectedRun, setSelectedRun] = useState<Run | null>(null);
+  const isNative = Capacitor.isNativePlatform();
 
   const handleFileUpload = (data: GPXData, name: string) => {
     setGpxData(data);
@@ -134,6 +136,7 @@ function App() {
           </div>
         )}
       </main>
+      {!isNative && <Analytics />}
     </div>
   );
 }
