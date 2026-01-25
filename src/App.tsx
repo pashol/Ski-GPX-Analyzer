@@ -14,6 +14,7 @@ import { useTranslation } from './i18n';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { initNativeApp } from './utils/nativeInit';
+import { Analytics } from '@vercel/analytics/react';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
@@ -134,6 +135,7 @@ function App() {
           </div>
         )}
       </main>
+      <Analytics />
     </div>
   );
 }
