@@ -185,6 +185,8 @@
     "avgHeartRate": "Durchschn. Herzfrequenz",
     "maxHeartRate": "Max Herzfrequenz",
     "elevationSpeedProfile": "Höhen- & Geschwindigkeitsprofil",
+    "expandChart": "Vollbild",
+    "exitFullscreen": "Vollbild beenden",
     "speedDistribution": "Geschwindigkeitsverteilung",
     "comparedToSession": "Vergleich mit Sitzungsdurchschnitt",
     "speedVsAvg": "Geschw. vs Durchschn.",

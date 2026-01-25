@@ -185,6 +185,8 @@
     "avgHeartRate": "Freq. Cardiaca Media",
     "maxHeartRate": "Freq. Cardiaca Max",
     "elevationSpeedProfile": "Profilo Quota e Velocità",
+    "expandChart": "Schermo intero",
+    "exitFullscreen": "Esci da schermo intero",
     "speedDistribution": "Distribuzione Velocità",
     "comparedToSession": "Confronto con Media Sessione",
     "speedVsAvg": "Velocità vs Media",

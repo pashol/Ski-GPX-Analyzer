@@ -185,6 +185,8 @@
     "avgHeartRate": "Fréq. Cardiaque Moyenne",
     "maxHeartRate": "Fréq. Cardiaque Max",
     "elevationSpeedProfile": "Profil Altitude & Vitesse",
+    "expandChart": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran",
     "speedDistribution": "Distribution des Vitesses",
     "comparedToSession": "Comparé à la Moyenne de Session",
     "speedVsAvg": "Vitesse vs Moyenne",

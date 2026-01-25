@@ -21,6 +21,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const { t } = useTranslation();
   const { formatSpeed, formatDistance, formatAltitude } = useUnits();
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layersRef = useRef<any[]>([]);
   const pisteLayerRef = useRef<any>(null);
@@ -32,6 +33,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const [isLeafletReady, setIsLeafletReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [cycledRunIndex, setCycledRunIndex] = useState<number | null>(null);
+  const [mapTypeMenuOpen, setMapTypeMenuOpen] = useState(false);
+  const [toggleMenuOpen, setToggleMenuOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Clear cycle state when external selection changes
   useEffect(() => {
@@ -65,13 +69,22 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     });
   }, [data.runs.length]);
 
-  // Keyboard navigation for cycling runs
+  // Keyboard navigation for cycling runs and closing expanded map
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't capture if user is typing in an input
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'Escape') {
+        if (isExpanded) {
+          e.preventDefault();
+          setIsExpanded(false);
+        } else if (mapTypeMenuOpen) {
+          setMapTypeMenuOpen(false);
+        } else if (toggleMenuOpen) {
+          setToggleMenuOpen(false);
+        }
+      } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         handlePrevRun();
       } else if (e.key === 'ArrowRight') {
@@ -81,7 +94,22 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handlePrevRun, handleNextRun]);
+  }, [handlePrevRun, handleNextRun, isExpanded, mapTypeMenuOpen, toggleMenuOpen]);
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.map-type-control')) {
+        setMapTypeMenuOpen(false);
+      }
+      if (!target.closest('.map-toggle-control')) {
+        setToggleMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const { bounds, center } = useMemo(() => {
     const points = data.points;
@@ -457,16 +485,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         layersRef.current.push(endMarker);
       }
 
-      // Fit bounds - only zoom to run when directly selected (not when cycling)
-      if (selectedRun && cycledRunIndex === null) {
-        const runPoints = data.points.slice(selectedRun.startIndex, selectedRun.endIndex + 1);
+      // Fit bounds - zoom to active run (whether from cycling or selection)
+      if (activeRunIndex !== null) {
+        const activeRun = data.runs[activeRunIndex];
+        const runPoints = data.points.slice(activeRun.startIndex, activeRun.endIndex + 1);
         const runLats = runPoints.map(p => p.lat);
         const runLons = runPoints.map(p => p.lon);
         map.fitBounds([
           [Math.min(...runLats), Math.min(...runLons)],
           [Math.max(...runLats), Math.max(...runLons)]
         ], { padding: [50, 50] });
-      } else if (!selectedRun && cycledRunIndex === null) {
+      } else {
         map.fitBounds([
           [bounds.minLat, bounds.minLon],
           [bounds.maxLat, bounds.maxLon]
@@ -534,108 +563,117 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
   return (
     <div className="map-view">
-      <div className="map-controls">
-        <div className="control-group">
-          <span className="map-label">{t('map.mapType')}</span>
-          <div className="map-type-buttons">
-            <button
-              className={mapType === 'streets' ? 'active' : ''}
-              onClick={() => setMapType('streets')}
-            >
-              {t('map.streets')}
-            </button>
-            <button
-              className={mapType === 'satellite' ? 'active' : ''}
-              onClick={() => setMapType('satellite')}
-            >
-              {t('map.satellite')}
-            </button>
-            <button
-              className={mapType === 'terrain' ? 'active' : ''}
-              onClick={() => setMapType('terrain')}
-            >
-              {t('map.terrain')}
-            </button>
-          </div>
+      <div className={`map-container ${isExpanded ? 'expanded' : ''}`} ref={mapWrapperRef}>
+        {/* Leaflet map element */}
+        <div className="map-leaflet" ref={mapContainerRef} />
+
+        {/* Expand/collapse button - top right (topmost) */}
+        <div className="map-overlay-control map-expand-control">
+          <button
+            className="control-btn"
+            onClick={() => setIsExpanded(!isExpanded)}
+            title={isExpanded ? 'Exit fullscreen' : 'Fullscreen'}
+          >
+            <span className="control-icon">{isExpanded ? '✕' : '⛶'}</span>
+          </button>
         </div>
 
-        <div className="control-group toggles">
-          <label className="toggle-label piste-toggle">
-            <input
-              type="checkbox"
-              checked={showPisteOverlay}
-              onChange={(e) => setShowPisteOverlay(e.target.checked)}
-            />
-            <span className="toggle-icon">🎿</span>
-            <span>{t('map.skiPistes')}</span>
-          </label>
-          <label className="toggle-label">
-            <input
-              type="checkbox"
-              checked={showRuns}
-              onChange={(e) => setShowRuns(e.target.checked)}
-            />
-            <span>{t('map.highlightRuns')}</span>
-          </label>
-          <label className="toggle-label">
-            <input
-              type="checkbox"
-              checked={showRunMarkers}
-              onChange={(e) => setShowRunMarkers(e.target.checked)}
-            />
-            <span>{t('map.runMarkers')}</span>
-          </label>
-          <label className="toggle-label">
-            <input
-              type="checkbox"
-              checked={showKmMarkers}
-              onChange={(e) => setShowKmMarkers(e.target.checked)}
-            />
-            <span>{t('map.kmMarkers')}</span>
-          </label>
-        </div>
-      </div>
-      
-      <div className="map-container" ref={mapContainerRef} />
-
-      <div className="map-legend">
-        <div className="legend-item">
-          <span className="legend-marker start">S</span>
-          <span>{t('map.start')}</span>
-        </div>
-        <div className="legend-item">
-          <span className="legend-marker end">E</span>
-          <span>{t('map.end')}</span>
-        </div>
-        {showRuns && (
-          <div className="legend-item speed-scale">
-            <div className="speed-gradient" />
-            <div className="speed-labels">
-              <span>{t('map.slow')}</span>
-              <span>{Math.round(maxRunSpeed)} {t('units.kmh')}</span>
+        {/* Map type selector - top right (below expand) */}
+        <div className="map-overlay-control map-type-control">
+          <button
+            className="control-btn"
+            onClick={() => setMapTypeMenuOpen(!mapTypeMenuOpen)}
+            title={t('map.mapType')}
+          >
+            <span className="control-icon">🗺️</span>
+          </button>
+          {mapTypeMenuOpen && (
+            <div className="control-menu">
+              <button
+                className={`menu-item ${mapType === 'streets' ? 'active' : ''}`}
+                onClick={() => {
+                  setMapType('streets');
+                  setMapTypeMenuOpen(false);
+                }}
+              >
+                <span>{t('map.streets')}</span>
+                {mapType === 'streets' && <span className="checkmark">✓</span>}
+              </button>
+              <button
+                className={`menu-item ${mapType === 'satellite' ? 'active' : ''}`}
+                onClick={() => {
+                  setMapType('satellite');
+                  setMapTypeMenuOpen(false);
+                }}
+              >
+                <span>{t('map.satellite')}</span>
+                {mapType === 'satellite' && <span className="checkmark">✓</span>}
+              </button>
+              <button
+                className={`menu-item ${mapType === 'terrain' ? 'active' : ''}`}
+                onClick={() => {
+                  setMapType('terrain');
+                  setMapTypeMenuOpen(false);
+                }}
+              >
+                <span>{t('map.terrain')}</span>
+                {mapType === 'terrain' && <span className="checkmark">✓</span>}
+              </button>
             </div>
-          </div>
-        )}
-        {showRunMarkers && data.runs.length > 0 && (
-          <div className="legend-item">
-            <span className="legend-marker run-number">1</span>
-            <span>{t('map.runStart')}</span>
-          </div>
-        )}
-        {showKmMarkers && (
-          <div className="legend-item">
-            <span className="legend-marker km">1</span>
-            <span>{t('map.kilometer')}</span>
-          </div>
-        )}
-        {activeRunIndex !== null && (
-          <div className="legend-item">
-            <span className="legend-line selected" />
-            <span>{t('map.selectedRun')}</span>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Toggle controls menu - below map type */}
+        <div className="map-overlay-control map-toggle-control">
+          <button
+            className="control-btn"
+            onClick={() => setToggleMenuOpen(!toggleMenuOpen)}
+            title="Toggle map layers"
+          >
+            <span className="control-icon">⚙️</span>
+          </button>
+          {toggleMenuOpen && (
+            <div className="control-menu toggle-menu">
+              <label className="menu-toggle-item">
+                <input
+                  type="checkbox"
+                  checked={showPisteOverlay}
+                  onChange={(e) => setShowPisteOverlay(e.target.checked)}
+                />
+                <span className="toggle-icon">🎿</span>
+                <span>{t('map.skiPistes')}</span>
+              </label>
+              <label className="menu-toggle-item">
+                <input
+                  type="checkbox"
+                  checked={showRuns}
+                  onChange={(e) => setShowRuns(e.target.checked)}
+                />
+                <span>{t('map.highlightRuns')}</span>
+              </label>
+              <label className="menu-toggle-item">
+                <input
+                  type="checkbox"
+                  checked={showRunMarkers}
+                  onChange={(e) => setShowRunMarkers(e.target.checked)}
+                />
+                <span>{t('map.runMarkers')}</span>
+              </label>
+              <label className="menu-toggle-item">
+                <input
+                  type="checkbox"
+                  checked={showKmMarkers}
+                  onChange={(e) => setShowKmMarkers(e.target.checked)}
+                />
+                <span>{t('map.kmMarkers')}</span>
+              </label>
+            </div>
+          )}
+        </div>
+
+        {/* Run cycle controls - bottom right */}
         {data.runs.length > 0 && (
-          <div className="run-cycle-controls">
+          <div className="map-overlay-control map-run-cycle">
             <button
               className="cycle-btn"
               onClick={handlePrevRun}
@@ -659,53 +697,68 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         )}
       </div>
 
-      {showPisteOverlay && (
-        <div className="piste-overlay-info">
-          <div className="piste-info-content">
-            <span className="piste-badge">🎿 {t('map.pisteOverlayActive')}</span>
-            <span className="piste-hint">{t('map.pisteOverlayHint')}</span>
+      {!isExpanded && (
+        <div className="map-legend">
+          <div className="legend-item">
+            <span className="legend-marker start">S</span>
+            <span>{t('map.start')}</span>
           </div>
-          <div className="piste-legend">
-            <div className="piste-legend-item">
-              <span className="piste-color easy"></span>
-              <span>{t('map.easy')}</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color intermediate"></span>
-              <span>{t('map.intermediate')}</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color advanced"></span>
-              <span>{t('map.advanced')}</span>
-            </div>
-            <div className="piste-legend-item">
-              <span className="piste-color expert"></span>
-              <span>{t('map.expert')}</span>
-            </div>
+          <div className="legend-item">
+            <span className="legend-marker end">E</span>
+            <span>{t('map.end')}</span>
           </div>
+          {showRuns && (
+            <div className="legend-item speed-scale">
+              <div className="speed-gradient" />
+              <div className="speed-labels">
+                <span>{t('map.slow')}</span>
+                <span>{Math.round(maxRunSpeed)} {t('units.kmh')}</span>
+              </div>
+            </div>
+          )}
+          {showRunMarkers && data.runs.length > 0 && (
+            <div className="legend-item">
+              <span className="legend-marker run-number">1</span>
+              <span>{t('map.runStart')}</span>
+            </div>
+          )}
+          {showKmMarkers && (
+            <div className="legend-item">
+              <span className="legend-marker km">1</span>
+              <span>{t('map.kilometer')}</span>
+            </div>
+          )}
+          {activeRunIndex !== null && (
+            <div className="legend-item">
+              <span className="legend-line selected" />
+              <span>{t('map.selectedRun')}</span>
+            </div>
+          )}
         </div>
       )}
 
-      <div className="map-stats">
-        <div className="map-stat">
-          <span className="label">{t('map.points')}</span>
-          <span className="value">{data.points.length.toLocaleString()}</span>
-        </div>
-        <div className="map-stat">
-          <span className="label">{t('track.runs')}</span>
-          <span className="value">{data.runs.length}</span>
-        </div>
-        <div className="map-stat">
-          <span className="label">{t('track.distance')}</span>
-          <span className="value">{formatDistance(data.stats.totalDistance / 1000, 1)}</span>
-        </div>
-        {data.runs.length > 0 && (
+      {!isExpanded && (
+        <div className="map-stats">
           <div className="map-stat">
-            <span className="label">{t('map.topSpeed')}</span>
-            <span className="value">{formatSpeed(maxRunSpeed, 1)}</span>
+            <span className="label">{t('map.points')}</span>
+            <span className="value">{data.points.length.toLocaleString()}</span>
           </div>
-        )}
-      </div>
+          <div className="map-stat">
+            <span className="label">{t('track.runs')}</span>
+            <span className="value">{data.runs.length}</span>
+          </div>
+          <div className="map-stat">
+            <span className="label">{t('track.distance')}</span>
+            <span className="value">{formatDistance(data.stats.totalDistance / 1000, 1)}</span>
+          </div>
+          {data.runs.length > 0 && (
+            <div className="map-stat">
+              <span className="label">{t('map.topSpeed')}</span>
+              <span className="value">{formatSpeed(maxRunSpeed, 1)}</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

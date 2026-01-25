@@ -185,6 +185,8 @@
     "avgHeartRate": "Avg Heart Rate",
     "maxHeartRate": "Max Heart Rate",
     "elevationSpeedProfile": "Elevation & Speed Profile",
+    "expandChart": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
     "speedDistribution": "Speed Distribution",
     "comparedToSession": "Compared to Session Average",
     "speedVsAvg": "Speed vs Avg",
