@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import './RunDetailView.css';
 import { GPXData, Run, formatDurationLong, metersToFeet, metersToMiles, kmhToMph } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
@@ -27,7 +27,27 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
   const { unitSystem, formatSpeed, formatDistance, formatAltitude } = useUnits();
   const [xAxis, setXAxis] = useState<'distance' | 'time'>('distance');
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'Escape' && isExpanded) {
+        e.preventDefault();
+        setIsExpanded(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isExpanded]);
 
   const runPoints = useMemo(() => {
     return data.points.slice(run.startIndex, run.endIndex + 1);
@@ -278,7 +298,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
   }, [runPoints, unitSystem]);
 
   return (
-    <div className="run-detail-view">
+    <div className="run-detail-view" ref={topRef}>
       <div className="run-detail-header">
         <button className="back-btn" onClick={onBack}>
           ← {t('runDetail.backToOverview')}
@@ -377,7 +397,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       </div>
 
       {/* Combined Elevation & Speed Profile Chart */}
-      <div className="combined-chart-card">
+      <div className={`combined-chart-card ${isExpanded ? 'expanded' : ''}`}>
         <div className="chart-header">
           <h3>{t('runDetail.elevationSpeedProfile')}</h3>
           <div className="chart-controls">
@@ -395,6 +415,13 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                 {t('profile.time')}
               </button>
             </div>
+            <button
+              className="expand-btn"
+              onClick={() => setIsExpanded(!isExpanded)}
+              title={isExpanded ? t('runDetail.exitFullscreen') : t('runDetail.expandChart')}
+            >
+              <span className="expand-icon">{isExpanded ? '✕' : '⛶'}</span>
+            </button>
           </div>
         </div>
         
@@ -746,57 +773,61 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
         </div>
       </div>
 
-      <div className="speed-distribution-card">
-        <h3>{t('runDetail.speedDistribution')}</h3>
-        <div className="speed-bars">
-          {speedDistribution.map((bucket, i) => (
-            <div key={i} className="speed-bar-item">
-              <span className="bar-range">{bucket.range} {unitSystem === 'metric' ? t('units.kmh') : t('units.mph')}</span>
-              <div className="bar-track">
-                <div
-                  className="bar-fill"
-                  style={{
-                    width: `${bucket.percentage}%`,
-                    background: bucket.color,
-                  }}
-                />
-              </div>
-              <span className="bar-count">{((bucket.count / runPoints.length) * 100).toFixed(1)}%</span>
+      {!isExpanded && (
+        <>
+          <div className="speed-distribution-card">
+            <h3>{t('runDetail.speedDistribution')}</h3>
+            <div className="speed-bars">
+              {speedDistribution.map((bucket, i) => (
+                <div key={i} className="speed-bar-item">
+                  <span className="bar-range">{bucket.range} {unitSystem === 'metric' ? t('units.kmh') : t('units.mph')}</span>
+                  <div className="bar-track">
+                    <div
+                      className="bar-fill"
+                      style={{
+                        width: `${bucket.percentage}%`,
+                        background: bucket.color,
+                      }}
+                    />
+                  </div>
+                  <span className="bar-count">{((bucket.count / runPoints.length) * 100).toFixed(1)}%</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <div className="run-comparison">
-        <h3>{t('runDetail.comparedToSession')}</h3>
-        <div className="comparison-grid">
-          <div className="comparison-item">
-            <span className="comparison-label">{t('runDetail.speedVsAvg')}</span>
-            <span className={`comparison-value ${run.avgSpeed > data.stats.avgSkiSpeed ? 'positive' : 'negative'}`}>
-              {run.avgSpeed > data.stats.avgSkiSpeed ? '+' : ''}
-              {data.stats.avgSkiSpeed > 0 ? (((run.avgSpeed - data.stats.avgSkiSpeed) / data.stats.avgSkiSpeed) * 100).toFixed(0) : 0}%
-            </span>
+          <div className="run-comparison">
+            <h3>{t('runDetail.comparedToSession')}</h3>
+            <div className="comparison-grid">
+              <div className="comparison-item">
+                <span className="comparison-label">{t('runDetail.speedVsAvg')}</span>
+                <span className={`comparison-value ${run.avgSpeed > data.stats.avgSkiSpeed ? 'positive' : 'negative'}`}>
+                  {run.avgSpeed > data.stats.avgSkiSpeed ? '+' : ''}
+                  {data.stats.avgSkiSpeed > 0 ? (((run.avgSpeed - data.stats.avgSkiSpeed) / data.stats.avgSkiSpeed) * 100).toFixed(0) : 0}%
+                </span>
+              </div>
+              <div className="comparison-item">
+                <span className="comparison-label">{t('runDetail.distanceRank')}</span>
+                <span className="comparison-value">
+                  #{data.runs.filter(r => r.distance > run.distance).length + 1} {t('runDetail.of')} {data.runs.length}
+                </span>
+              </div>
+              <div className="comparison-item">
+                <span className="comparison-label">{t('runDetail.verticalRank')}</span>
+                <span className="comparison-value">
+                  #{data.runs.filter(r => r.verticalDrop > run.verticalDrop).length + 1} {t('runDetail.of')} {data.runs.length}
+                </span>
+              </div>
+              <div className="comparison-item">
+                <span className="comparison-label">{t('runDetail.maxSpeedRank')}</span>
+                <span className="comparison-value">
+                  #{data.runs.filter(r => r.maxSpeed > run.maxSpeed).length + 1} {t('runDetail.of')} {data.runs.length}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="comparison-item">
-            <span className="comparison-label">{t('runDetail.distanceRank')}</span>
-            <span className="comparison-value">
-              #{data.runs.filter(r => r.distance > run.distance).length + 1} {t('runDetail.of')} {data.runs.length}
-            </span>
-          </div>
-          <div className="comparison-item">
-            <span className="comparison-label">{t('runDetail.verticalRank')}</span>
-            <span className="comparison-value">
-              #{data.runs.filter(r => r.verticalDrop > run.verticalDrop).length + 1} {t('runDetail.of')} {data.runs.length}
-            </span>
-          </div>
-          <div className="comparison-item">
-            <span className="comparison-label">{t('runDetail.maxSpeedRank')}</span>
-            <span className="comparison-value">
-              #{data.runs.filter(r => r.maxSpeed > run.maxSpeed).length + 1} {t('runDetail.of')} {data.runs.length}
-            </span>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

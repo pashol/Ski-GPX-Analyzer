@@ -57,165 +57,6 @@
   opacity: 0.9;
 }
 
-.map-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.control-group {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.control-group.toggles {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.map-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-}
-
-.map-type-buttons {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.map-type-buttons button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.85rem;
-}
-
-.map-type-buttons button:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.map-type-buttons button.active {
-  background: linear-gradient(135deg, #7c3aed, #00d4ff);
-  border-color: transparent;
-}
-
-.toggle-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.toggle-label input {
-  width: 18px;
-  height: 18px;
-  accent-color: #7c3aed;
-}
-
-.toggle-label.piste-toggle {
-  background: rgba(56, 189, 248, 0.15);
-  padding: 0.4rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  transition: all 0.2s;
-}
-
-.toggle-label.piste-toggle:hover {
-  background: rgba(56, 189, 248, 0.25);
-}
-
-.toggle-label.piste-toggle input:checked + .toggle-icon {
-  animation: skiWiggle 0.5s ease;
-}
-
-@keyframes skiWiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  75% { transform: rotate(10deg); }
-}
-
-.toggle-icon {
-  font-size: 1.1rem;
-}
-
-/* Piste Overlay Info */
-.piste-overlay-info {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(56, 189, 248, 0.1));
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.piste-info-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.piste-badge {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #38bdf8;
-}
-
-.piste-hint {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.piste-legend {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.piste-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.piste-color {
-  width: 20px;
-  height: 6px;
-  border-radius: 3px;
-}
-
-.piste-color.easy {
-  background: #22c55e;
-}
-
-.piste-color.intermediate {
-  background: #3b82f6;
-}
-
-.piste-color.advanced {
-  background: #ef4444;
-}
-
-.piste-color.expert {
-  background: #1f2937;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
 .map-container {
   height: 700px;
   border-radius: 12px;
@@ -223,6 +64,167 @@
   background: #1a1a2e;
   position: relative;
   z-index: 1;
+}
+
+/* Leaflet map fills the container */
+.map-leaflet {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Expanded state - fills viewport */
+.map-container.expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  border-radius: 0;
+}
+
+/* Shared control styling */
+.map-overlay-control {
+  position: absolute;
+  z-index: 1000; /* Above map tiles, below popups */
+  background: rgba(26, 26, 46, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+/* Control buttons */
+.control-btn {
+  background: rgba(26, 26, 46, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.control-btn:hover {
+  background: rgba(124, 58, 237, 0.8);
+  border-color: rgba(124, 58, 237, 0.8);
+}
+
+.control-icon {
+  font-size: 1.2rem;
+}
+
+/* Control menus */
+.control-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: rgba(26, 26, 46, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.menu-item {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.menu-item:hover {
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.menu-item.active {
+  background: rgba(124, 58, 237, 0.5);
+  color: white;
+}
+
+.checkmark {
+  color: #00d4ff;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+/* Toggle menu items */
+.menu-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s;
+}
+
+.menu-toggle-item:hover {
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.menu-toggle-item input {
+  width: 18px;
+  height: 18px;
+  accent-color: #7c3aed;
+}
+
+/* Expand button - top right (topmost) */
+.map-expand-control {
+  top: 10px;
+  right: 10px;
+}
+
+/* Map type selector - top right (below expand) */
+.map-type-control {
+  top: 58px; /* Below expand button */
+  right: 10px;
+}
+
+/* Toggle menu - below map type */
+.map-toggle-control {
+  top: 106px; /* Below map type button */
+  right: 10px;
+}
+
+/* Run cycle - bottom right */
+.map-run-cycle {
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(26, 26, 46, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
 .map-legend {
@@ -424,6 +426,20 @@
 
 .leaflet-container {
   font-family: inherit;
+  touch-action: pan-x pan-y;
+}
+
+/* Better touch targets for map controls */
+.leaflet-control-zoom a {
+  min-width: 44px;
+  min-height: 44px;
+  line-height: 44px;
+}
+
+.leaflet-touch .leaflet-bar a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
 }
 
 .run-popup {
@@ -435,24 +451,13 @@
   font-size: 0.9em;
 }
 
-/* Run cycle controls */
-.run-cycle-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-left: auto;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 8px;
-  padding: 0.4rem 0.6rem;
-}
-
-.cycle-btn {
+/* Run cycle button styling */
+.map-run-cycle .cycle-btn {
   background: rgba(0, 212, 255, 0.2);
   border: 1px solid rgba(0, 212, 255, 0.4);
   color: #00d4ff;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
@@ -460,18 +465,19 @@
   justify-content: center;
   font-size: 0.75rem;
   transition: all 0.2s;
+  padding: 0;
 }
 
-.cycle-btn:hover {
+.map-run-cycle .cycle-btn:hover {
   background: rgba(0, 212, 255, 0.35);
   border-color: rgba(0, 212, 255, 0.6);
 }
 
-.cycle-btn:active {
+.map-run-cycle .cycle-btn:active {
   transform: scale(0.95);
 }
 
-.run-indicator {
+.map-run-cycle .run-indicator {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
@@ -480,34 +486,18 @@
 }
 
 @media (max-width: 768px) {
-  .map-type-buttons {
-    flex-wrap: wrap;
+  .control-menu {
+    min-width: 140px;
   }
 
-  .piste-overlay-info {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .piste-legend {
-    width: 100%;
-    justify-content: flex-start;
+  .map-run-cycle {
+    padding: 0.4rem 0.6rem;
   }
 }
 
 @media (max-width: 600px) {
-  .map-container {
+  .map-container:not(.expanded) {
     height: 400px;
-  }
-
-  .map-controls {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .control-group.toggles {
-    flex-direction: column;
-    gap: 0.5rem;
   }
 
   .map-legend {
@@ -518,21 +508,22 @@
     flex-direction: column;
   }
 
-  .piste-legend {
-    gap: 0.75rem;
-  }
-
-  .piste-legend-item {
-    font-size: 0.75rem;
-  }
-
-  .run-cycle-controls {
-    margin-left: 0;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .run-indicator {
+  .map-run-cycle .run-indicator {
     font-size: 0.8rem;
+    min-width: 80px;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .control-icon {
+    font-size: 1.1rem;
+  }
+
+  .map-run-cycle .cycle-btn {
+    width: 28px;
+    height: 28px;
   }
 }

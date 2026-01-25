@@ -154,6 +154,30 @@
   overflow: hidden;
 }
 
+.combined-chart-card.expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0f1729;
+}
+
+.combined-chart-card.expanded .chart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.combined-chart-card.expanded .profile-chart {
+  flex: 1;
+  height: 100%;
+}
+
 .chart-header {
   display: flex;
   justify-content: space-between;
@@ -204,6 +228,30 @@
   color: white;
 }
 
+.expand-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.expand-btn:hover {
+  background: rgba(124, 58, 237, 0.8);
+  border-color: rgba(124, 58, 237, 0.8);
+}
+
+.expand-icon {
+  font-size: 1.1rem;
+}
+
 .chart-container {
   position: relative;
   background: rgba(0, 0, 0, 0.2);
@@ -232,6 +280,12 @@
   pointer-events: none;
   z-index: 10;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.combined-chart-card.expanded .chart-tooltip {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
 }
 
 .tooltip-header {

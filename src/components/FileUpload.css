@@ -48,6 +48,17 @@
   transform: scale(1.02);
 }
 
+.upload-zone.native {
+  min-height: 200px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.upload-zone.native:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
 .upload-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -132,13 +143,18 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .upload-hero h2 {
     font-size: 1.5rem;
   }
 
   .upload-zone {
-    padding: 2rem;
+    min-height: 180px;
+    padding: 2rem 1.5rem;
+  }
+
+  .upload-icon {
+    font-size: 4rem;
   }
 
   .features-grid {
