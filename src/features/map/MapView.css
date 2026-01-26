@@ -217,7 +217,7 @@
 
 /* Run cycle - bottom center */
 .map-run-cycle {
-  bottom: 10px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -229,7 +229,7 @@
 }
 
 .map-run-cycle.expanded {
-  bottom: 20px;
+  bottom: 30px;
 }
 
 .map-legend {
