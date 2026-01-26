@@ -111,6 +111,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // Hide Ko-fi button when map is expanded
+  useEffect(() => {
+    if (isExpanded) {
+      document.body.classList.add('hide-kofi');
+    } else {
+      document.body.classList.remove('hide-kofi');
+    }
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('hide-kofi');
+    };
+  }, [isExpanded]);
+
   const { bounds, center } = useMemo(() => {
     const points = data.points;
     if (points.length === 0) {
@@ -673,7 +686,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
         {/* Run cycle controls - bottom right */}
         {data.runs.length > 0 && (
-          <div className="map-overlay-control map-run-cycle">
+          <div className={`map-overlay-control map-run-cycle ${isExpanded ? 'expanded' : ''}`}>
             <button
               className="cycle-btn"
               onClick={handlePrevRun}
