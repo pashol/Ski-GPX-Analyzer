@@ -491,6 +491,52 @@
 }
 
 @media (max-width: 600px) {
+  /* Rotate expanded chart 90° clockwise on mobile */
+  .combined-chart-card.expanded.rotated {
+    transform: rotate(90deg);
+    transform-origin: center center;
+    width: calc(100vh - 2rem);
+    height: calc(100vw - 2rem);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(-50vh + 1rem);
+    margin-top: calc(-50vw + 1rem);
+    overflow: hidden;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .combined-chart-card.expanded.rotated .chart-header {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .combined-chart-card.expanded.rotated .chart-header h3 {
+    display: none;
+  }
+
+  .combined-chart-card.expanded.rotated .chart-container {
+    flex: 1;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .combined-chart-card.expanded.rotated .profile-chart {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .combined-chart-card.expanded.rotated .chart-tooltip {
+    display: none;
+  }
+
   .run-detail-header {
     flex-direction: column;
     align-items: flex-start;
@@ -517,5 +563,133 @@
   .chart-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* Compact data bar for expanded view */
+.chart-data-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 10001;
+  pointer-events: none;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.chart-data-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.chart-data-bar-icon {
+  font-size: 1rem;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.chart-data-bar-item.elevation .chart-data-bar-icon {
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.chart-data-bar-item.speed .chart-data-bar-icon {
+  background: rgba(74, 222, 128, 0.3);
+}
+
+.chart-data-bar-item.distance .chart-data-bar-icon {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+.chart-data-bar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.chart-data-bar-label {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.chart-data-bar-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+.chart-data-bar-item.elevation .chart-data-bar-value {
+  color: #a78bfa;
+}
+
+.chart-data-bar-item.speed .chart-data-bar-value {
+  color: #4ade80;
+}
+
+.chart-data-bar-item.distance .chart-data-bar-value {
+  color: #00d4ff;
+}
+
+/* Hide data bar in non-expanded views */
+.combined-chart-card:not(.expanded) .chart-data-bar {
+  display: none;
+}
+
+/* Hide original tooltip in expanded view */
+.combined-chart-card.expanded .chart-tooltip {
+  display: none;
+}
+
+/* Responsive sizing */
+@media (max-width: 400px) {
+  .chart-data-bar {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .chart-data-bar-label {
+    font-size: 0.55rem;
+  }
+
+  .chart-data-bar-value {
+    font-size: 0.75rem;
+  }
+
+  .chart-data-bar-icon {
+    font-size: 0.9rem;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (min-width: 400px) and (max-width: 600px) {
+  .chart-data-bar {
+    padding: 0.6rem 1.5rem;
+  }
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(12px)) {
+  .chart-data-bar {
+    background: rgba(0, 0, 0, 0.95);
   }
 }

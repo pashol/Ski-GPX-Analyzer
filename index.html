@@ -4,10 +4,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-  <meta name="description" content="Analyze your ski adventures with GPX files - get comprehensive statistics, interactive maps, and detailed run analysis" />
+
+  <!-- Primary Meta Tags -->
+  <meta name="description" content="Ski GPX Analyzer: Free web and Android app for analyzing GPX and FIT files. Automatic ski run detection, speed/elevation profiles, interactive maps, and detailed performance analytics. Track your ski adventures with comprehensive statistics." />
+  <meta name="keywords" content="ski, GPX, FIT, analyzer, run detection, elevation profile, speed analysis, interactive map, ski tracking, winter sports, Garmin, Strava" />
   <meta name="theme-color" content="#1a1a2e" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ski-gsx-analyzer.vercel.app/" />
+  <meta property="og:title" content="Ski GPX Analyzer - Free Ski Run Analysis Tool" />
+  <meta property="og:description" content="Analyze your ski adventures with automatic run detection, speed/elevation profiles, and interactive mapping. Supports GPX and FIT files from Garmin, Strava, and other GPS devices." />
+  <meta property="og:site_name" content="Ski GPX Analyzer" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ski GPX Analyzer - Analyze Your Ski Runs" />
+  <meta name="twitter:description" content="Free web and Android app for analyzing GPX/FIT files. Get automatic run detection, speed profiles, elevation analysis, and interactive maps." />
+  <meta name="twitter:image" content="/og-image.png" />
+
+  <!-- Additional SEO Meta Tags -->
+  <meta name="author" content="Ski GPX Analyzer" />
+  <meta name="copyright" content="MIT License" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>GPX Ski Analyzer</title>
+  <title>Ski GPX Analyzer - Free GPX & FIT File Analysis Tool</title>
   <style>
     body {
       margin: 0;
@@ -16,6 +43,14 @@
         sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Hide Ko-fi widget when chart is expanded */
+    body.hide-kofi #kofi-widget-overlay,
+    body.hide-kofi div[id^="kofi"],
+    body.hide-kofi iframe[src*="ko-fi.com"] {
+      display: none !important;
+      visibility: hidden !important;
     }
   </style>
 </head>

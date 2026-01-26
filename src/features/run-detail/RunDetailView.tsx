@@ -28,8 +28,28 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
   const [xAxis, setXAxis] = useState<'distance' | 'time'>('distance');
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   const svgRef = useRef<SVGSVGElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
+
+  // Track mobile state
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Hide Ko-fi button when chart is expanded
+  useEffect(() => {
+    if (isExpanded) {
+      document.body.classList.add('hide-kofi');
+    } else {
+      document.body.classList.remove('hide-kofi');
+    }
+    return () => {
+      document.body.classList.remove('hide-kofi');
+    };
+  }, [isExpanded]);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -100,7 +120,12 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
     };
   }, [chartData]);
 
-  const svgDimensions = {
+  // Use landscape-optimized dimensions when rotated on mobile
+  const svgDimensions = (isExpanded && isMobile) ? {
+    width: 800,
+    height: 360,
+    padding: { top: 30, right: 60, bottom: 50, left: 60 },
+  } : {
     width: 900,
     height: 400,
     padding: { top: 40, right: 80, bottom: 60, left: 80 },
@@ -397,9 +422,9 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       </div>
 
       {/* Combined Elevation & Speed Profile Chart */}
-      <div className={`combined-chart-card ${isExpanded ? 'expanded' : ''}`}>
+      <div className={`combined-chart-card ${isExpanded ? 'expanded' : ''} ${isExpanded && isMobile ? 'rotated' : ''}`}>
         <div className="chart-header">
-          <h3>{t('runDetail.elevationSpeedProfile')}</h3>
+          {!(isExpanded && isMobile) && <h3>{t('runDetail.elevationSpeedProfile')}</h3>}
           <div className="chart-controls">
             <div className="axis-toggle">
               <button
@@ -714,22 +739,24 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
               </>
             )}
 
-            {/* Legend */}
-            <g className="chart-legend" transform={`translate(${svgDimensions.padding.left + 10}, ${svgDimensions.padding.top + 10})`}>
-              <rect
-                x="0"
-                y="0"
-                width="180"
-                height="50"
-                fill="rgba(0, 0, 0, 0.6)"
-                rx="6"
-              />
-              <line x1="10" y1="18" x2="30" y2="18" stroke="#7c3aed" strokeWidth="3" />
-              <text x="40" y="22" fill="white" fontSize="11">{t('runDetail.legend.elevation')}</text>
+            {/* Legend - hide in rotated mobile view */}
+            {!(isExpanded && isMobile) && (
+              <g className="chart-legend" transform={`translate(${svgDimensions.padding.left + 10}, ${svgDimensions.padding.top + 10})`}>
+                <rect
+                  x="0"
+                  y="0"
+                  width="180"
+                  height="50"
+                  fill="rgba(0, 0, 0, 0.6)"
+                  rx="6"
+                />
+                <line x1="10" y1="18" x2="30" y2="18" stroke="#7c3aed" strokeWidth="3" />
+                <text x="40" y="22" fill="white" fontSize="11">{t('runDetail.legend.elevation')}</text>
 
-              <rect x="10" y="30" width="20" height="8" fill="url(#speedLegendGradient)" rx="2" />
-              <text x="40" y="38" fill="white" fontSize="11">{t('runDetail.legend.speedByIntensity')}</text>
-            </g>
+                <rect x="10" y="30" width="20" height="8" fill="url(#speedLegendGradient)" rx="2" />
+                <text x="40" y="38" fill="white" fontSize="11">{t('runDetail.legend.speedByIntensity')}</text>
+              </g>
+            )}
           </svg>
 
           {/* Hover Tooltip */}
@@ -766,6 +793,33 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
                     <span className="tooltip-label">{t('runDetail.tooltip.time')}</span>
                     <span className="tooltip-value">{hoveredData.time.toLocaleTimeString()}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Compact Data Bar - for expanded view */}
+          {hoveredData && isExpanded && (
+            <div className="chart-data-bar">
+              <div className="chart-data-bar-item elevation">
+                <span className="chart-data-bar-icon">⛰️</span>
+                <div className="chart-data-bar-content">
+                  <span className="chart-data-bar-label">{t('runDetail.tooltip.elevation')}</span>
+                  <span className="chart-data-bar-value">{formatAltitude(hoveredData.elevation)}</span>
+                </div>
+              </div>
+              <div className="chart-data-bar-item speed">
+                <span className="chart-data-bar-icon">🚀</span>
+                <div className="chart-data-bar-content">
+                  <span className="chart-data-bar-label">{t('runDetail.tooltip.speed')}</span>
+                  <span className="chart-data-bar-value">{formatSpeed(hoveredData.speed)}</span>
+                </div>
+              </div>
+              <div className="chart-data-bar-item distance">
+                <span className="chart-data-bar-icon">📏</span>
+                <div className="chart-data-bar-content">
+                  <span className="chart-data-bar-label">{t('runDetail.tooltip.distance')}</span>
+                  <span className="chart-data-bar-value">{formatDistance(hoveredData.distance / 1000)}</span>
                 </div>
               </div>
             </div>

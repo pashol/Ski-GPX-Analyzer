@@ -93,21 +93,21 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <div className="logo">
-            <span className="logo-icon">⛷️</span>
-            <h1>{t('header.title')}</h1>
-          </div>
-          <div className="header-right">
+          <div className="header-top">
+            <div className="logo">
+              <span className="logo-icon">⛷️</span>
+              <h1>{t('header.title')}</h1>
+            </div>
             <SettingsMenu />
-            {gpxData && (
-              <div className="header-actions">
-                <span className="file-name">{fileName}</span>
-                <button className="reset-btn" onClick={handleReset}>
-                  {t('header.newAnalysis')}
-                </button>
-              </div>
-            )}
           </div>
+          {gpxData && (
+            <div className="header-actions">
+              <span className="file-name">{fileName}</span>
+              <button className="reset-btn" onClick={handleReset}>
+                {t('header.newAnalysis')}
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
