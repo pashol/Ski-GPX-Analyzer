@@ -3,6 +3,8 @@
 
 A cross-platform application for analyzing ski adventures using GPX and FIT files. Available as a web app and native Android application. Get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H21VNZU)
+
 ## Features
 
 ### 📊 Analysis & Statistics
