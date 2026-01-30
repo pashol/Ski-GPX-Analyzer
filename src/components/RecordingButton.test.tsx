@@ -1,8 +1,10 @@
+import React from 'react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// Import mocks FIRST (before components) to ensure proper hoisting
+import { mockCapacitor, resetAllMocks, geolocationMock, foregroundServiceMock } from '@/test/mocks';
 import { RecordingButton } from './RecordingButton';
-import { RecordingProvider } from '@/contexts/RecordingContext';
-import { mockCapacitor, resetAllMocks } from '@/test/mocks';
+import { RecordingProvider, useRecording } from '@/contexts/RecordingContext';
 import * as permissions from '@/platform/permissions';
 
 // Mock the permissions module
@@ -69,14 +71,41 @@ describe('RecordingButton', () => {
       expect(screen.getByText('Start Recording')).toBeInTheDocument();
     });
 
-    it('should not render when already recording', () => {
+    it('should not render when already recording', async () => {
       mockCapacitor.isNativePlatform.mockReturnValue(true);
-      const { rerender } = render(
+      
+      // Mock the recording context to return isRecording = true
+      const { useRecording } = await import('@/contexts/RecordingContext');
+      const mockUseRecording = vi.spyOn(await import('@/contexts/RecordingContext'), 'useRecording');
+      mockUseRecording.mockReturnValue({
+        isRecording: true,
+        points: [],
+        startTime: new Date(),
+        elapsedSeconds: 60,
+        liveData: null,
+        locationName: 'Test',
+        error: null,
+        gpsAccuracy: 10,
+        pointCount: 10,
+        startRecording: vi.fn(),
+        stopRecording: vi.fn(),
+        discardRecording: vi.fn(),
+        checkForRecovery: vi.fn(),
+        recoverRecording: vi.fn(),
+        clearRecovery: vi.fn(),
+      });
+      
+      render(
         <RecordingProvider>
           <RecordingButton onStartRecording={mockOnStartRecording} />
         </RecordingProvider>
       );
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      
+      // Button should not be rendered when isRecording is true
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
+      
+      // Restore the mock
+      mockUseRecording.mockRestore();
     });
   });
 
@@ -90,7 +119,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       await waitFor(() => {
         expect(permissions.requestLocationPermissions).toHaveBeenCalled();
       });
@@ -107,7 +138,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       await waitFor(() => {
         expect(screen.getByText('Acquiring GPS...')).toBeInTheDocument();
       });
@@ -122,7 +155,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       await waitFor(() => {
         expect(mockOnStartRecording).toHaveBeenCalled();
       }, { timeout: 2000 });
@@ -138,7 +173,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('Permission denied');
       });
@@ -155,7 +192,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('Failed to start recording');
       });
@@ -199,7 +238,9 @@ describe('RecordingButton', () => {
         </RecordingProvider>
       );
       const button = screen.getByRole('button');
-      fireEvent.click(button);
+      await React.act(async () => {
+        fireEvent.click(button);
+      });
       // Button should be disabled during permission request + 1000ms delay
       await waitFor(() => {
         expect(button).toBeDisabled();
