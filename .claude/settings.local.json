@@ -17,7 +17,14 @@
       "Bash(git commit:*)",
       "Bash(git fetch:*)",
       "Bash(powershell -Command:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(dir \"C:\\\\Users\\\\pasca\\\\Coding\\\\Ski-GPX-Analyzer\\\\android\\\\app\\\\build\\\\outputs\\\\apk\\\\debug\")",
+      "Bash(cmd.exe /c \"cd c:\\\\Users\\\\pasca\\\\Coding\\\\Ski-GPX-Analyzer\\\\android && gradlew.bat assembleDebug\")",
+      "Bash(npx vite build:*)",
+      "Bash(.gradlew assembleDebug:*)",
+      "Bash(gradlew.bat assembleDebug:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(ls:*)"
     ]
   }
 }

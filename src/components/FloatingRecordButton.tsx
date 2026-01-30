@@ -10,10 +10,15 @@ interface FloatingRecordButtonProps {
 export function FloatingRecordButton({ onClick, isRecording = false }: FloatingRecordButtonProps) {
   const { t } = useTranslation();
 
+  const handleClick = () => {
+    console.log('[FloatingRecordButton] Button clicked, isRecording:', isRecording);
+    onClick();
+  };
+
   return (
     <button
       className={`floating-record-btn ${isRecording ? 'recording' : ''}`}
-      onClick={onClick}
+      onClick={handleClick}
       aria-label={isRecording ? t('recording.stopRecording') : t('recording.startRecording')}
     >
       {isRecording ? (

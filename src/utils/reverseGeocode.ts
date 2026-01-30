@@ -52,7 +52,7 @@ export async function reverseGeocode(lat: number, lon: number): Promise<string |
     if (error instanceof Error && error.name === 'AbortError') {
       console.log('Reverse geocoding timed out');
     } else {
-      console.error('Reverse geocoding failed:', error);
+      console.error('Reverse geocoding failed:', error instanceof Error ? error.message : String(error));
     }
     return null;
   } finally {

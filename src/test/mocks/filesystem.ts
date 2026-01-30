@@ -5,6 +5,7 @@ export enum Directory {
   Data = 'DATA',
   Cache = 'CACHE',
   External = 'EXTERNAL',
+  ExternalStorage = 'EXTERNAL_STORAGE',
 }
 
 export enum Encoding {
@@ -21,9 +22,10 @@ export class FilesystemMock {
     directory: Directory;
     encoding?: Encoding;
     recursive?: boolean;
-  }): Promise<void> {
+  }): Promise<{ uri: string }> {
     const key = `${options.directory}/${options.path}`;
     this.files.set(key, { data: options.data, directory: options.directory });
+    return { uri: `file:///mock/${options.directory}/${options.path}` };
   }
 
   async readFile(options: {

@@ -15,6 +15,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     assetsDir: 'assets',
+    cssCodeSplit: false, // Workaround for inline CSS issue
     rollupOptions: {
       output: {
         manualChunks: {

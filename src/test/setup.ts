@@ -24,3 +24,6 @@ global.navigator.getBattery = global.navigator.getBattery || vi.fn(() =>
     removeEventListener: vi.fn(),
   })
 );
+
+// Mock Element.scrollIntoView
+global.Element.prototype.scrollIntoView = vi.fn();

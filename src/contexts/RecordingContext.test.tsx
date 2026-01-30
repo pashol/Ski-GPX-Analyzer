@@ -286,7 +286,7 @@ describe('RecordingContext', () => {
       await filesystemMock.writeFile({
         path: 'SkiGPXAnalyzer/recording-autosave.json',
         data: JSON.stringify({ points: [{ lat: 45.0, lon: 7.0, ele: 1000, time: new Date().toISOString() }], startTime: new Date().toISOString(), locationName: 'Test', timestamp: Date.now() }),
-        directory: Directory.Documents,
+        directory: Directory.Data,
       });
       const { result } = renderHook(() => useRecording(), { wrapper });
       let hasRecovery = false;
@@ -299,7 +299,7 @@ describe('RecordingContext', () => {
       await filesystemMock.writeFile({
         path: 'SkiGPXAnalyzer/recording-autosave.json',
         data: JSON.stringify({ points: [{ lat: 45.0, lon: 7.0, ele: 1000, time: startTime.toISOString() }, { lat: 45.001, lon: 7.001, ele: 990, time: new Date().toISOString() }], startTime: startTime.toISOString(), locationName: 'Test Location', timestamp: Date.now() }),
-        directory: Directory.Documents,
+        directory: Directory.Data,
       });
       const { result } = renderHook(() => useRecording(), { wrapper });
       await act(async () => { await result.current.recoverRecording(); });

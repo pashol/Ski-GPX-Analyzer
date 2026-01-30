@@ -1,34 +1,45 @@
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 const APP_FOLDER = 'SkiGPXAnalyzer';
 
 export async function saveGPXFile(gpxContent: string, fileName: string): Promise<string> {
   try {
-    // Ensure the app folder exists
+    // On Android with MANAGE_EXTERNAL_STORAGE permission, try to save to public Documents
+    // Otherwise fall back to app-private Documents
+    const isAndroid = Capacitor.getPlatform() === 'android';
+    const targetDirectory = isAndroid ? Directory.ExternalStorage : Directory.Documents;
+    const publicPath = isAndroid ? `Documents/${APP_FOLDER}/${fileName}` : `${APP_FOLDER}/${fileName}`;
+    const savePath = isAndroid ? publicPath : `${APP_FOLDER}/${fileName}`;
+
+    // Ensure subfolder exists
     try {
+      const folderPath = isAndroid ? `Documents/${APP_FOLDER}` : APP_FOLDER;
       await Filesystem.mkdir({
-        path: APP_FOLDER,
-        directory: Directory.Documents,
+        path: folderPath,
+        directory: targetDirectory,
         recursive: true,
       });
     } catch (error) {
-      // Folder may already exist, continue
+      // Folder may already exist
+      console.log('[fileSaver] Folder creation skipped (may already exist):', error instanceof Error ? error.message : String(error));
     }
 
-    // Save the file
-    const filePath = `${APP_FOLDER}/${fileName}`;
-    
-    await Filesystem.writeFile({
-      path: filePath,
+    // Write to public Documents (Android with MANAGE_EXTERNAL_STORAGE) or app-private Documents
+    const result = await Filesystem.writeFile({
+      path: savePath,
       data: gpxContent,
-      directory: Directory.Documents,
+      directory: targetDirectory,
       encoding: Encoding.UTF8,
     });
 
-    return filePath;
+    const location = isAndroid ? 'ExternalStorage (public Documents)' : 'Documents';
+    console.log(`[fileSaver] GPX file saved to ${location}/${savePath}`);
+    return result.uri;
   } catch (error) {
-    console.error('Failed to save GPX file:', error);
-    throw new Error(`Failed to save GPX file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('[fileSaver] Failed to save GPX file:', errorMsg);
+    throw new Error(`Failed to save GPX file: ${errorMsg}`);
   }
 }
 
@@ -36,7 +47,7 @@ export async function readTempFile(fileName: string): Promise<string | null> {
   try {
     const result = await Filesystem.readFile({
       path: `${APP_FOLDER}/${fileName}`,
-      directory: Directory.Documents,
+      directory: Directory.Data,
       encoding: Encoding.UTF8,
     });
     return result.data as string;
@@ -49,7 +60,7 @@ export async function writeTempFile(fileName: string, content: string): Promise<
   try {
     await Filesystem.mkdir({
       path: APP_FOLDER,
-      directory: Directory.Documents,
+      directory: Directory.Data,
       recursive: true,
     });
   } catch (error) {
@@ -59,7 +70,7 @@ export async function writeTempFile(fileName: string, content: string): Promise<
   await Filesystem.writeFile({
     path: `${APP_FOLDER}/${fileName}`,
     data: content,
-    directory: Directory.Documents,
+    directory: Directory.Data,
     encoding: Encoding.UTF8,
   });
 }
@@ -68,7 +79,7 @@ export async function deleteTempFile(fileName: string): Promise<void> {
   try {
     await Filesystem.deleteFile({
       path: `${APP_FOLDER}/${fileName}`,
-      directory: Directory.Documents,
+      directory: Directory.Data,
     });
   } catch (error) {
     // File may not exist

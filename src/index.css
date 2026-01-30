@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide Ko-fi widget when chart is expanded */
+body.hide-kofi #kofi-widget-overlay,
+body.hide-kofi div[id^="kofi"],
+body.hide-kofi iframe[src*="ko-fi.com"] {
+  display: none !important;
+  visibility: hidden !important;
+}

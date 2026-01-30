@@ -14,14 +14,14 @@ const localStorageFallback: Persistence = {
     try {
       localStorage.setItem(key, value);
     } catch (e) {
-      console.warn('localStorage not available:', e);
+      console.warn('localStorage not available:', e instanceof Error ? e.message : String(e));
     }
   },
   async getItem(key) {
     try {
       return localStorage.getItem(key);
     } catch (e) {
-      console.warn('localStorage not available:', e);
+      console.warn('localStorage not available:', e instanceof Error ? e.message : String(e));
       return null;
     }
   },
@@ -29,14 +29,14 @@ const localStorageFallback: Persistence = {
     try {
       localStorage.removeItem(key);
     } catch (e) {
-      console.warn('localStorage not available:', e);
+      console.warn('localStorage not available:', e instanceof Error ? e.message : String(e));
     }
   },
   async clear() {
     try {
       localStorage.clear();
     } catch (e) {
-      console.warn('localStorage not available:', e);
+      console.warn('localStorage not available:', e instanceof Error ? e.message : String(e));
     }
   },
 };
@@ -46,7 +46,7 @@ const capacitorStorage: Persistence = {
     try {
       await Preferences.set({ key, value });
     } catch (error) {
-      console.error('Capacitor Preferences setItem failed:', error);
+      console.error('Capacitor Preferences setItem failed:', error instanceof Error ? error.message : String(error));
       throw error;
     }
   },
@@ -55,7 +55,7 @@ const capacitorStorage: Persistence = {
       const { value } = await Preferences.get({ key });
       return value;
     } catch (error) {
-      console.error('Capacitor Preferences getItem failed:', error);
+      console.error('Capacitor Preferences getItem failed:', error instanceof Error ? error.message : String(error));
       return null;
     }
   },
@@ -63,14 +63,14 @@ const capacitorStorage: Persistence = {
     try {
       await Preferences.remove({ key });
     } catch (error) {
-      console.error('Capacitor Preferences removeItem failed:', error);
+      console.error('Capacitor Preferences removeItem failed:', error instanceof Error ? error.message : String(error));
     }
   },
   async clear() {
     try {
       await Preferences.clear();
     } catch (error) {
-      console.error('Capacitor Preferences clear failed:', error);
+      console.error('Capacitor Preferences clear failed:', error instanceof Error ? error.message : String(error));
     }
   }
 };

@@ -237,7 +237,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         mapRef.current.setView([centerLat, centerLon], 13);
       }
     } catch (err) {
-      console.error('Error initializing map:', err);
+      console.error('Error initializing map:', err instanceof Error ? err.message : String(err));
       setMapError('Failed to initialize map.');
     }
 
@@ -276,7 +276,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         });
       }
     } catch (err) {
-      console.error('Error toggling piste overlay:', err);
+      console.error('Error toggling piste overlay:', err instanceof Error ? err.message : String(err));
     }
   }, [showPisteOverlay, isLeafletReady]);
 
@@ -527,7 +527,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       }
 
     } catch (err) {
-      console.error('Error updating map layers:', err);
+      console.error('Error updating map layers:', err instanceof Error ? err.message : String(err));
     }
   }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex]);
 

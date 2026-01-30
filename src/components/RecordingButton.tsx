@@ -35,7 +35,7 @@ export function RecordingButton({ onStartRecording, size = 'normal' }: Recording
       await new Promise(resolve => setTimeout(resolve, 1000));
       onStartRecording();
     } catch (error) {
-      console.error('Failed to start recording:', error);
+      console.error('Failed to start recording:', error instanceof Error ? error.message : String(error));
       alert(t('recording.startFailed'));
     } finally {
       setIsAcquiring(false);

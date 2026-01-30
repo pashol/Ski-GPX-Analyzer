@@ -139,8 +139,11 @@ function App() {
   };
 
   const handleStartRecording = async () => {
+    console.log('[App] handleStartRecording called');
     const started = await startRecording();
+    console.log('[App] startRecording result:', started);
     if (started) {
+      console.log('[App] Setting app mode to recording');
       setAppMode('recording');
       setGpxData({
         name: 'Recording',
@@ -167,6 +170,9 @@ function App() {
         runs: [],
       });
       setActiveTab('track');
+    } else {
+      console.error('[App] Failed to start recording');
+      alert('Failed to start recording. Check console logs for details.');
     }
   };
 
@@ -214,7 +220,7 @@ function App() {
         await handleOpenFile(gpxData, file.name);
       }
     } catch (error) {
-      console.error('Failed to open file from hamburger menu:', error);
+      console.error('Failed to open file from hamburger menu:', error instanceof Error ? error.message : String(error));
       // Could show error toast here
     }
   };

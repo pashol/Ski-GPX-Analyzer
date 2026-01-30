@@ -38,8 +38,9 @@ export async function pickNativeFile(): Promise<NativeFile | null> {
     if (error.message === 'pickFiles canceled') {
       return null; // User cancelled - not an error
     }
-    console.error('Native file picker error:', error);
-    throw new Error(`Failed to pick file: ${error.message}`);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('Native file picker error:', errorMsg);
+    throw new Error(`Failed to pick file: ${errorMsg}`);
   }
 }
 
