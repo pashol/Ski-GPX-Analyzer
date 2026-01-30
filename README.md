@@ -13,12 +13,16 @@ A cross-platform application for analyzing ski adventures using GPX and FIT file
 - **Speed Distribution** - Histogram analysis of time spent in different speed ranges
 - **Time Distribution** - Breakdown of moving, stationary, ascending, and descending time
 - **Run Rankings** - Compare individual runs by speed, distance, and vertical drop
+- **Heart Rate Analysis** - Average and max heart rate per session with 5-zone training breakdown
+- **Best Run Identification** - Automatically highlights your best run by vertical drop
 
 ### 🏔️ Intelligent Run Detection
-- **Automatic Run Identification** - Advanced algorithm detects ski runs based on elevation trends and speed patterns
+- **Advanced Algorithm** - Window-based descent detection using 20-point trend analysis with elevation smoothing
+- **Smart Segmentation** - Combines segments with small gaps and filters noise using 5-point moving window
 - **Lift Filtering** - Automatically excludes lift rides from run statistics
 - **Run Metrics** - Detailed stats for each run: distance, vertical drop, duration, average/max speed, and slope angle
 - **Minimum Thresholds** - Filters out insignificant segments (60s minimum duration, 30m minimum vertical)
+- **Speed Smoothing** - 5-point moving window reduces GPS jitter for accurate speed calculation
 
 ### 🗺️ Interactive Mapping
 - **Multiple Map Types** - Streets, satellite, and terrain views
@@ -26,6 +30,8 @@ A cross-platform application for analyzing ski adventures using GPX and FIT file
 - **Piste Overlay** - Toggle OpenSnowMap layer to view official ski runs and lifts
 - **Smart Markers** - Start/End markers, numbered run markers, and optional kilometer markers
 - **Run Highlighting** - Click any run to highlight it on the map and view details
+- **Run Cycling** - Navigate between runs with on-screen controls or keyboard arrows
+- **Fullscreen Mode** - Expand map to full-screen for better exploration
 
 ### 📈 Elevation & Speed Profiles
 - **Dual-Axis Charts** - Elevation and speed displayed simultaneously
@@ -33,12 +39,23 @@ A cross-platform application for analyzing ski adventures using GPX and FIT file
 - **Axis Toggle** - Switch between distance-based and time-based X-axis
 - **Hover Tooltips** - Detailed point-by-point data on mouse hover
 - **Run Overlays** - Visual indicators showing where each run occurs on the profile
+- **Heart Rate Overlay** - Optional heart rate line when data is available
 
 ### 🔍 Run Detail View
 - **Individual Run Analysis** - Deep dive into any run with dedicated charts and statistics
 - **Performance Comparison** - Compare run metrics to session averages
 - **Speed Distribution** - Per-run histogram showing speed patterns
 - **Point-by-Point Data** - Explore elevation and speed changes throughout the run
+- **Fullscreen Charts** - Expand charts with mobile rotation support
+
+### ⏺️ Live GPS Recording
+- **Real-Time Tracking** - Record ski sessions with live GPS tracking and foreground service
+- **Live Statistics** - See runs detected in real-time with speed, distance, and vertical metrics
+- **Auto-Save Protection** - Recording progress saved every 60 seconds to prevent data loss
+- **Crash Recovery** - Resume interrupted recordings after app restart or crash
+- **Battery Management** - Auto-save at low battery (10%), auto-stop at critical (5%)
+- **Smart Filtering** - GPS accuracy filtering ignores poor quality points (>50m accuracy)
+- **GPX Export** - Save recordings as GPX files to device storage
 
 ### ⚙️ User Experience
 - **Drag-and-Drop Upload (Web)** - Easy file upload with drag-and-drop support
@@ -48,6 +65,10 @@ A cross-platform application for analyzing ski adventures using GPX and FIT file
 - **Persistent Storage** - Saves session data across app restarts
 - **Responsive Design** - Optimized for desktop browsers and mobile devices
 - **File Format Support** - Compatible with GPX and FIT files from Strava, Garmin, and other GPS devices
+- **Multi-Language Support** - Available in English, Italian, German, and French
+- **Onboarding Flow** - Guided introduction for first-time native app users
+- **Keyboard Navigation** - Arrow keys for run cycling, Escape to exit fullscreen
+- **Smart Location Names** - Reverse geocoding converts coordinates to location names
 
 ### 📱 Mobile & Platform Support
 - **Web Version** - Works on any modern web browser (desktop, tablet, mobile)
