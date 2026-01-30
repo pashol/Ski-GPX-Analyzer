@@ -19,6 +19,8 @@
     "heroDescription": "Lade deine GPX- oder FIT-Datei hoch für umfassende Statistiken, interaktive Karten und detaillierte Analyse deiner Abfahrten.",
     "dropzone": "GPX- oder FIT-Datei hier ablegen",
     "dropzoneHint": "oder klicken zum Durchsuchen",
+    "nativeDropzone": "Tippen zum Auswählen",
+    "nativeDropzoneHint": "Wähle eine GPX- oder FIT-Datei von deinem Gerät",
     "fileHint": "Unterstützt .gpx und .fit Dateien von Strava, Garmin und anderen GPS-Geräten",
     "processing": "Datei wird verarbeitet...",
     "pleaseWait": "Bitte warten",
@@ -217,6 +219,11 @@
   },
   "language": {
     "select": "Sprache"
+  },
+  "menu": {
+    "toggle": "Menü",
+    "openFile": "Datei öffnen",
+    "supportMe": "Unterstützen"
   },
   "settings": {
     "title": "Einstellungen",

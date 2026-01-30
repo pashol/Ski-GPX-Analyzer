@@ -555,3 +555,28 @@ export function metersToMiles(m: number): number {
 export function kmhToMph(kmh: number): number {
   return kmh * 0.621371;
 }
+
+export const EMPTY_GPX_DATA: GPXData = {
+  name: 'Ready to record',
+  points: [],
+  stats: {
+    totalDistance: 0,
+    skiDistance: 0,
+    totalAscent: 0,
+    totalDescent: 0,
+    skiVertical: 0,
+    maxSpeed: 0,
+    avgSpeed: 0,
+    avgSkiSpeed: 0,
+    maxAltitude: 0,
+    minAltitude: 0,
+    elevationDelta: 0,
+    duration: 0,
+    avgSlope: 0,
+    maxSlope: 0,
+    runCount: 0,
+    startTime: new Date(),
+    endTime: new Date(),
+  },
+  runs: [],
+};

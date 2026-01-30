@@ -1,0 +1,69 @@
+.recording-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.recording-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.recording-button:active {
+  transform: translateY(0);
+}
+
+.recording-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.recording-button.large {
+  padding: 1.25rem 3rem;
+  font-size: 1.25rem;
+}
+
+.recording-icon {
+  font-size: 1.2em;
+  animation: pulse-icon 1.5s infinite;
+}
+
+@keyframes pulse-icon {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.recording-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.recording-button.acquiring {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+}

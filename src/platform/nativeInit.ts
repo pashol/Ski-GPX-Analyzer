@@ -19,7 +19,7 @@ export async function initNativeApp() {
     // Hide splash screen after initialization
     await SplashScreen.hide();
   } catch (error) {
-    console.error('Native initialization error:', error);
+    console.error('Native initialization error:', error instanceof Error ? error.message : String(error));
     // Don't throw - app should still work
   }
 }

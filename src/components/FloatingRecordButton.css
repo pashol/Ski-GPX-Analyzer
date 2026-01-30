@@ -1,0 +1,51 @@
+.floating-record-btn {
+  position: fixed;
+  bottom: 72px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(238, 90, 111, 0.4);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.floating-record-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(238, 90, 111, 0.5);
+}
+
+.floating-record-btn:active {
+  transform: scale(0.95);
+}
+
+.floating-record-btn.recording {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  box-shadow: 0 4px 12px rgba(68, 160, 141, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.floating-record-btn.recording:hover {
+  box-shadow: 0 6px 16px rgba(68, 160, 141, 0.5);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(68, 160, 141, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(68, 160, 141, 0.6);
+  }
+}
+
+.record-icon {
+  width: 24px;
+  height: 24px;
+}

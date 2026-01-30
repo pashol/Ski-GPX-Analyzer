@@ -3,8 +3,7 @@ import React, { useRef, useState } from 'react';
 import './FileUpload.css';
 import { parseFile, isSupportedFile, GPXData } from '../utils/parser';
 import { useTranslation } from '../i18n';
-import { Capacitor } from '@capacitor/core';
-import { pickNativeFile } from '../utils/filePicker';
+import { pickNativeFile, usePlatform } from '../platform';
 
 interface FileUploadProps {
   onFileUpload: (data: GPXData, fileName: string) => void;
@@ -12,12 +11,11 @@ interface FileUploadProps {
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
   const { t } = useTranslation();
+  const { isNative } = usePlatform();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const isNative = Capacitor.isNativePlatform();
 
   const handleFile = async (file: File | string, fileName?: string) => {
     setError(null);
@@ -127,8 +125,8 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         ) : (
           <>
             <div className="upload-icon">📁</div>
-            <h3>{isNative ? 'Tap to Select File' : t('upload.dropzone')}</h3>
-            <p>{isNative ? 'Select a GPX or FIT file from your device' : t('upload.dropzoneHint')}</p>
+            <h3>{isNative ? t('upload.nativeDropzone') : t('upload.dropzone')}</h3>
+            <p>{isNative ? t('upload.nativeDropzoneHint') : t('upload.dropzoneHint')}</p>
             <span className="file-hint">{t('upload.fileHint')}</span>
           </>
         )}

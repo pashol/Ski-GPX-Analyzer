@@ -41,5 +41,14 @@ KEYSTORE_INFO.txt
 # Android local config
 android/local.properties
 
+# Test coverage
+coverage/
+
+# Local agent settings
+.claude/settings.local.json
+
+# Build scripts
+build-release.ps1
+
 ANDROID_SETUP.md
 ANDROID_IMPLEMENTATION_SUMMARY.md

@@ -1,23 +1,30 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './index.css'; // Base styles
 import './utils/leafletLoader'; // Import Leaflet before app
 import App from './App';
 import { LanguageProvider } from './i18n';
 import { UnitsProvider } from './contexts/UnitsContext';
+import { PlatformProvider } from './platform';
+import { RecordingProvider } from './contexts/RecordingContext';
 
 const container = document.getElementById('app');
 if (container) {
   const root = createRoot(container);
   root.render(
     <React.StrictMode>
-      <LanguageProvider>
-        <UnitsProvider>
-          <div className="app-safe-area">
-            <App />
-          </div>
-        </UnitsProvider>
-      </LanguageProvider>
+      <PlatformProvider>
+        <RecordingProvider>
+          <LanguageProvider>
+            <UnitsProvider>
+              <div className="app-safe-area">
+                <App />
+              </div>
+            </UnitsProvider>
+          </LanguageProvider>
+        </RecordingProvider>
+      </PlatformProvider>
     </React.StrictMode>
   );
 }

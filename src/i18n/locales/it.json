@@ -19,6 +19,8 @@
     "heroDescription": "Carica il tuo file GPX o FIT per ottenere statistiche complete, mappe interattive e analisi dettagliate delle tue discese.",
     "dropzone": "Trascina qui il tuo file GPX o FIT",
     "dropzoneHint": "o clicca per sfogliare",
+    "nativeDropzone": "Tocca per Selezionare File",
+    "nativeDropzoneHint": "Seleziona un file GPX o FIT dal tuo dispositivo",
     "fileHint": "Supporta file .gpx e .fit da Strava, Garmin e altri dispositivi GPS",
     "processing": "Elaborazione file...",
     "pleaseWait": "Attendere prego",
@@ -217,6 +219,11 @@
   },
   "language": {
     "select": "Lingua"
+  },
+  "menu": {
+    "toggle": "Menu",
+    "openFile": "Apri file",
+    "supportMe": "Sostieni"
   },
   "settings": {
     "title": "Impostazioni",

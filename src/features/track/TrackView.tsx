@@ -1,19 +1,38 @@
-
 import React from 'react';
 import './TrackView.css';
 import { GPXData, Run, formatDuration, formatDurationLong, metersToFeet, kmhToMph } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
+import { useRecording } from '../../contexts/RecordingContext';
 
 interface TrackViewProps {
-  data: GPXData;
+  data: GPXData | null;
   onRunSelect: (run: Run) => void;
 }
 
 export function TrackView({ data, onRunSelect }: TrackViewProps) {
   const { t, language } = useTranslation();
   const { unitSystem, formatSpeed, formatDistance, formatAltitude } = useUnits();
-  const { stats } = data;
+  const { isRecording, elapsedSeconds, gpsAccuracy, pointCount, liveData } = useRecording();
+  
+  // Use live data when recording, otherwise use the provided data
+  const displayData = (isRecording && liveData) ? liveData : data;
+  
+  // Handle empty state when no data is loaded
+  if (!displayData) {
+    return (
+      <div className="track-view track-view--empty">
+        <div className="empty-state">
+          <span className="empty-icon">⛷️</span>
+          <h2>{t('home.title')}</h2>
+          <p className="empty-description">{t('home.description')}</p>
+          <p className="empty-hint">{t('recording.runsHint')}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const { stats } = displayData;
 
   // Calculate lift distance (total distance minus ski distance)
   const liftDistance = stats.totalDistance - stats.skiDistance;
@@ -22,25 +41,46 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
 
   return (
     <div className="track-view">
+      {/* Recording Indicator */}
+      {isRecording && (
+        <div className="recording-indicator">
+          <div className="recording-pulse">
+            <span className="recording-dot"></span>
+            <span className="recording-status">{t('recording.recording')}</span>
+          </div>
+          <div className="recording-stats">
+            <span className="recording-time">{formatDuration(elapsedSeconds)}</span>
+            {gpsAccuracy && (
+              <span className="recording-accuracy">
+                GPS: ±{gpsAccuracy.toFixed(0)}m
+              </span>
+            )}
+            <span className="recording-points">{pointCount} points</span>
+          </div>
+        </div>
+      )}
+
       <div className="track-header">
         <div className="track-title">
-          <h2>{data.name}</h2>
-          <div className="track-times">
-            <span className="track-date">
-              {stats.startTime.toLocaleDateString(locale, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })} {stats.startTime.toLocaleTimeString(locale)}
-            </span>
-            <span className="track-date">
-              {stats.endTime.toLocaleDateString(locale, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })} {stats.endTime.toLocaleTimeString(locale)}
-            </span>
-          </div>
+          <h2>{displayData.name}</h2>
+          {!isRecording && (
+            <div className="track-times">
+              <span className="track-date">
+                {stats.startTime.toLocaleDateString(locale, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })} {stats.startTime.toLocaleTimeString(locale)}
+              </span>
+              <span className="track-date">
+                {stats.endTime.toLocaleDateString(locale, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })} {stats.endTime.toLocaleTimeString(locale)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -152,19 +192,19 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
         )}
       </div>
 
-      {data.runs.length > 0 && (
+      {displayData.runs.length > 0 && (
         <div className="stats-section">
-          <h3>🎿 {t('track.skiRuns')} ({data.runs.length})</h3>
-          <p className="runs-hint">{t('track.runsHint')}</p>
+          <h3>🎿 {t('track.skiRuns')} ({displayData.runs.length})</h3>
+          <p className="runs-hint">{isRecording ? t('recording.runsHint') : t('track.runsHint')}</p>
           <div className="runs-list">
-            {data.runs.map((run, idx) => (
+            {displayData.runs.map((run, idx) => (
               <div
                 key={run.id}
-                className="run-card clickable"
-                onClick={() => onRunSelect(run)}
+                className={`run-card ${!isRecording ? 'clickable' : ''}`}
+                onClick={() => !isRecording && onRunSelect(run)}
                 role="button"
-                tabIndex={0}
-                onKeyPress={(e) => e.key === 'Enter' && onRunSelect(run)}
+                tabIndex={!isRecording ? 0 : undefined}
+                onKeyPress={(e) => !isRecording && e.key === 'Enter' && onRunSelect(run)}
               >
                 <div className="run-header">
                   <span className="run-number">{t('track.run')} {idx + 1}</span>
@@ -172,7 +212,7 @@ export function TrackView({ data, onRunSelect }: TrackViewProps) {
                     {run.startTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <span className="run-duration">{formatDurationLong(run.duration)}</span>
-                  <span className="run-arrow">→</span>
+                  {!isRecording && <span className="run-arrow">→</span>}
                 </div>
                 <div className="run-stats">
                   <div className="run-stat">

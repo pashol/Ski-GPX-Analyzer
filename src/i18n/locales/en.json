@@ -19,6 +19,8 @@
     "heroDescription": "Upload your GPX or FIT file to get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.",
     "dropzone": "Drop your GPX or FIT file here",
     "dropzoneHint": "or click to browse",
+    "nativeDropzone": "Tap to Select File",
+    "nativeDropzoneHint": "Select a GPX or FIT file from your device",
     "fileHint": "Supports .gpx and .fit files from Strava, Garmin, and other GPS devices",
     "processing": "Processing file...",
     "pleaseWait": "Please wait",
@@ -60,6 +62,43 @@
     "slope": "Slope",
     "elevation": "Elevation",
     "heartRate": "Heart Rate"
+  },
+  "recording": {
+    "recording": "Recording",
+    "startRecording": "Start Recording",
+    "stopRecording": "Stop Recording",
+    "acquiringGPS": "Acquiring GPS...",
+    "permissionDenied": "Location permission is required for recording",
+    "startFailed": "Failed to start recording",
+    "runsHint": "Runs will be available after stopping"
+  },
+  "onboarding": {
+    "title": "Welcome to Ski GPX Analyzer",
+    "description": "Track and analyze your ski adventures with GPS recording and detailed statistics.",
+    "recordTitle": "Record Your Runs",
+    "recordDesc": "Use GPS to automatically track your ski sessions with real-time stats",
+    "analyzeTitle": "Detailed Analysis",
+    "analyzeDesc": "View comprehensive statistics, speed profiles, and run detection",
+    "mapTitle": "Interactive Maps",
+    "mapDesc": "Visualize your tracks on detailed maps with satellite view",
+    "getStarted": "Get Started"
+  },
+  "home": {
+    "title": "Ski GPX Analyzer",
+    "description": "Record your ski sessions or analyze GPX/FIT files",
+    "openFile": "Open GPX/FIT File",
+    "continueSession": "Continue Session"
+  },
+  "menu": {
+    "toggle": "Menu",
+    "openFile": "Open File",
+    "supportMe": "Support me"
+  },
+  "recovery": {
+    "title": "Recover Recording?",
+    "description": "A recording was interrupted. Would you like to resume or discard it?",
+    "resume": "Resume Recording",
+    "discard": "Discard"
   },
   "map": {
     "mapType": "Map Type:",

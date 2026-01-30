@@ -35,24 +35,6 @@
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>Ski GPX Analyzer - Free GPX & FIT File Analysis Tool</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* Hide Ko-fi widget when chart is expanded */
-    body.hide-kofi #kofi-widget-overlay,
-    body.hide-kofi div[id^="kofi"],
-    body.hide-kofi iframe[src*="ko-fi.com"] {
-      display: none !important;
-      visibility: hidden !important;
-    }
-  </style>
 </head>
 <body>
   <div id="app"></div>
@@ -62,38 +44,47 @@
   <script>
     const prefersCompactOffset = () => window.matchMedia('(max-width: 480px)').matches || window.innerHeight < 640;
 
-    // Only load Ko-fi on web, not in native app
-    if (typeof window !== 'undefined' &&
-        !window.matchMedia('(display-mode: standalone)').matches) {
-      const isCapacitor = document.URL.indexOf('http://') === -1 &&
-                         document.URL.indexOf('https://') === -1;
+    // Only load Ko-fi on web, not in native app (Android/iOS)
+    // Check multiple indicators of native/Capacitor environment
+    const isNativeApp = (
+      // Check for Capacitor bridge (available in native apps)
+      window.Capacitor ||
+      window.CapacitorWebView ||
+      window.AndroidBridge ||
+      // Check for Android/iOS user agent
+      /android|iphone|ipad|ipod/i.test(navigator.userAgent) && !/chrome|firefox|safari/i.test(navigator.userAgent) ||
+      // Check if URL is capacitor:// or file:// (native schemes)
+      /^capacitor:/.test(document.URL) ||
+      /^file:/.test(document.URL) && /android_asset/.test(document.URL) ||
+      // Check for missing http/https in protocol
+      (!/^https?:/.test(location.protocol) && location.protocol !== 'about:')
+    );
 
-      if (!isCapacitor) {
-        const script = document.createElement('script');
-        script.src = 'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js';
-        script.onload = () => {
-          kofiWidgetOverlay.draw('gggentii', {
-            type: 'floating-chat',
-            'floating-chat.donateButton.text': 'Support me',
-            'floating-chat.donateButton.background-color': '#00bfa5',
-            'floating-chat.donateButton.text-color': '#fff',
-            'floating-chat.donateButton.bottom': prefersCompactOffset()
+    if (!isNativeApp && typeof window !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js';
+      script.onload = () => {
+        kofiWidgetOverlay.draw('gggentii', {
+          type: 'floating-chat',
+          'floating-chat.donateButton.text': 'Support me',
+          'floating-chat.donateButton.background-color': '#00bfa5',
+          'floating-chat.donateButton.text-color': '#fff',
+          'floating-chat.donateButton.bottom': prefersCompactOffset()
+            ? 'calc(72px + env(safe-area-inset-bottom, 16px))'
+            : 'calc(96px + env(safe-area-inset-bottom, 16px))'
+        });
+      };
+      document.head.appendChild(script);
+
+      window.addEventListener('resize', () => {
+        if (window.kofiWidgetOverlay?.setPosition) {
+          window.kofiWidgetOverlay.setPosition({
+            bottom: prefersCompactOffset()
               ? 'calc(72px + env(safe-area-inset-bottom, 16px))'
               : 'calc(96px + env(safe-area-inset-bottom, 16px))'
           });
-        };
-        document.head.appendChild(script);
-
-        window.addEventListener('resize', () => {
-          if (window.kofiWidgetOverlay?.setPosition) {
-            window.kofiWidgetOverlay.setPosition({
-              bottom: prefersCompactOffset()
-                ? 'calc(72px + env(safe-area-inset-bottom, 16px))'
-                : 'calc(96px + env(safe-area-inset-bottom, 16px))'
-            });
-          }
-        });
-      }
+        }
+      });
     }
   </script>
 </body>

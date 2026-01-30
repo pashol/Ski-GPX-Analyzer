@@ -1,19 +1,20 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useTranslation } from '../i18n';
 import { metersToFeet, metersToMiles, kmhToMph } from '../utils/gpxParser';
+import { persistence } from '../platform';
 
 export type UnitSystem = 'metric' | 'imperial';
 
 const STORAGE_KEY = 'ski-gpx-analyzer-units';
 
-function getInitialUnitSystem(): UnitSystem {
+async function loadInitialUnitSystem(): Promise<UnitSystem> {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = await persistence.getItem(STORAGE_KEY);
     if (stored === 'metric' || stored === 'imperial') {
       return stored;
     }
   } catch {
-    // localStorage not available
+    // Storage not available
   }
   return 'metric'; // Default to metric
 }
@@ -34,16 +35,20 @@ interface UnitsProviderProps {
 }
 
 export function UnitsProvider({ children }: UnitsProviderProps) {
-  const [unitSystem, setUnitSystemState] = useState<UnitSystem>(getInitialUnitSystem);
+  const [unitSystem, setUnitSystemState] = useState<UnitSystem>('metric');
   const { t } = useTranslation();
+
+  // Load saved unit system on mount
+  useEffect(() => {
+    loadInitialUnitSystem().then(setUnitSystemState);
+  }, []);
 
   const setUnitSystem = useCallback((units: UnitSystem) => {
     setUnitSystemState(units);
-    try {
-      localStorage.setItem(STORAGE_KEY, units);
-    } catch {
-      // localStorage not available
-    }
+    // Fire-and-forget persistence
+    persistence.setItem(STORAGE_KEY, units).catch(() => {
+      // Silently fail if storage unavailable
+    });
   }, []);
 
   const formatSpeed = useCallback((kmh: number, precision: number = 1): string => {
