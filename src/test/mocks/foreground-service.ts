@@ -1,5 +1,13 @@
 import { vi } from 'vitest';
-import { ServiceType } from '@capawesome-team/capacitor-android-foreground-service';
+
+// Define ServiceType enum locally to avoid import issues
+export enum ServiceType {
+  Location = 'location',
+  DataSync = 'dataSync',
+  MediaPlayback = 'mediaPlayback',
+  PhoneCall = 'phoneCall',
+  VideoCall = 'videoCall',
+}
 
 export interface ForegroundServiceOptions {
   id: number;
@@ -44,7 +52,6 @@ export class ForegroundServiceMock {
 }
 
 export const foregroundServiceMock = new ForegroundServiceMock();
-export { ServiceType };
 
 vi.mock('@capawesome-team/capacitor-android-foreground-service', () => ({
   ForegroundService: foregroundServiceMock,
