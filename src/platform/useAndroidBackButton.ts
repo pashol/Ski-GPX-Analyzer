@@ -13,7 +13,8 @@ interface BackButtonCallbacks {
 export function useAndroidBackButton(
   activeTab: TabType,
   selectedRun: Run | null,
-  callbacks: BackButtonCallbacks
+  callbacks: BackButtonCallbacks,
+  isRecording?: boolean
 ) {
   const { isNative } = usePlatform();
 
@@ -23,6 +24,13 @@ export function useAndroidBackButton(
     let listenerHandle: any;
 
     CapacitorApp.addListener('backButton', () => {
+      // Prevent accidental exit during recording
+      if (isRecording) {
+        // Just go back to track view, don't exit
+        callbacks.setActiveTab('track');
+        return;
+      }
+
       if (activeTab === 'run-detail' && selectedRun) {
         // Go back to track view from run detail
         callbacks.setSelectedRun(null);
@@ -43,5 +51,5 @@ export function useAndroidBackButton(
         listenerHandle.remove();
       }
     };
-  }, [isNative, activeTab, selectedRun, callbacks]);
+  }, [isNative, activeTab, selectedRun, callbacks, isRecording]);
 }

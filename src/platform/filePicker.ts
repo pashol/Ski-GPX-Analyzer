@@ -42,3 +42,26 @@ export async function pickNativeFile(): Promise<NativeFile | null> {
     throw new Error(`Failed to pick file: ${error.message}`);
   }
 }
+
+/**
+ * Platform-agnostic file picker that returns a File object.
+ * On native platforms, converts base64 data to a File object.
+ * On web, this should not be called (use HTML file input instead).
+ */
+export async function pickFile(): Promise<File | null> {
+  const nativeFile = await pickNativeFile();
+  if (!nativeFile) {
+    return null;
+  }
+
+  // Decode base64 to string
+  const decodedData = atob(nativeFile.data);
+
+  // Determine MIME type based on extension
+  const extension = nativeFile.name.toLowerCase().split('.').pop();
+  const mimeType = extension === 'gpx' ? 'application/gpx+xml' : 'application/octet-stream';
+
+  // Create a Blob and File from the decoded data
+  const blob = new Blob([decodedData], { type: mimeType });
+  return new File([blob], nativeFile.name, { type: mimeType });
+}

@@ -6,6 +6,7 @@ import App from './App';
 import { LanguageProvider } from './i18n';
 import { UnitsProvider } from './contexts/UnitsContext';
 import { PlatformProvider } from './platform';
+import { RecordingProvider } from './contexts/RecordingContext';
 
 const container = document.getElementById('app');
 if (container) {
@@ -13,13 +14,15 @@ if (container) {
   root.render(
     <React.StrictMode>
       <PlatformProvider>
-        <LanguageProvider>
-          <UnitsProvider>
-            <div className="app-safe-area">
-              <App />
-            </div>
-          </UnitsProvider>
-        </LanguageProvider>
+        <RecordingProvider>
+          <LanguageProvider>
+            <UnitsProvider>
+              <div className="app-safe-area">
+                <App />
+              </div>
+            </UnitsProvider>
+          </LanguageProvider>
+        </RecordingProvider>
       </PlatformProvider>
     </React.StrictMode>
   );

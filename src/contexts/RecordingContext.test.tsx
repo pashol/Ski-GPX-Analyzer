@@ -2,6 +2,10 @@
 import { vi } from 'vitest';
 
 // Mock Capacitor modules before importing the context
+vi.mock('@/utils/reverseGeocode', () => ({
+  reverseGeocode: vi.fn().mockResolvedValue('Mock Location'),
+}));
+
 vi.mock('@capacitor/geolocation', async () => {
   const { geolocationMock } = await import('@/test/mocks/geolocation');
   return {

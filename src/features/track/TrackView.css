@@ -5,6 +5,41 @@
   gap: 2rem;
 }
 
+.track-view--empty {
+  min-height: calc(100vh - 200px);
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.empty-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.empty-hint {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
 .track-header {
   display: flex;
   justify-content: space-between;
@@ -279,4 +314,85 @@
   .big-stat-card.compact {
     padding: 0.6rem 0.75rem;
   }
+}
+
+/* Recording Indicator Styles */
+.recording-indicator {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+.recording-pulse {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.recording-status {
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+}
+
+.recording-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.recording-time {
+  font-family: monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+
+.recording-accuracy {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.recording-points {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
 }

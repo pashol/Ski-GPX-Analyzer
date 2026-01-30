@@ -220,6 +220,11 @@
   "language": {
     "select": "Langue"
   },
+  "menu": {
+    "toggle": "Menu",
+    "openFile": "Ouvrir fichier",
+    "supportMe": "Soutenir"
+  },
   "settings": {
     "title": "Paramètres",
     "language": "Langue",
