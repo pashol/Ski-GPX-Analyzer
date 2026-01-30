@@ -19,6 +19,8 @@
     "heroDescription": "Upload your GPX or FIT file to get comprehensive statistics, interactive maps, and detailed analysis of your ski runs.",
     "dropzone": "Drop your GPX or FIT file here",
     "dropzoneHint": "or click to browse",
+    "nativeDropzone": "Tap to Select File",
+    "nativeDropzoneHint": "Select a GPX or FIT file from your device",
     "fileHint": "Supports .gpx and .fit files from Strava, Garmin, and other GPS devices",
     "processing": "Processing file...",
     "pleaseWait": "Please wait",

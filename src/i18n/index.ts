@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { Language, SUPPORTED_LANGUAGES, Translations } from './types';
+import { persistence } from '../platform';
 
 import en from './locales/en.json';
 import it from './locales/it.json';
@@ -22,14 +23,14 @@ function getBrowserLanguage(): Language {
     : 'en';
 }
 
-function getInitialLanguage(): Language {
+async function loadInitialLanguage(): Promise<Language> {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = await persistence.getItem(STORAGE_KEY);
     if (stored && SUPPORTED_LANGUAGES.includes(stored as Language)) {
       return stored as Language;
     }
   } catch {
-    // localStorage not available
+    // Storage not available
   }
   return getBrowserLanguage();
 }
@@ -47,15 +48,19 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const [language, setLanguageState] = useState<Language>(getBrowserLanguage());
+
+  // Load saved language on mount
+  useEffect(() => {
+    loadInitialLanguage().then(setLanguageState);
+  }, []);
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch {
-      // localStorage not available
-    }
+    // Fire-and-forget persistence
+    persistence.setItem(STORAGE_KEY, lang).catch(() => {
+      // Silently fail if storage unavailable
+    });
   }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>): string => {

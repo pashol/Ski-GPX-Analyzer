@@ -19,6 +19,8 @@
     "heroDescription": "Téléchargez votre fichier GPX ou FIT pour obtenir des statistiques complètes, des cartes interactives et une analyse détaillée de vos descentes.",
     "dropzone": "Déposez votre fichier GPX ou FIT ici",
     "dropzoneHint": "ou cliquez pour parcourir",
+    "nativeDropzone": "Touchez pour Sélectionner",
+    "nativeDropzoneHint": "Sélectionnez un fichier GPX ou FIT depuis votre appareil",
     "fileHint": "Supporte les fichiers .gpx et .fit de Strava, Garmin et autres appareils GPS",
     "processing": "Traitement du fichier...",
     "pleaseWait": "Veuillez patienter",

@@ -11,20 +11,18 @@ import { ProfileView } from './features/profile/ProfileView';
 import { RunDetailView } from './features/run-detail/RunDetailView';
 import { GPXData, Run } from './utils/gpxParser';
 import { useTranslation } from './i18n';
-import { App as CapacitorApp } from '@capacitor/app';
-import { Capacitor } from '@capacitor/core';
-import { initNativeApp } from './utils/nativeInit';
+import { initNativeApp, useAndroidBackButton, usePlatform } from './platform';
 import { Analytics } from '@vercel/analytics/react';
 
 export type TabType = 'track' | 'map' | 'analysis' | 'profile' | 'run-detail';
 
 function App() {
   const { t } = useTranslation();
+  const { isNative } = usePlatform();
   const [gpxData, setGpxData] = useState<GPXData | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('track');
   const [fileName, setFileName] = useState<string>('');
   const [selectedRun, setSelectedRun] = useState<Run | null>(null);
-  const isNative = Capacitor.isNativePlatform();
 
   const handleFileUpload = (data: GPXData, name: string) => {
     setGpxData(data);
@@ -61,33 +59,10 @@ function App() {
   }, []);
 
   // Handle Android back button
-  useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
-
-    let listenerHandle: any;
-
-    CapacitorApp.addListener('backButton', () => {
-      if (activeTab === 'run-detail' && selectedRun) {
-        // Go back to track view from run detail
-        setSelectedRun(null);
-        setActiveTab('track');
-      } else if (activeTab !== 'track') {
-        // Go back to track view from other tabs
-        setActiveTab('track');
-      } else {
-        // On track view - exit app
-        CapacitorApp.exitApp();
-      }
-    }).then(handle => {
-      listenerHandle = handle;
-    });
-
-    return () => {
-      if (listenerHandle) {
-        listenerHandle.remove();
-      }
-    };
-  }, [activeTab, selectedRun]);
+  useAndroidBackButton(activeTab, selectedRun, {
+    setActiveTab,
+    setSelectedRun,
+  });
 
   return (
     <div className="app">
