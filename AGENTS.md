@@ -7,6 +7,12 @@ This guide equips autonomous coding agents with everything needed to work effect
 - `npm run dev`: launch Vite dev server on http://localhost:5173.
 - `npm run build`: run TypeScript type-check (`tsc`) then production build (`vite build`). Failures usually mean type or bundling errors—fix before shipping.
 - `npm run preview`: serve the production build locally.
+- Test commands (Vitest):
+  - `npm test`: run tests in watch mode for development.
+  - `npm run test:run`: run tests once (CI mode).
+  - `npm run test:coverage`: run tests with coverage report.
+  - `npm run test:ui`: open Vitest UI for interactive debugging.
+  - **Running a single test**: `npm test -- src/path/to/file.test.ts` or `npm test -- --grep "test name"`
 - Android workflow:
   - `npm run build:android`: build web bundle then `cap sync android` (syncs assets + native project).
   - `npm run android:dev`: build web bundle, sync, and run on connected device/emulator.
@@ -15,8 +21,6 @@ This guide equips autonomous coding agents with everything needed to work effect
   - `npm run cap:init` / `npm run cap:add`: utility scripts; rarely needed after initial setup.
   - `npm run cap:icons`: regenerate Capacitor icons/splashes.
 - No dedicated lint or formatting commands are configured; rely on TypeScript and build output.
-- No automated tests currently exist. When adding tests, document the command here and in `package.json`.
-- Running a single test: not applicable yet—add guidance if/when a test harness (e.g., Vitest, Jest) is introduced.
 
 ## 2. Repo Overview
 - React 18 + TypeScript + Vite web app with Capacitor Android wrapper.
@@ -25,6 +29,8 @@ This guide equips autonomous coding agents with everything needed to work effect
   - `src/components/*`: reusable UI pieces (file upload, settings menu, language selector, tab navigation).
   - `src/utils/*`: parsing, native abstraction, network monitoring, persistence, Leaflet loader, etc.
   - `src/i18n/*`: translation setup, locale JSON files, and typed helpers.
+  - `src/test/mocks/*`: Capacitor plugin mocks for testing.
+  - `src/contexts/*`: React contexts (RecordingContext, UnitsContext).
 - Entry point: `src/App.tsx`; mounts per-feature views, handles tab state, integrates analytics.
 - Capacitor config lives in `capacitor.config.ts`. Android build artifacts excluded via `.gitignore`.
 
@@ -32,6 +38,7 @@ This guide equips autonomous coding agents with everything needed to work effect
 - Target Node.js >= 16 with npm. Android tooling requires JDK 17+ and Android SDK (API 30+). Confirm actual versions via `README.md` and `ANDROID_SETUP.md` when prepping instructions.
 - TypeScript strictness: review `tsconfig.json` (implicit: Vite defaults). Do not introduce `any` unless unavoidable; prefer explicit types.
 - Browser environment: design for responsive layout; analytics should remain web-only (`@vercel/analytics` is gated via Capacitor detection).
+- Test environment: Vitest with jsdom, @testing-library/react for component tests, custom mocks in `src/test/mocks/`.
 
 ## 4. Code Style Guidelines
 
@@ -42,7 +49,7 @@ This guide equips autonomous coding agents with everything needed to work effect
 - Keep import alphabetization loose but consistent; prioritize readability over strict ordering.
 
 ### Formatting
-- Rely on repository conventions (Vite defaults). Follow existing patterns: two-space indentation inside JSX? (actually spaces appear as two). Use semicolons consistently (current code includes them). Keep trailing commas where TypeScript allows.
+- Rely on repository conventions (Vite defaults). Follow existing patterns: two-space indentation. Use semicolons consistently (current code includes them). Keep trailing commas where TypeScript allows.
 - JSX attributes go on new lines when component props exceed ~2 items. Align closing tags with start of element.
 - Wrap long template literals or expressions across lines for readability.
 - CSS uses kebab-case class names; continue this convention.
@@ -87,23 +94,28 @@ This guide equips autonomous coding agents with everything needed to work effect
 - Avoid recomputing expensive metrics on every render; cache results keyed by dependencies.
 - For map/Leaflet integration, load scripts via `src/utils/leafletLoader.ts` to keep bundling consistent.
 
-## 5. Repository Workflow
+## 5. Testing Guidelines
+- Test files: co-locate as `ComponentName.test.tsx` or `utilityName.test.ts` next to source.
+- Test structure: `describe('[Name]', () => { describe('feature', () => { it('should...') }) })`.
+- Mock Capacitor plugins using `src/test/mocks/` (Geolocation, Filesystem, ForegroundService, etc.).
+- Mock i18n in component tests to avoid translation dependencies.
+- Cover: rendering, user interactions, state changes, error states, edge cases.
+- Use `vi.mock()` at top of test file for module mocking; use `vi.fn()` for function mocks.
+- Run tests frequently: `npm test -- --run` for quick CI-style check.
+
+## 6. Repository Workflow
 - Branch naming: the active branch is `preview` (feature branch) tracking PRs against `main`. Follow same workflow when adding features.
 - Commit messages: short imperative, focused on intent (`Add web analytics integration`).
 - Avoid committing build outputs (`dist/`, Android artifacts). `.gitignore` already excludes `android/`, `ios/`, `.capacitor/`.
 - Run `npm run build` before opening PRs to ensure type safety.
+- Run `npm run test:run` before opening PRs to ensure tests pass.
 - Use GitHub CLI (`gh`) for PR management per existing automation.
 
-## 6. Documentation & Agent Guidance
-- Update `README.md` when features or setup steps change—see `.claude/agents/readme-maintainer.md` for documentation agent instructions.
+## 7. Documentation & Agent Guidance
+- Update `README.md` when features or setup steps change.
 - `CLAUDE.md` mirrors architecture overview; keep it current when altering high-level flows.
 - No Cursor or Copilot rule files present; if introduced later, reference them here.
 - When adding new automation or linting, reflect updates in both this guide and `CLAUDE.md`.
-
-## 7. Adding Tests (Future Guidance)
-- If integrating a test runner (e.g., Vitest), configure scripts (`npm run test`, `npm run test -- --watch`, etc.). Document how to run a single test file (`npm run test -- src/path/to/file.test.ts`).
-- Ensure test environment handles Capacitor mocking for native APIs.
-- Update this section accordingly once tests exist.
 
 ## 8. Android-Specific Notes
 - After modifying Capacitor plugins or native config (`capacitor.config.ts`), run `npm run build:android` or `npx cap sync android`.
@@ -114,7 +126,7 @@ This guide equips autonomous coding agents with everything needed to work effect
 ## 9. Workflow Tips for Agents
 - Before editing, skim related files to align with stylistic patterns.
 - When adding translations, update all locale JSON files and keep alphabetical ordering of keys where present.
-- Verify build before submitting PR. Mention build status in PR description.
+- Verify build and tests before submitting PR. Mention status in PR description.
 - Document significant feature changes in PR body under `## Summary` and `## Testing` headings (per existing PR template style).
 - Be mindful of CRLF vs LF warnings on Windows; respect repo `.gitattributes` if added later.
 
@@ -123,5 +135,6 @@ This guide equips autonomous coding agents with everything needed to work effect
 - Leaflet CSS missing: ensure `src/utils/leafletLoader.ts` correctly injects assets; avoid reintroducing CDN links in `index.html`.
 - Internationalization issues: confirm `useTranslation` context wraps component tree via provider in `src/index.tsx`.
 - Native runtime errors: reproduce via `npm run android:dev`; check Android logcat for diagnostics.
+- Test failures: check mock setup in `src/test/setup.ts`; ensure `vi.mock()` declarations are at top of test file before imports.
 
 Keep this handbook updated whenever workflows, scripts, or style conventions evolve. Agents should cross-reference `README.md`, `CLAUDE.md`, and Android docs to stay aligned with project direction.

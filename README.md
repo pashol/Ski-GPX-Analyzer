@@ -94,6 +94,28 @@ npm run build
 npm run preview
 ```
 
+### Testing
+
+```bash
+# Run tests in watch mode (for development)
+npm test
+
+# Run tests once (CI mode)
+npm run test:run
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Open Vitest UI for interactive debugging
+npm run test:ui
+
+# Run a single test file
+npm test -- src/utils/gpxParser.test.ts
+
+# Run tests matching a specific pattern
+npm test -- --grep "should parse"
+```
+
 The web app will be available at `http://localhost:5173` during development.
 
 ### Android Development
