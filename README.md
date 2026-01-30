@@ -163,21 +163,7 @@ The `npm run build` command produces a `dist/` folder ready for deployment to:
 - Build and run on device: `npm run android:dev`
 - Or open in Android Studio: `npm run android:studio`
 
-**Release to Play Store:**
-1. Generate signed release APK (see [ANDROID_SETUP.md](./ANDROID_SETUP.md))
-2. Create Play Console account (one-time $25 fee)
-3. Upload APK to Play Console
-4. Complete store listing and submit for review
-
 See [ANDROID_SETUP.md](./ANDROID_SETUP.md) for complete release build instructions, including keystore setup and signing.
-
-## Usage
-
-1. Upload a GPX file from your GPS device, Strava, Garmin, etc.
-2. View the overview with key statistics
-3. Explore the interactive map
-4. Analyze elevation and speed profiles
-5. Click on individual runs for detailed analysis
 
 ## License
 
