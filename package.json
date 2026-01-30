@@ -13,17 +13,24 @@
     "cap:icons": "capacitor-assets generate --android",
     "build:android": "npm run build && cap sync android",
     "android:dev": "npm run build && cap sync android && cap run android",
-    "android:studio": "cap open android"
+    "android:studio": "cap open android",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.1",
     "@capacitor/app": "^8.0.0",
     "@capacitor/cli": "^8.0.1",
     "@capacitor/core": "^8.0.1",
+    "@capacitor/filesystem": "^8.1.0",
+    "@capacitor/geolocation": "^8.0.0",
     "@capacitor/network": "^8.0.0",
     "@capacitor/preferences": "^8.0.0",
     "@capacitor/splash-screen": "^8.0.0",
     "@capacitor/status-bar": "^8.0.0",
+    "@capawesome-team/capacitor-android-foreground-service": "^8.0.0",
     "@capawesome/capacitor-file-picker": "^8.0.1",
     "@vercel/analytics": "^1.6.1",
     "fit-file-parser": "^1.9.0",
@@ -33,11 +40,17 @@
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/leaflet": "^1.9.8",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "happy-dom": "^20.4.0",
+    "jsdom": "^27.4.0",
     "typescript": "^5.3.3",
-    "vite": "^5.4.21"
+    "vite": "^5.4.21",
+    "vitest": "^4.0.18"
   }
 }
