@@ -1,0 +1,4870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Ski GPX Analyzer" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Recording</name>
+    <time>2026-02-06T11:13:53.324Z</time>
+  </metadata>
+  <trk>
+    <name>Recording</name>
+    <trkseg>
+      <trkpt lat="47.1824451" lon="8.4570367">
+        <ele>477.1</ele>
+        <time>2026-02-06T11:13:54.221Z</time>
+        <extensions>
+          <accuracy unit="m">73.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821809" lon="8.4569101">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:00.671Z</time>
+        <extensions>
+          <accuracy unit="m">24.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821486" lon="8.4568952">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:04.535Z</time>
+        <extensions>
+          <accuracy unit="m">24.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821509" lon="8.4569047">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:05.622Z</time>
+        <extensions>
+          <accuracy unit="m">24.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821460" lon="8.4569048">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:06.660Z</time>
+        <extensions>
+          <accuracy unit="m">24.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821409" lon="8.4569030">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:07.715Z</time>
+        <extensions>
+          <accuracy unit="m">24.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821362" lon="8.4569020">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:08.740Z</time>
+        <extensions>
+          <accuracy unit="m">25.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821283" lon="8.4569058">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:10.116Z</time>
+        <extensions>
+          <accuracy unit="m">26.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821237" lon="8.4569129">
+        <ele>475.4</ele>
+        <time>2026-02-06T11:14:11.385Z</time>
+        <extensions>
+          <accuracy unit="m">27.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821131" lon="8.4569140">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:12.420Z</time>
+        <extensions>
+          <accuracy unit="m">28.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1821050" lon="8.4569135">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:13.436Z</time>
+        <extensions>
+          <accuracy unit="m">28.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1820964" lon="8.4569135">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:14.541Z</time>
+        <extensions>
+          <accuracy unit="m">28.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1820816" lon="8.4569290">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:15.596Z</time>
+        <extensions>
+          <accuracy unit="m">27.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1820658" lon="8.4569431">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:16.683Z</time>
+        <extensions>
+          <accuracy unit="m">25.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1820480" lon="8.4569603">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:17.712Z</time>
+        <extensions>
+          <accuracy unit="m">24.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1820285" lon="8.4569749">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:18.774Z</time>
+        <extensions>
+          <accuracy unit="m">22.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1819463" lon="8.4569497">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:19.840Z</time>
+        <extensions>
+          <accuracy unit="m">20.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1819285" lon="8.4569390">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:20.875Z</time>
+        <extensions>
+          <accuracy unit="m">18.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1819143" lon="8.4569331">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:21.922Z</time>
+        <extensions>
+          <accuracy unit="m">16.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1819023" lon="8.4569348">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:22.957Z</time>
+        <extensions>
+          <accuracy unit="m">14.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818919" lon="8.4569444">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:24.083Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818827" lon="8.4569572">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:25.161Z</time>
+        <extensions>
+          <accuracy unit="m">10.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818716" lon="8.4569688">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:26.195Z</time>
+        <extensions>
+          <accuracy unit="m">9.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818538" lon="8.4569817">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818457" lon="8.4569881">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:28.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818358" lon="8.4569971">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818226" lon="8.4570035">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:30.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1818089" lon="8.4570033">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:31.163Z</time>
+        <extensions>
+          <accuracy unit="m">5.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817948" lon="8.4569963">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817819" lon="8.4569884">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817612" lon="8.4569751">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817516" lon="8.4569690">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:35.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817399" lon="8.4569600">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:36.207Z</time>
+        <extensions>
+          <accuracy unit="m">5.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817288" lon="8.4569471">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:37.211Z</time>
+        <extensions>
+          <accuracy unit="m">5.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817203" lon="8.4569313">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:38.217Z</time>
+        <extensions>
+          <accuracy unit="m">5.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817130" lon="8.4569139">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:39.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817050" lon="8.4568960">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:14:40.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1817006" lon="8.4568669">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:41.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816950" lon="8.4568524">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816876" lon="8.4568363">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:43.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816802" lon="8.4568210">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:44.154Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816720" lon="8.4568045">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:45.160Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816612" lon="8.4567905">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:46.195Z</time>
+        <extensions>
+          <accuracy unit="m">8.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816482" lon="8.4567849">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:14:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816349" lon="8.4567820">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816288" lon="8.4567845">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816180" lon="8.4567895">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1816059" lon="8.4567945">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:51.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815938" lon="8.4568001">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:52.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815819" lon="8.4568042">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:53.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815700" lon="8.4568081">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:54.205Z</time>
+        <extensions>
+          <accuracy unit="m">9.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815565" lon="8.4568071">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:55.210Z</time>
+        <extensions>
+          <accuracy unit="m">9.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815432" lon="8.4568073">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815316" lon="8.4568125">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:57.120Z</time>
+        <extensions>
+          <accuracy unit="m">9.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815200" lon="8.4568209">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815094" lon="8.4568297">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814990" lon="8.4568380">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:00.137Z</time>
+        <extensions>
+          <accuracy unit="m">10.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814869" lon="8.4568461">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814646" lon="8.4568408">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814544" lon="8.4568437">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814427" lon="8.4568493">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:04.159Z</time>
+        <extensions>
+          <accuracy unit="m">11.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814302" lon="8.4568550">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814186" lon="8.4568603">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814066" lon="8.4568658">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:07.175Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813953" lon="8.4568735">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:08.137Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813685" lon="8.4568568">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:09.204Z</time>
+        <extensions>
+          <accuracy unit="m">12.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813603" lon="8.4568427">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:10.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813510" lon="8.4568328">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:11.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813395" lon="8.4568321">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:12.203Z</time>
+        <extensions>
+          <accuracy unit="m">13.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813275" lon="8.4568348">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:13.208Z</time>
+        <extensions>
+          <accuracy unit="m">13.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813165" lon="8.4568420">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:14.113Z</time>
+        <extensions>
+          <accuracy unit="m">13.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813045" lon="8.4568495">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812829" lon="8.4568689">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:16.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812728" lon="8.4568799">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:17.130Z</time>
+        <extensions>
+          <accuracy unit="m">13.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812575" lon="8.4568941">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:18.135Z</time>
+        <extensions>
+          <accuracy unit="m">13.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812437" lon="8.4569034">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:19.141Z</time>
+        <extensions>
+          <accuracy unit="m">12.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812306" lon="8.4569127">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:20.146Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812183" lon="8.4569232">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:21.152Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812066" lon="8.4569329">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:22.158Z</time>
+        <extensions>
+          <accuracy unit="m">11.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811947" lon="8.4569424">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:23.163Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811887" lon="8.4569269">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811708" lon="8.4569488">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:25.174Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811578" lon="8.4569627">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:26.179Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811470" lon="8.4569728">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:27.102Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811346" lon="8.4569835">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:28.136Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811215" lon="8.4569924">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:29.201Z</time>
+        <extensions>
+          <accuracy unit="m">11.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811100" lon="8.4570003">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:30.202Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810902" lon="8.4570146">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:31.207Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810829" lon="8.4570047">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:32.212Z</time>
+        <extensions>
+          <accuracy unit="m">11.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810724" lon="8.4570030">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:33.117Z</time>
+        <extensions>
+          <accuracy unit="m">11.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810613" lon="8.4570073">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:34.124Z</time>
+        <extensions>
+          <accuracy unit="m">11.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810501" lon="8.4570130">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:35.128Z</time>
+        <extensions>
+          <accuracy unit="m">10.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810379" lon="8.4570195">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:36.134Z</time>
+        <extensions>
+          <accuracy unit="m">10.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810255" lon="8.4570275">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:37.139Z</time>
+        <extensions>
+          <accuracy unit="m">10.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810144" lon="8.4570430">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810086" lon="8.4570498">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:39.150Z</time>
+        <extensions>
+          <accuracy unit="m">11.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809994" lon="8.4570605">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:40.156Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809892" lon="8.4570712">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:41.161Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809806" lon="8.4570843">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:42.167Z</time>
+        <extensions>
+          <accuracy unit="m">11.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809721" lon="8.4570995">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:43.172Z</time>
+        <extensions>
+          <accuracy unit="m">11.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809618" lon="8.4571133">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:44.178Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809502" lon="8.4571197">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809473" lon="8.4571127">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809500" lon="8.4571047">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:47.118Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809618" lon="8.4570904">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:48.156Z</time>
+        <extensions>
+          <accuracy unit="m">11.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809725" lon="8.4570764">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:49.221Z</time>
+        <extensions>
+          <accuracy unit="m">10.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809732" lon="8.4570686">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809676" lon="8.4570687">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809579" lon="8.4570715">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:52.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809485" lon="8.4570746">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809353" lon="8.4570808">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809260" lon="8.4570864">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:55.124Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809150" lon="8.4570889">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:56.178Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809032" lon="8.4570925">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:57.226Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808910" lon="8.4570975">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:58.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808772" lon="8.4570994">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808627" lon="8.4571048">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:16:00.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808461" lon="8.4571122">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:16:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808288" lon="8.4571198">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808123" lon="8.4571249">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807949" lon="8.4571323">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815700" lon="8.4568081">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:54.205Z</time>
+        <extensions>
+          <accuracy unit="m">9.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815565" lon="8.4568071">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:55.210Z</time>
+        <extensions>
+          <accuracy unit="m">9.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815432" lon="8.4568073">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815316" lon="8.4568125">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:57.120Z</time>
+        <extensions>
+          <accuracy unit="m">9.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815200" lon="8.4568209">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1815094" lon="8.4568297">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:14:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814990" lon="8.4568380">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:00.137Z</time>
+        <extensions>
+          <accuracy unit="m">10.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814869" lon="8.4568461">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814646" lon="8.4568408">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814544" lon="8.4568437">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814427" lon="8.4568493">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:04.159Z</time>
+        <extensions>
+          <accuracy unit="m">11.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814302" lon="8.4568550">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814186" lon="8.4568603">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1814066" lon="8.4568658">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:07.175Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813953" lon="8.4568735">
+        <ele>479.2</ele>
+        <time>2026-02-06T11:15:08.137Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813685" lon="8.4568568">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:09.204Z</time>
+        <extensions>
+          <accuracy unit="m">12.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813603" lon="8.4568427">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:10.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813510" lon="8.4568328">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:11.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813395" lon="8.4568321">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:12.203Z</time>
+        <extensions>
+          <accuracy unit="m">13.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813275" lon="8.4568348">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:13.208Z</time>
+        <extensions>
+          <accuracy unit="m">13.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813165" lon="8.4568420">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:14.113Z</time>
+        <extensions>
+          <accuracy unit="m">13.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1813045" lon="8.4568495">
+        <ele>479.6</ele>
+        <time>2026-02-06T11:15:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812829" lon="8.4568689">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:16.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812728" lon="8.4568799">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:17.130Z</time>
+        <extensions>
+          <accuracy unit="m">13.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812575" lon="8.4568941">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:18.135Z</time>
+        <extensions>
+          <accuracy unit="m">13.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812437" lon="8.4569034">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:19.141Z</time>
+        <extensions>
+          <accuracy unit="m">12.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812306" lon="8.4569127">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:20.146Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812183" lon="8.4569232">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:21.152Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1812066" lon="8.4569329">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:22.158Z</time>
+        <extensions>
+          <accuracy unit="m">11.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811947" lon="8.4569424">
+        <ele>478.6</ele>
+        <time>2026-02-06T11:15:23.163Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811887" lon="8.4569269">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811708" lon="8.4569488">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:25.174Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811578" lon="8.4569627">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:26.179Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811470" lon="8.4569728">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:27.102Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811346" lon="8.4569835">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:28.136Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811215" lon="8.4569924">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:29.201Z</time>
+        <extensions>
+          <accuracy unit="m">11.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1811100" lon="8.4570003">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:30.202Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810902" lon="8.4570146">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:31.207Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810829" lon="8.4570047">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:32.212Z</time>
+        <extensions>
+          <accuracy unit="m">11.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810724" lon="8.4570030">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:33.117Z</time>
+        <extensions>
+          <accuracy unit="m">11.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810613" lon="8.4570073">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:34.124Z</time>
+        <extensions>
+          <accuracy unit="m">11.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810501" lon="8.4570130">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:35.128Z</time>
+        <extensions>
+          <accuracy unit="m">10.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810379" lon="8.4570195">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:36.134Z</time>
+        <extensions>
+          <accuracy unit="m">10.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810255" lon="8.4570275">
+        <ele>475.6</ele>
+        <time>2026-02-06T11:15:37.139Z</time>
+        <extensions>
+          <accuracy unit="m">10.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810144" lon="8.4570430">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1810086" lon="8.4570498">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:39.150Z</time>
+        <extensions>
+          <accuracy unit="m">11.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809994" lon="8.4570605">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:40.156Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809892" lon="8.4570712">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:41.161Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809806" lon="8.4570843">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:42.167Z</time>
+        <extensions>
+          <accuracy unit="m">11.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809721" lon="8.4570995">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:43.172Z</time>
+        <extensions>
+          <accuracy unit="m">11.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809618" lon="8.4571133">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:44.178Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809502" lon="8.4571197">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:15:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809473" lon="8.4571127">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809500" lon="8.4571047">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:47.118Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809618" lon="8.4570904">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:48.156Z</time>
+        <extensions>
+          <accuracy unit="m">11.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809725" lon="8.4570764">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:49.221Z</time>
+        <extensions>
+          <accuracy unit="m">10.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809732" lon="8.4570686">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809676" lon="8.4570687">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809579" lon="8.4570715">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:52.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809485" lon="8.4570746">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:15:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809353" lon="8.4570808">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809260" lon="8.4570864">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:55.124Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809150" lon="8.4570889">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:56.178Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1809032" lon="8.4570925">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:57.226Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808910" lon="8.4570975">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:58.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808772" lon="8.4570994">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:15:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808627" lon="8.4571048">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:16:00.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808461" lon="8.4571122">
+        <ele>480.6</ele>
+        <time>2026-02-06T11:16:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808288" lon="8.4571198">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808123" lon="8.4571249">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807949" lon="8.4571323">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807782" lon="8.4571398">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:05.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807642" lon="8.4571492">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:06.163Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807513" lon="8.4571558">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:07.203Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807378" lon="8.4571600">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:08.209Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807251" lon="8.4571662">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:16:09.214Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807059" lon="8.4571784">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:10.120Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806997" lon="8.4571806">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:11.080Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806941" lon="8.4571723">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806910" lon="8.4571656">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:13.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806930" lon="8.4571689">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:14.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806981" lon="8.4571813">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807009" lon="8.4571925">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:16.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807028" lon="8.4572057">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:17.158Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807027" lon="8.4572115">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:18.223Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807021" lon="8.4572188">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807017" lon="8.4572254">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:20.174Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807013" lon="8.4572305">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:21.180Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807003" lon="8.4572345">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:22.185Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807001" lon="8.4572377">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:16:23.191Z</time>
+        <extensions>
+          <accuracy unit="m">4.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806992" lon="8.4572399">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:24.196Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806983" lon="8.4572407">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:25.203Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806974" lon="8.4572422">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:26.207Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806970" lon="8.4572439">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:27.213Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806969" lon="8.4572462">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:28.118Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806969" lon="8.4572469">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806938" lon="8.4572335">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:30.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807314" lon="8.4571713">
+        <ele>476.6</ele>
+        <time>2026-02-06T11:16:31.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807695" lon="8.4571117">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807981" lon="8.4570683">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808170" lon="8.4570397">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808290" lon="8.4570218">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:35.200Z</time>
+        <extensions>
+          <accuracy unit="m">15.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808362" lon="8.4570112">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:36.201Z</time>
+        <extensions>
+          <accuracy unit="m">14.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808329" lon="8.4570078">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:37.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808145" lon="8.4570140">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1808004" lon="8.4570195">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:39.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807898" lon="8.4570248">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:40.201Z</time>
+        <extensions>
+          <accuracy unit="m">12.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807840" lon="8.4570295">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:41.201Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807751" lon="8.4570351">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807695" lon="8.4570387">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:43.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807670" lon="8.4570405">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:44.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807663" lon="8.4570410">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807657" lon="8.4570403">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807652" lon="8.4570395">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807650" lon="8.4570390">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807647" lon="8.4570389">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807645" lon="8.4570388">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807644" lon="8.4570388">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807634" lon="8.4570396">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:52.201Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807622" lon="8.4570406">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807611" lon="8.4570413">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807532" lon="8.4570522">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:55.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807467" lon="8.4570577">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807357" lon="8.4570685">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807276" lon="8.4570767">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807226" lon="8.4570817">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:16:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807197" lon="8.4570848">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:00.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807181" lon="8.4570865">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:01.201Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807173" lon="8.4570875">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807165" lon="8.4570884">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1807082" lon="8.4570634">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806444" lon="8.4571822">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:05.201Z</time>
+        <extensions>
+          <accuracy unit="m">12.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806041" lon="8.4572439">
+        <ele>475.8</ele>
+        <time>2026-02-06T11:17:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">11.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805969" lon="8.4572676">
+        <ele>475.8</ele>
+        <time>2026-02-06T11:17:07.200Z</time>
+        <extensions>
+          <accuracy unit="m">12.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806229" lon="8.4573041">
+        <ele>475.8</ele>
+        <time>2026-02-06T11:17:08.200Z</time>
+        <extensions>
+          <accuracy unit="m">13.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806819" lon="8.4573206">
+        <ele>475.8</ele>
+        <time>2026-02-06T11:17:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">15.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806894" lon="8.4573170">
+        <ele>475.8</ele>
+        <time>2026-02-06T11:17:10.200Z</time>
+        <extensions>
+          <accuracy unit="m">15.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806761" lon="8.4573213">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:11.200Z</time>
+        <extensions>
+          <accuracy unit="m">15.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806710" lon="8.4573248">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">14.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806654" lon="8.4573307">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:13.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806617" lon="8.4573355">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:14.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806517" lon="8.4573291">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:15.201Z</time>
+        <extensions>
+          <accuracy unit="m">7.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806428" lon="8.4573164">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:16.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806399" lon="8.4573104">
+        <ele>475.1</ele>
+        <time>2026-02-06T11:17:17.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806361" lon="8.4573027">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:18.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806338" lon="8.4572958">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806299" lon="8.4572666">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:20.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806298" lon="8.4572572">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806539" lon="8.4572846">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:22.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806561" lon="8.4572881">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806564" lon="8.4572890">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806400" lon="8.4572675">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806380" lon="8.4572657">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806377" lon="8.4572655">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:27.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806400" lon="8.4572671">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:28.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806411" lon="8.4572676">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806416" lon="8.4572677">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:30.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806445" lon="8.4572694">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:31.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806466" lon="8.4572707">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806480" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806486" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:34.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806488" lon="8.4572710">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:35.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806488" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:36.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806488" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:37.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806488" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806487" lon="8.4572709">
+        <ele>475.3</ele>
+        <time>2026-02-06T11:17:39.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806484" lon="8.4572694">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:40.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806483" lon="8.4572690">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:41.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806483" lon="8.4572689">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806482" lon="8.4572689">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:43.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806482" lon="8.4572688">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:44.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806482" lon="8.4572688">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806467" lon="8.4572645">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806432" lon="8.4572649">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806413" lon="8.4572652">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806351" lon="8.4572617">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806288" lon="8.4572566">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806201" lon="8.4572515">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806314" lon="8.4572682">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:52.152Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806350" lon="8.4572905">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:53.213Z</time>
+        <extensions>
+          <accuracy unit="m">5.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806167" lon="8.4572996">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:54.218Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806025" lon="8.4572963">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:55.148Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805974" lon="8.4573059">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805951" lon="8.4573240">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805900" lon="8.4573351">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805790" lon="8.4573388">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:59.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805588" lon="8.4573372">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:00.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805392" lon="8.4573397">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805166" lon="8.4573484">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805085" lon="8.4573550">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804974" lon="8.4573651">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:04.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804851" lon="8.4573774">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804732" lon="8.4573897">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804620" lon="8.4574012">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:07.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804518" lon="8.4574141">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:08.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804409" lon="8.4574295">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:09.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804301" lon="8.4574473">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:10.206Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804180" lon="8.4574672">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:11.211Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804012" lon="8.4574835">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803840" lon="8.4574942">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:13.222Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803664" lon="8.4575025">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:14.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803539" lon="8.4575134">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:15.127Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803375" lon="8.4575212">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:16.173Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803203" lon="8.4575269">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:17.188Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803035" lon="8.4575335">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:18.226Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802899" lon="8.4575419">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802770" lon="8.4575556">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:20.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802666" lon="8.4575729">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802581" lon="8.4575952">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:22.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802514" lon="8.4576252">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802450" lon="8.4576509">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802367" lon="8.4576727">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802289" lon="8.4576923">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802207" lon="8.4577097">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802127" lon="8.4577266">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:28.208Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802033" lon="8.4577415">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:29.209Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801918" lon="8.4577548">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:30.214Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801800" lon="8.4577607">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:31.221Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801755" lon="8.4577669">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801708" lon="8.4577704">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801597" lon="8.4577690">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801442" lon="8.4577725">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:35.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801311" lon="8.4577781">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:36.111Z</time>
+        <extensions>
+          <accuracy unit="m">5.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801145" lon="8.4577821">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:37.127Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800974" lon="8.4578018">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:38.174Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800843" lon="8.4578016">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:39.170Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800672" lon="8.4577937">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:40.233Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800518" lon="8.4577831">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:41.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800369" lon="8.4577736">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800219" lon="8.4577679">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:43.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800070" lon="8.4577654">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:44.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799912" lon="8.4577645">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:45.206Z</time>
+        <extensions>
+          <accuracy unit="m">9.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799750" lon="8.4577639">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:46.211Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799650" lon="8.4577604">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799632" lon="8.4577592">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799606" lon="8.4577572">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:49.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799507" lon="8.4577546">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:50.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799346" lon="8.4577487">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:51.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799276" lon="8.4577477">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:52.109Z</time>
+        <extensions>
+          <accuracy unit="m">8.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799140" lon="8.4577456">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798965" lon="8.4577406">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798710" lon="8.4577421">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:55.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806167" lon="8.4572996">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:54.218Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1806025" lon="8.4572963">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:55.148Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805974" lon="8.4573059">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805951" lon="8.4573240">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805900" lon="8.4573351">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805790" lon="8.4573388">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:17:59.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805588" lon="8.4573372">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:00.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805392" lon="8.4573397">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805166" lon="8.4573484">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1805085" lon="8.4573550">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804974" lon="8.4573651">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:04.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804851" lon="8.4573774">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804732" lon="8.4573897">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804620" lon="8.4574012">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:07.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804518" lon="8.4574141">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:08.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804409" lon="8.4574295">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:09.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804301" lon="8.4574473">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:10.206Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804180" lon="8.4574672">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:11.211Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1804012" lon="8.4574835">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803840" lon="8.4574942">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:13.222Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803664" lon="8.4575025">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:14.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803539" lon="8.4575134">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:15.127Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803375" lon="8.4575212">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:16.173Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803203" lon="8.4575269">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:17.188Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1803035" lon="8.4575335">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:18.226Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802899" lon="8.4575419">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802770" lon="8.4575556">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:20.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802666" lon="8.4575729">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802581" lon="8.4575952">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:22.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802514" lon="8.4576252">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802450" lon="8.4576509">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802367" lon="8.4576727">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802289" lon="8.4576923">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802207" lon="8.4577097">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802127" lon="8.4577266">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:28.208Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1802033" lon="8.4577415">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:29.209Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801918" lon="8.4577548">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:30.214Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801800" lon="8.4577607">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:31.221Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801755" lon="8.4577669">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801708" lon="8.4577704">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801597" lon="8.4577690">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801442" lon="8.4577725">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:35.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801311" lon="8.4577781">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:36.111Z</time>
+        <extensions>
+          <accuracy unit="m">5.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1801145" lon="8.4577821">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:18:37.127Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800974" lon="8.4578018">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:38.174Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800843" lon="8.4578016">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:39.170Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800672" lon="8.4577937">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:40.233Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800518" lon="8.4577831">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:41.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800369" lon="8.4577736">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800219" lon="8.4577679">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:43.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1800070" lon="8.4577654">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:44.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799912" lon="8.4577645">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:45.206Z</time>
+        <extensions>
+          <accuracy unit="m">9.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799750" lon="8.4577639">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:46.211Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799650" lon="8.4577604">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">10.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799632" lon="8.4577592">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799606" lon="8.4577572">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:49.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799507" lon="8.4577546">
+        <ele>478.9</ele>
+        <time>2026-02-06T11:18:50.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799346" lon="8.4577487">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:51.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799276" lon="8.4577477">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:52.109Z</time>
+        <extensions>
+          <accuracy unit="m">8.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1799140" lon="8.4577456">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798965" lon="8.4577406">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798710" lon="8.4577421">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:55.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798446" lon="8.4577503">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798254" lon="8.4577537">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798096" lon="8.4577549">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1798043" lon="8.4577571">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:18:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797991" lon="8.4577633">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:19:00.201Z</time>
+        <extensions>
+          <accuracy unit="m">5.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797924" lon="8.4577742">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:19:01.148Z</time>
+        <extensions>
+          <accuracy unit="m">6.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797812" lon="8.4577880">
+        <ele>476.1</ele>
+        <time>2026-02-06T11:19:02.175Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797648" lon="8.4577960">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:03.169Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797574" lon="8.4577996">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797451" lon="8.4578054">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:05.201Z</time>
+        <extensions>
+          <accuracy unit="m">7.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797275" lon="8.4578156">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797051" lon="8.4578257">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:07.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796869" lon="8.4578380">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:08.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796725" lon="8.4578445">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796555" lon="8.4578537">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:10.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796457" lon="8.4578610">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:11.153Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796340" lon="8.4578699">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:12.187Z</time>
+        <extensions>
+          <accuracy unit="m">7.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796221" lon="8.4578782">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:13.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796099" lon="8.4578833">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:14.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795979" lon="8.4578857">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:15.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795831" lon="8.4578822">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:16.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795666" lon="8.4578744">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:17.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795536" lon="8.4578760">
+        <ele>474.1</ele>
+        <time>2026-02-06T11:19:18.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795339" lon="8.4578689">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:19.201Z</time>
+        <extensions>
+          <accuracy unit="m">9.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795091" lon="8.4578567">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:20.206Z</time>
+        <extensions>
+          <accuracy unit="m">9.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794913" lon="8.4578551">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794781" lon="8.4578606">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:22.200Z</time>
+        <extensions>
+          <accuracy unit="m">9.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794670" lon="8.4578746">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:23.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794556" lon="8.4578904">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794431" lon="8.4579030">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794277" lon="8.4578935">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794314" lon="8.4578728">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">8.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794289" lon="8.4578629">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:28.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794127" lon="8.4578603">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793976" lon="8.4578578">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:30.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793855" lon="8.4578496">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:31.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793745" lon="8.4578362">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793653" lon="8.4578183">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793573" lon="8.4577987">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793502" lon="8.4577782">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:35.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793429" lon="8.4577579">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:36.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793307" lon="8.4577435">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:37.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793163" lon="8.4577359">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793021" lon="8.4577276">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:39.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792884" lon="8.4577183">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:40.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792760" lon="8.4577053">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:41.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792659" lon="8.4576881">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792560" lon="8.4576721">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:43.202Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792460" lon="8.4576548">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:44.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792376" lon="8.4576365">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:45.213Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792265" lon="8.4576188">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792164" lon="8.4576002">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792068" lon="8.4575816">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:48.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791971" lon="8.4575630">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791879" lon="8.4575438">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791793" lon="8.4575249">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:51.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791713" lon="8.4575086">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:52.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791627" lon="8.4574949">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791549" lon="8.4574816">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:54.106Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791459" lon="8.4574680">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:55.132Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791369" lon="8.4574549">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:56.189Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791278" lon="8.4574427">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791181" lon="8.4574272">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791080" lon="8.4574107">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:19:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790976" lon="8.4573956">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:00.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790881" lon="8.4573804">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:01.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790790" lon="8.4573665">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:02.206Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790706" lon="8.4573519">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:03.211Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790619" lon="8.4573377">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790531" lon="8.4573216">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790439" lon="8.4573044">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790343" lon="8.4572871">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:07.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790241" lon="8.4572721">
+        <ele>473.0</ele>
+        <time>2026-02-06T11:20:08.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790090" lon="8.4572595">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789998" lon="8.4572620">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:10.193Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789935" lon="8.4572847">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:11.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789874" lon="8.4573041">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:12.194Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789797" lon="8.4573196">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:13.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789724" lon="8.4573330">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:14.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789697" lon="8.4573519">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789713" lon="8.4573700">
+        <ele>470.8</ele>
+        <time>2026-02-06T11:20:16.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789806" lon="8.4573906">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:17.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1789894" lon="8.4574021">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:18.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790013" lon="8.4574100">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790116" lon="8.4574151">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:20.236Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790196" lon="8.4574248">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:21.209Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790250" lon="8.4574309">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:22.215Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790282" lon="8.4574421">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790371" lon="8.4574345">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:24.109Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790950" lon="8.4575329">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791409" lon="8.4575556">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791885" lon="8.4575744">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792365" lon="8.4575916">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:28.201Z</time>
+        <extensions>
+          <accuracy unit="m">8.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792816" lon="8.4576071">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:29.201Z</time>
+        <extensions>
+          <accuracy unit="m">12.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793168" lon="8.4576196">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:30.199Z</time>
+        <extensions>
+          <accuracy unit="m">13.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793399" lon="8.4576281">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:31.200Z</time>
+        <extensions>
+          <accuracy unit="m">17.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793510" lon="8.4576333">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">18.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793173" lon="8.4576220">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:33.115Z</time>
+        <extensions>
+          <accuracy unit="m">21.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792949" lon="8.4576126">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:34.120Z</time>
+        <extensions>
+          <accuracy unit="m">24.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792837" lon="8.4576003">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:35.125Z</time>
+        <extensions>
+          <accuracy unit="m">29.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792707" lon="8.4575838">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:36.130Z</time>
+        <extensions>
+          <accuracy unit="m">30.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792558" lon="8.4575647">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:37.136Z</time>
+        <extensions>
+          <accuracy unit="m">33.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792448" lon="8.4575502">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:38.141Z</time>
+        <extensions>
+          <accuracy unit="m">36.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792767" lon="8.4575887">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:39.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792921" lon="8.4576073">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:40.201Z</time>
+        <extensions>
+          <accuracy unit="m">30.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793023" lon="8.4576192">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:41.201Z</time>
+        <extensions>
+          <accuracy unit="m">26.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793070" lon="8.4576244">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">23.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793088" lon="8.4576263">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:43.201Z</time>
+        <extensions>
+          <accuracy unit="m">21.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793093" lon="8.4576268">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:44.200Z</time>
+        <extensions>
+          <accuracy unit="m">24.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793091" lon="8.4576264">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">28.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793075" lon="8.4576244">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">30.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793066" lon="8.4576233">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:47.201Z</time>
+        <extensions>
+          <accuracy unit="m">32.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793061" lon="8.4576227">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:48.201Z</time>
+        <extensions>
+          <accuracy unit="m">34.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793058" lon="8.4576223">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">35.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793056" lon="8.4576222">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:50.201Z</time>
+        <extensions>
+          <accuracy unit="m">33.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793056" lon="8.4576222">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793056" lon="8.4576222">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:20:52.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793056" lon="8.4576222">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793056" lon="8.4576222">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793057" lon="8.4576223">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:55.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793057" lon="8.4576223">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:56.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793057" lon="8.4576223">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:57.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793057" lon="8.4576223">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793063" lon="8.4576209">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:20:59.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793068" lon="8.4576196">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:00.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793073" lon="8.4576184">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:01.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793076" lon="8.4576176">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793078" lon="8.4576170">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:03.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793080" lon="8.4576166">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:04.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793081" lon="8.4576164">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793082" lon="8.4576162">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793082" lon="8.4576161">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:07.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793082" lon="8.4576161">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:08.200Z</time>
+        <extensions>
+          <accuracy unit="m">33.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793082" lon="8.4576161">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">34.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793082" lon="8.4576161">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:10.201Z</time>
+        <extensions>
+          <accuracy unit="m">35.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793068" lon="8.4576155">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:11.200Z</time>
+        <extensions>
+          <accuracy unit="m">35.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793054" lon="8.4576149">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">35.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793041" lon="8.4576144">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:13.201Z</time>
+        <extensions>
+          <accuracy unit="m">35.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793031" lon="8.4576140">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:14.200Z</time>
+        <extensions>
+          <accuracy unit="m">34.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793023" lon="8.4576136">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">34.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793015" lon="8.4576134">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:16.200Z</time>
+        <extensions>
+          <accuracy unit="m">34.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793011" lon="8.4576130">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:17.200Z</time>
+        <extensions>
+          <accuracy unit="m">169.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793006" lon="8.4576127">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:18.200Z</time>
+        <extensions>
+          <accuracy unit="m">169.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793002" lon="8.4576123">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:19.201Z</time>
+        <extensions>
+          <accuracy unit="m">169.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792998" lon="8.4576120">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:20.201Z</time>
+        <extensions>
+          <accuracy unit="m">171.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792994" lon="8.4576117">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">176.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792990" lon="8.4576114">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:22.200Z</time>
+        <extensions>
+          <accuracy unit="m">177.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792986" lon="8.4576112">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">182.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792983" lon="8.4576110">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">183.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792981" lon="8.4576109">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">186.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792979" lon="8.4576108">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">186.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792977" lon="8.4576107">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">188.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792975" lon="8.4576106">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:28.200Z</time>
+        <extensions>
+          <accuracy unit="m">194.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792973" lon="8.4576105">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">203.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792645" lon="8.4576692">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:30.201Z</time>
+        <extensions>
+          <accuracy unit="m">213.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792608" lon="8.4576756">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:31.200Z</time>
+        <extensions>
+          <accuracy unit="m">225.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792570" lon="8.4576820">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:32.200Z</time>
+        <extensions>
+          <accuracy unit="m">228.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792534" lon="8.4576881">
+        <ele>470.9</ele>
+        <time>2026-02-06T11:21:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">237.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792500" lon="8.4576939">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:34.200Z</time>
+        <extensions>
+          <accuracy unit="m">244.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792469" lon="8.4576990">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:35.200Z</time>
+        <extensions>
+          <accuracy unit="m">244.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792516" lon="8.4577093">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:36.200Z</time>
+        <extensions>
+          <accuracy unit="m">247.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792481" lon="8.4576650">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:37.200Z</time>
+        <extensions>
+          <accuracy unit="m">93.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792452" lon="8.4576262">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">90.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792669" lon="8.4576060">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:39.201Z</time>
+        <extensions>
+          <accuracy unit="m">86.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792741" lon="8.4575735">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:40.200Z</time>
+        <extensions>
+          <accuracy unit="m">84.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792800" lon="8.4575540">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:41.200Z</time>
+        <extensions>
+          <accuracy unit="m">83.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792835" lon="8.4575379">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:42.200Z</time>
+        <extensions>
+          <accuracy unit="m">81.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792932" lon="8.4575192">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:43.200Z</time>
+        <extensions>
+          <accuracy unit="m">74.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793092" lon="8.4575142">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:44.201Z</time>
+        <extensions>
+          <accuracy unit="m">73.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793269" lon="8.4575128">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">71.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791058" lon="8.4573801">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791024" lon="8.4573781">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:47.102Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791050" lon="8.4573798">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791104" lon="8.4573820">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791172" lon="8.4573845">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:21:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791124" lon="8.4573817">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791118" lon="8.4573822">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:52.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791120" lon="8.4573833">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791124" lon="8.4573842">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:21:54.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791087" lon="8.4573810">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:21:55.171Z</time>
+        <extensions>
+          <accuracy unit="m">7.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791072" lon="8.4573814">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:21:56.176Z</time>
+        <extensions>
+          <accuracy unit="m">7.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791073" lon="8.4573817">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:21:57.182Z</time>
+        <extensions>
+          <accuracy unit="m">7.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791073" lon="8.4573818">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:21:58.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791080" lon="8.4573816">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:21:59.194Z</time>
+        <extensions>
+          <accuracy unit="m">7.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791086" lon="8.4573814">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:22:00.201Z</time>
+        <extensions>
+          <accuracy unit="m">7.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791086" lon="8.4573800">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:22:01.204Z</time>
+        <extensions>
+          <accuracy unit="m">7.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791090" lon="8.4573782">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:22:02.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791093" lon="8.4573784">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:22:03.108Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791091" lon="8.4573772">
+        <ele>470.4</ele>
+        <time>2026-02-06T11:22:04.194Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791012" lon="8.4573748">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:05.125Z</time>
+        <extensions>
+          <accuracy unit="m">7.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790979" lon="8.4573711">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790974" lon="8.4573701">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:07.171Z</time>
+        <extensions>
+          <accuracy unit="m">7.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790991" lon="8.4573686">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:08.143Z</time>
+        <extensions>
+          <accuracy unit="m">7.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791008" lon="8.4573671">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791009" lon="8.4573655">
+        <ele>470.6</ele>
+        <time>2026-02-06T11:22:10.153Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790952" lon="8.4573530">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:22:11.159Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790919" lon="8.4573418">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:22:12.164Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790924" lon="8.4573306">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:22:13.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790944" lon="8.4573227">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:22:14.202Z</time>
+        <extensions>
+          <accuracy unit="m">6.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790930" lon="8.4573268">
+        <ele>470.5</ele>
+        <time>2026-02-06T11:22:15.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790877" lon="8.4573295">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:16.201Z</time>
+        <extensions>
+          <accuracy unit="m">6.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790886" lon="8.4573322">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:17.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790908" lon="8.4573362">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:18.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1790953" lon="8.4573427">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:19.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791012" lon="8.4573518">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:20.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791060" lon="8.4573636">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791117" lon="8.4573770">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:22.200Z</time>
+        <extensions>
+          <accuracy unit="m">7.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791165" lon="8.4573882">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:23.109Z</time>
+        <extensions>
+          <accuracy unit="m">7.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791257" lon="8.4574050">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:24.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791357" lon="8.4574208">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:25.200Z</time>
+        <extensions>
+          <accuracy unit="m">6.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791464" lon="8.4574385">
+        <ele>471.0</ele>
+        <time>2026-02-06T11:22:26.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791553" lon="8.4574515">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:27.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791634" lon="8.4574643">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:28.200Z</time>
+        <extensions>
+          <accuracy unit="m">5.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791740" lon="8.4574825">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:29.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791864" lon="8.4575018">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:30.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1791992" lon="8.4575186">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:31.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792107" lon="8.4575336">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:32.199Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792211" lon="8.4575444">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:33.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792312" lon="8.4575578">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:34.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792625" lon="8.4575850">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:35.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792807" lon="8.4576028">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:36.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1792940" lon="8.4576173">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:37.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793041" lon="8.4576325">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:38.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793133" lon="8.4576477">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:39.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793233" lon="8.4576619">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:40.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793196" lon="8.4576808">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:41.204Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793297" lon="8.4576934">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:42.183Z</time>
+        <extensions>
+          <accuracy unit="m">3.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793429" lon="8.4577041">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:43.215Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793518" lon="8.4577132">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:44.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793587" lon="8.4577271">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:45.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793626" lon="8.4577463">
+        <ele>471.3</ele>
+        <time>2026-02-06T11:22:46.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793696" lon="8.4577653">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:47.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793789" lon="8.4577827">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:48.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793888" lon="8.4577982">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:49.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1793966" lon="8.4578130">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:50.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794046" lon="8.4578280">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:51.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794134" lon="8.4578420">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:52.201Z</time>
+        <extensions>
+          <accuracy unit="m">3.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794213" lon="8.4578542">
+        <ele>473.1</ele>
+        <time>2026-02-06T11:22:53.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794353" lon="8.4578753">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:54.110Z</time>
+        <extensions>
+          <accuracy unit="m">3.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794403" lon="8.4578827">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:55.106Z</time>
+        <extensions>
+          <accuracy unit="m">3.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794477" lon="8.4578934">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:56.132Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794550" lon="8.4579065">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:57.167Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794628" lon="8.4579168">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:58.193Z</time>
+        <extensions>
+          <accuracy unit="m">4.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794710" lon="8.4579277">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:22:59.187Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794803" lon="8.4579387">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:23:00.192Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1794909" lon="8.4579509">
+        <ele>472.8</ele>
+        <time>2026-02-06T11:23:01.186Z</time>
+        <extensions>
+          <accuracy unit="m">4.3</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795002" lon="8.4579742">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:02.203Z</time>
+        <extensions>
+          <accuracy unit="m">4.5</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795110" lon="8.4579912">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:03.231Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795232" lon="8.4580047">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:04.228Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795378" lon="8.4580124">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:05.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795520" lon="8.4580202">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:06.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795651" lon="8.4580288">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:07.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795770" lon="8.4580382">
+        <ele>473.4</ele>
+        <time>2026-02-06T11:23:08.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795872" lon="8.4580490">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:09.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1795985" lon="8.4580591">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:10.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796099" lon="8.4580714">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:11.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796206" lon="8.4580850">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:12.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.7</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796300" lon="8.4580996">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:13.201Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796385" lon="8.4581155">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:14.149Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796460" lon="8.4581365">
+        <ele>474.2</ele>
+        <time>2026-02-06T11:23:15.144Z</time>
+        <extensions>
+          <accuracy unit="m">4.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796547" lon="8.4581638">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:16.188Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796635" lon="8.4581800">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:17.205Z</time>
+        <extensions>
+          <accuracy unit="m">4.8</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796737" lon="8.4581978">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:18.206Z</time>
+        <extensions>
+          <accuracy unit="m">4.6</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796835" lon="8.4582143">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:19.212Z</time>
+        <extensions>
+          <accuracy unit="m">4.4</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1796934" lon="8.4582283">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:20.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.2</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797033" lon="8.4582409">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:21.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.1</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797137" lon="8.4582532">
+        <ele>475.2</ele>
+        <time>2026-02-06T11:23:22.200Z</time>
+        <extensions>
+          <accuracy unit="m">4.0</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1797302" lon="8.4582735">
+        <ele>474.5</ele>
+        <time>2026-02-06T11:23:23.200Z</time>
+        <extensions>
+          <accuracy unit="m">3.9</accuracy>
+        </extensions>
+      </trkpt>
+      <trkpt lat="47.1823190" lon="8.4567991">
+        <ele>475.5</ele>
+        <time>2026-02-06T11:30:05.670Z</time>
+        <extensions>
+          <accuracy unit="m">16.3</accuracy>
+        </extensions>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
