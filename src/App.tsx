@@ -27,7 +27,7 @@ type AppMode = 'onboarding' | 'home' | 'recording' | 'analysis';
 function App() {
   const { t } = useTranslation();
   const { isNative } = usePlatform();
-  const { isRecording, startRecording, stopRecording, checkForRecovery, recoverRecording, clearRecovery } = useRecording();
+  const { isRecording, liveData, startRecording, stopRecording, checkForRecovery, recoverRecording, clearRecovery } = useRecording();
   const scrollDirection = useScrollDirection();
   
   const [gpxData, setGpxData] = useState<GPXData | null>(null);
@@ -123,12 +123,26 @@ function App() {
     setAppMode('home');
   };
 
+  // When switching tabs during recording, snapshot liveData so views get current stats
+  const handleTabChange = (tab: TabType) => {
+    if (isRecording && liveData && tab !== 'track') {
+      setGpxData(liveData);
+    }
+    setActiveTab(tab);
+  };
+
   const handleRunSelect = (run: Run) => {
+    if (isRecording && liveData) {
+      setGpxData(liveData);
+    }
     setSelectedRun(run);
     setActiveTab('run-detail');
   };
 
   const handleRunSelectOnMap = (run: Run) => {
+    if (isRecording && liveData) {
+      setGpxData(liveData);
+    }
     setSelectedRun(run);
     setActiveTab('map');
   };
@@ -177,17 +191,17 @@ function App() {
   };
 
   const handleStopRecording = async () => {
-    const finalData = await stopRecording();
-    if (finalData) {
-      setGpxData(finalData);
-      setFileName(`${finalData.name}.gpx`);
+    const result = await stopRecording();
+    if (result) {
+      setGpxData(result.data);
+      setFileName(result.fileName);
       setAppMode('analysis');
       
       // Save session
       await persistence.setItem('last-session', JSON.stringify({
         date: new Date().toISOString(),
-        fileName: `${finalData.name}.gpx`,
-        filePath: `${finalData.name}.gpx`,
+        fileName: result.fileName,
+        filePath: result.fileName,
       }));
     }
   };
@@ -240,7 +254,7 @@ function App() {
     if (isNative && !gpxData) {
       return (
         <div className="dashboard">
-          <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+          <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
           <div className="tab-content">
             <TrackView data={EMPTY_GPX_DATA} onRunSelect={handleRunSelect} />
           </div>
@@ -256,7 +270,7 @@ function App() {
     return (
       <div className="dashboard">
         {activeTab !== 'run-detail' && (
-          <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+          <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
         )}
         <div className="tab-content">
           {activeTab === 'track' && (
@@ -282,11 +296,6 @@ function App() {
     );
   };
 
-  // During recording, only show Track and Map tabs
-  const availableTabs: TabType[] = isRecording 
-    ? ['track', 'map'] 
-    : ['track', 'map', 'analysis', 'profile'];
-
   return (
     <div className="app">
       {/* Header - hidden during recording or on scroll down */}
@@ -298,14 +307,15 @@ function App() {
                 <span className="logo-icon">⛷️</span>
                 <h1>{t('header.title')}</h1>
               </div>
-              <HamburgerMenu onOpenFile={handleHamburgerOpenFile} />
+              <HamburgerMenu 
+                onOpenFile={handleHamburgerOpenFile} 
+                onNewAnalysis={handleReset}
+                canNewAnalysis={!!gpxData && !isRecording}
+              />
             </div>
             {gpxData && !isRecording && (
               <div className="header-actions">
                 <span className="file-name">{fileName}</span>
-                <button className="reset-btn" onClick={handleReset}>
-                  {t('header.newAnalysis')}
-                </button>
               </div>
             )}
             {isRecording && (

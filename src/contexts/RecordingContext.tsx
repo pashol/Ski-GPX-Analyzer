@@ -3,11 +3,12 @@ import { Geolocation, Position } from '@capacitor/geolocation';
 import { ForegroundService, ServiceType } from '@capawesome-team/capacitor-android-foreground-service';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
-import { TrackPoint, GPXData, calculateStatsAndRuns, formatDuration } from '../utils/gpxParser';
+import { TrackPoint, GPXData, calculateStatsAndRuns, formatDuration, parseGPX } from '../utils/gpxParser';
 import { generateGPX } from '../utils/gpxWriter';
-import { saveGPXFile, writeTempFile, deleteTempFile } from '../platform/fileSaver';
+import { saveGPXFile, writeTempFile, deleteTempFile, readTempFile } from '../platform/fileSaver';
 import { reverseGeocode } from '../utils/reverseGeocode';
 import { getNetworkStatus } from '../platform/networkMonitor';
+import { createRecordingGpx, appendPoints, finalizeRecording, getTempGpxFileName } from '../utils/incrementalGpxWriter';
 
 interface RecordingState {
   isRecording: boolean;
@@ -21,9 +22,14 @@ interface RecordingState {
   pointCount: number;
 }
 
+export interface RecordingResult {
+  data: GPXData;
+  fileName: string;
+}
+
 interface RecordingContextValue extends RecordingState {
   startRecording: () => Promise<boolean>;
-  stopRecording: () => Promise<GPXData | null>;
+  stopRecording: () => Promise<RecordingResult | null>;
   discardRecording: () => void;
   checkForRecovery: () => Promise<boolean>;
   recoverRecording: () => Promise<void>;
@@ -32,16 +38,17 @@ interface RecordingContextValue extends RecordingState {
 
 const RecordingContext = createContext<RecordingContextValue | null>(null);
 
-const AUTOSAVE_INTERVAL = 60000; // 60 seconds
+const AUTOSAVE_INTERVAL = 30000; // 30 seconds (reduced from 60s for incremental writes)
+const AUTOSAVE_POINT_INTERVAL = 60; // ~60 points at 1/s = ~60s backup trigger
 const STATS_UPDATE_INTERVAL = 5000; // 5 seconds
 const NOTIFICATION_UPDATE_INTERVAL = 5000; // 5 seconds
 const GPS_MIN_INTERVAL = 1000; // 1 second minimum between points
-const GPS_ACCURACY_THRESHOLD = 50; // 50 meters max accuracy
 const SIGNAL_LOSS_THRESHOLD = 30000; // 30 seconds
 const LOW_BATTERY_THRESHOLD = 0.10; // 10%
 const CRITICAL_BATTERY_THRESHOLD = 0.05; // 5%
 const MIN_STORAGE_MB = 50; // 50MB minimum
 const NOTIFICATION_ID = 1;
+const SESSION_FILE = 'recording-session.json';
 
 // Battery API type declaration
 interface BatteryManager extends EventTarget {
@@ -86,6 +93,8 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
   });
 
   const pointsRef = useRef<TrackPoint[]>([]);
+  const lastSavedIndexRef = useRef<number>(0); // Track which points have been saved
+  const isSavingRef = useRef<boolean>(false); // Guard against concurrent saves
   const watchIdRef = useRef<string | null>(null);
   const elapsedIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const statsIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -95,12 +104,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
   const hasGoodFirstPointRef = useRef(false);
   const batteryRef = useRef<BatteryManager | null>(null);
   const isAppActiveRef = useRef(true);
-  
+
   // Refs for callbacks and state that need stable references for event listeners
-  const stopRecordingRef = useRef<() => Promise<GPXData | null>>(() => Promise.resolve(null));
-  const autoSaveRef = useRef<(isGracefulPause?: boolean) => Promise<void>>(() => Promise.resolve());
+  const stopRecordingRef = useRef<() => Promise<RecordingResult | null>>(() => Promise.resolve(null));
+  const incrementalSaveRef = useRef<() => Promise<void>>(() => Promise.resolve());
   const stateRef = useRef<RecordingState>(state);
-  
+
   // Keep stateRef synchronized with current state
   stateRef.current = state;
 
@@ -164,24 +173,40 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
     const { latitude, longitude, altitude, accuracy } = position.coords;
     const timestamp = position.timestamp;
-
-    // Filter out poor accuracy points
-    if (accuracy && accuracy > GPS_ACCURACY_THRESHOLD) {
-      return;
-    }
-
-    // Filter out points too close in time
     const now = Date.now();
-    if (now - lastLocationTimeRef.current < GPS_MIN_INTERVAL) {
-      return;
-    }
+
+    // Update signal tracking (for signal loss detection)
     lastLocationTimeRef.current = now;
+
+    // Filter: enforce minimum time interval between points
+    const lastPoint = pointsRef.current.length > 0
+      ? pointsRef.current[pointsRef.current.length - 1]
+      : null;
+
+    if (lastPoint) {
+      const timeSinceLast = timestamp - lastPoint.time.getTime();
+
+      // Reject points with non-monotonic timestamps (time going backward or duplicate)
+      if (timeSinceLast <= 0) {
+        console.log(`[RecordingContext] Rejecting point: non-monotonic timestamp (${timeSinceLast}ms behind last)`);
+        return;
+      }
+
+      // Enforce minimum interval
+      if (timeSinceLast < GPS_MIN_INTERVAL) {
+        return;
+      }
+    }
+
+    // Accept all points regardless of accuracy - accuracy is stored in GPX
+    // extensions for post-processing filtering (e.g. ski lifts can have poor GPS)
 
     const point: TrackPoint = {
       lat: latitude,
       lon: longitude,
       ele: altitude || 0,
       time: new Date(timestamp),
+      accuracy: accuracy || undefined,
     };
 
     pointsRef.current.push(point);
@@ -205,6 +230,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       gpsAccuracy: accuracy || null,
       pointCount: pointsRef.current.length,
     }));
+
+    // Point-count-driven autosave (backup to timer-based autosave)
+    // This ensures saves happen even if setInterval is throttled by WebView
+    if (pointsRef.current.length - lastSavedIndexRef.current >= AUTOSAVE_POINT_INTERVAL) {
+      incrementalSaveRef.current();
+    }
   }, []);
 
   const handleBatteryChange = useCallback(async () => {
@@ -219,7 +250,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     } else if (level <= LOW_BATTERY_THRESHOLD && watchIdRef.current) {
       // Low battery - warn and auto-save (only if recording)
       setState(prev => ({ ...prev, error: 'Low battery - saving progress' }));
-      await autoSaveRef.current();
+      await incrementalSaveRef.current();
     }
   }, []);
 
@@ -235,21 +266,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Only trigger autosave if we're currently recording
       if (stateRef.current.isRecording && pointsRef.current.length > 0) {
         if (!isActive) {
-          // App going to background - mark as graceful pause
+          // App going to background - save incrementally
           console.log('[RecordingContext] App backgrounded during recording, saving state...');
-          await autoSaveRef.current(true);
+          await incrementalSaveRef.current();
         } else {
-          // App coming back to foreground - mark as active again
-          console.log('[RecordingContext] App resumed, updating recording state...');
-          await autoSaveRef.current(false);
-          // Clean up autosave file since recording is continuing normally
-          try {
-            await deleteTempFile('recording-autosave.json');
-            console.log('[RecordingContext] Autosave file cleaned up after graceful resume');
-          } catch (error) {
-            // File may not exist, that's fine
-            console.log('[RecordingContext] No autosave file to clean up');
-          }
+          // App coming back to foreground - just log, session is still active
+          console.log('[RecordingContext] App resumed, continuing recording...');
         }
       }
     }).then(handle => {
@@ -263,26 +285,54 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     };
   }, [isNative]);
 
-  const autoSave = useCallback(async (isGracefulPause = false) => {
+  const incrementalSave = useCallback(async () => {
     if (pointsRef.current.length === 0) return;
 
+    // Prevent concurrent saves - this avoids duplicate point writes
+    // when both timer-based and point-count-based autosave trigger simultaneously
+    if (isSavingRef.current) {
+      console.log('[RecordingContext] Incremental save already in progress, skipping');
+      return;
+    }
+    isSavingRef.current = true;
+
     try {
-      const autosaveData = {
-        points: pointsRef.current,
-        startTime: stateRef.current.startTime?.toISOString(),
+      // Snapshot the save index before async operations
+      const saveFromIndex = lastSavedIndexRef.current;
+      const newPoints = pointsRef.current.slice(saveFromIndex);
+      if (newPoints.length === 0) {
+        isSavingRef.current = false;
+        return;
+      }
+
+      // Update saved index immediately to prevent overlapping saves
+      // from picking up the same points
+      const newSavedIndex = saveFromIndex + newPoints.length;
+      lastSavedIndexRef.current = newSavedIndex;
+
+      // Append new points to GPX file
+      await appendPoints(newPoints);
+
+      // Update session file
+      const sessionData = {
+        startTime: stateRef.current.startTime?.toISOString() || new Date().toISOString(),
         locationName: stateRef.current.locationName,
-        timestamp: Date.now(),
-        isGracefulPause,
-        // Note: filePath would be added here after recording is stopped and file is saved
+        status: 'active',
+        lastUpdateTime: Date.now(),
+        pointCount: pointsRef.current.length,
       };
-      await writeTempFile('recording-autosave.json', JSON.stringify(autosaveData));
+      await writeTempFile(SESSION_FILE, JSON.stringify(sessionData));
+
+      console.log(`[RecordingContext] Incremental save: ${newPoints.length} new points saved (${pointsRef.current.length} total)`);
     } catch (error) {
-      console.error('Auto-save failed:', error instanceof Error ? error.message : String(error));
+      console.error('Incremental save failed:', error instanceof Error ? error.message : String(error));
+    } finally {
+      isSavingRef.current = false;
     }
   }, []);
-  
-  // Update ref after autoSave is defined
-  autoSaveRef.current = autoSave;
+
+  // Update ref after incrementalSave is defined
+  incrementalSaveRef.current = incrementalSave;
 
   const checkStorage = async (): Promise<boolean> => {
     if (!navigator.storage || !navigator.storage.estimate) return true;
@@ -313,13 +363,14 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
 
-    // Clear any existing autosave file before starting new recording
+    // Clear any existing session and temp GPX files before starting new recording
     try {
-      await deleteTempFile('recording-autosave.json');
-      console.log('[RecordingContext] Cleared existing autosave file');
+      await deleteTempFile(SESSION_FILE);
+      await deleteTempFile(getTempGpxFileName());
+      console.log('[RecordingContext] Cleared existing session files');
     } catch (error) {
-      // File may not exist, that's fine
-      console.log('[RecordingContext] No existing autosave file to clear');
+      // Files may not exist, that's fine
+      console.log('[RecordingContext] No existing session files to clear');
     }
 
     try {
@@ -365,7 +416,13 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Start GPS watch
       console.log('[RecordingContext] Starting GPS watch...');
       const watchId = await Geolocation.watchPosition(
-        { enableHighAccuracy: true, timeout: 10000 },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          interval: 1000,              // Request updates every 1s
+          minimumUpdateInterval: 1000,  // Accept updates as fast as 1s
+          maximumAge: 0,                // Never use cached positions
+        },
         handlePosition
       );
       watchIdRef.current = watchId;
@@ -388,24 +445,39 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }, 1000);
 
       statsIntervalRef.current = setInterval(updateLiveStats, STATS_UPDATE_INTERVAL);
-      autosaveIntervalRef.current = setInterval(autoSave, AUTOSAVE_INTERVAL);
+      autosaveIntervalRef.current = setInterval(incrementalSave, AUTOSAVE_INTERVAL);
       notificationIntervalRef.current = setInterval(updateNotification, NOTIFICATION_UPDATE_INTERVAL);
 
+      const locationName = 'Recording';
       setState({
         isRecording: true,
         points: [],
         startTime,
         elapsedSeconds: 0,
         liveData: null,
-        locationName: null,
+        locationName,
         error: null,
         gpsAccuracy: null,
         pointCount: 0,
       });
 
       pointsRef.current = [];
+      lastSavedIndexRef.current = 0;
       lastLocationTimeRef.current = 0;
       hasGoodFirstPointRef.current = false;
+
+      // Create initial GPX file
+      await createRecordingGpx(locationName);
+
+      // Create initial session file
+      const sessionData = {
+        startTime: startTime.toISOString(),
+        locationName,
+        status: 'active',
+        lastUpdateTime: Date.now(),
+        pointCount: 0,
+      };
+      await writeTempFile(SESSION_FILE, JSON.stringify(sessionData));
 
       console.log('[RecordingContext] Recording started successfully');
       return true;
@@ -418,7 +490,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const stopRecording = async (): Promise<GPXData | null> => {
+  const stopRecording = async (): Promise<RecordingResult | null> => {
     const cleanupErrors: string[] = [];
     
     // Clear all timers and watchers with error handling
@@ -479,6 +551,20 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
     // Calculate final stats
     if (pointsRef.current.length === 0) {
+      // Mark session as stopped before cleaning up
+      try {
+        const sessionData = {
+          startTime: stateRef.current.startTime?.toISOString() || new Date().toISOString(),
+          locationName: stateRef.current.locationName,
+          status: 'stopped',
+          lastUpdateTime: Date.now(),
+          pointCount: 0,
+        };
+        await writeTempFile(SESSION_FILE, JSON.stringify(sessionData));
+      } catch (error) {
+        console.error('Failed to update session status:', error);
+      }
+
       setState(prev => ({ ...prev, isRecording: false }));
       return null;
     }
@@ -491,20 +577,41 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       runs,
     };
 
-    // Generate and save GPX
+    // Save any remaining unsaved points before finalizing
+    if (pointsRef.current.length > lastSavedIndexRef.current) {
+      await incrementalSave();
+    }
+
+    // Mark session as stopped
+    try {
+      const sessionData = {
+        startTime: stateRef.current.startTime?.toISOString() || new Date().toISOString(),
+        locationName: stateRef.current.locationName,
+        status: 'stopped',
+        lastUpdateTime: Date.now(),
+        pointCount: pointsRef.current.length,
+      };
+      await writeTempFile(SESSION_FILE, JSON.stringify(sessionData));
+    } catch (error) {
+      console.error('Failed to update session status:', error);
+    }
+
+    // Finalize and save GPX
     let savedSuccessfully = false;
+    let savedFileName = '';
     try {
       const date = new Date();
       const dateStr = date.toISOString().split('T')[0];
       const location = stateRef.current.locationName || 'Unknown';
-      const fileName = `${dateStr}_${location.replace(/[^a-z0-9]/gi, '_')}.gpx`;
+      savedFileName = `${dateStr}_${location.replace(/[^a-z0-9]/gi, '_')}.gpx`;
 
-      const gpxContent = generateGPX(pointsRef.current, finalData.name);
-      await saveGPXFile(gpxContent, fileName);
+      const gpxContent = await finalizeRecording();
+      await saveGPXFile(gpxContent, savedFileName);
       savedSuccessfully = true;
 
-      // Clear autosave only if save succeeded
-      await deleteTempFile('recording-autosave.json');
+      // Clear temp files only if save succeeded
+      await deleteTempFile(SESSION_FILE);
+      await deleteTempFile(getTempGpxFileName());
     } catch (error) {
       console.error('Failed to save GPX:', error instanceof Error ? error.message : String(error));
       setState(prev => ({
@@ -512,8 +619,8 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
         isRecording: false, // Always set this to false on error
         error: 'Failed to save GPX file. Recording data is still available.'
       }));
-      // Keep the recording data and autosave file for recovery
-      return finalData;
+      // Keep the recording data and temp files for recovery
+      return { data: finalData, fileName: savedFileName };
     }
 
     // Only clear data if save succeeded
@@ -526,9 +633,10 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }));
 
       pointsRef.current = [];
+      lastSavedIndexRef.current = 0;
     }
 
-    return finalData;
+    return { data: finalData, fileName: savedFileName };
   };
   
   // Update ref after stopRecording is defined
@@ -564,7 +672,9 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       ForegroundService.stopForegroundService();
     }
 
-    deleteTempFile('recording-autosave.json');
+    // Clean up temp files
+    deleteTempFile(SESSION_FILE);
+    deleteTempFile(getTempGpxFileName());
 
     setState({
       isRecording: false,
@@ -579,6 +689,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     });
 
     pointsRef.current = [];
+    lastSavedIndexRef.current = 0;
   };
 
   const checkForRecovery = async (): Promise<boolean> => {
@@ -588,57 +699,64 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const { Filesystem, Directory, Encoding } = await import('@capacitor/filesystem');
-      const result = await Filesystem.readFile({
-        path: 'SkiGPXAnalyzer/recording-autosave.json',
-        directory: Directory.Data,
-        encoding: Encoding.UTF8,
-      });
+      const sessionContent = await readTempFile(SESSION_FILE);
+      if (!sessionContent) return false;
 
-      if (!result.data) return false;
+      const sessionData = JSON.parse(sessionContent);
 
-      // Parse autosave data to check graceful pause flag
-      const autosaveData = JSON.parse(result.data as string);
-
-      // If the app was gracefully paused (backgrounded), don't show recovery
-      // This means the recording is still active and the app just resumed
-      if (autosaveData.isGracefulPause === true) {
-        console.log('[RecordingContext] Autosave found but app was gracefully paused, no recovery needed');
+      // Only offer recovery if status is 'active' (crashed/force-quit)
+      // If status is 'stopped', it was a clean shutdown
+      if (sessionData.status !== 'active') {
+        console.log('[RecordingContext] Session found but status is not active, no recovery needed');
         return false;
       }
 
-      // Otherwise, show recovery (true crash or force quit)
-      console.log('[RecordingContext] Autosave found from interrupted recording, recovery needed');
+      // Check if temp GPX file exists
+      const gpxContent = await readTempFile(getTempGpxFileName());
+      if (!gpxContent) {
+        console.log('[RecordingContext] Active session found but no temp GPX file, cannot recover');
+        return false;
+      }
+
+      console.log('[RecordingContext] Active session found with temp GPX file, recovery available');
       return true;
-    } catch {
+    } catch (error) {
+      console.error('[RecordingContext] Error checking for recovery:', error);
       return false;
     }
   };
 
   const recoverRecording = async () => {
     try {
-      const { Filesystem, Directory, Encoding } = await import('@capacitor/filesystem');
-      const result = await Filesystem.readFile({
-        path: 'SkiGPXAnalyzer/recording-autosave.json',
-        directory: Directory.Data,
-        encoding: Encoding.UTF8,
-      });
+      // Read session file
+      const sessionContent = await readTempFile(SESSION_FILE);
+      if (!sessionContent) {
+        throw new Error('Session file not found');
+      }
 
-      const data = JSON.parse(result.data as string);
-      const recoveredPoints: TrackPoint[] = data.points.map((p: any) => ({
-        ...p,
-        time: new Date(p.time),
-      }));
+      const sessionData = JSON.parse(sessionContent);
+
+      // Read and parse GPX file
+      const gpxContent = await readTempFile(getTempGpxFileName());
+      if (!gpxContent) {
+        throw new Error('Temp GPX file not found');
+      }
+
+      const gpxData = parseGPX(gpxContent);
+      const recoveredPoints = gpxData.points;
 
       pointsRef.current = recoveredPoints;
+      lastSavedIndexRef.current = recoveredPoints.length; // All points are already saved
+
+      const startTime = sessionData.startTime ? new Date(sessionData.startTime) : new Date();
 
       setState({
         isRecording: true,
         points: recoveredPoints,
-        startTime: data.startTime ? new Date(data.startTime) : new Date(),
-        elapsedSeconds: Math.floor((Date.now() - new Date(data.startTime).getTime()) / 1000),
+        startTime,
+        elapsedSeconds: Math.floor((Date.now() - startTime.getTime()) / 1000),
         liveData: null,
-        locationName: data.locationName || null,
+        locationName: sessionData.locationName || null,
         error: null,
         gpsAccuracy: null,
         pointCount: recoveredPoints.length,
@@ -653,12 +771,18 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }, 1000);
 
       statsIntervalRef.current = setInterval(updateLiveStats, STATS_UPDATE_INTERVAL);
-      autosaveIntervalRef.current = setInterval(autoSave, AUTOSAVE_INTERVAL);
+      autosaveIntervalRef.current = setInterval(incrementalSave, AUTOSAVE_INTERVAL);
       notificationIntervalRef.current = setInterval(updateNotification, NOTIFICATION_UPDATE_INTERVAL);
 
       // Restart GPS watch
       const watchId = await Geolocation.watchPosition(
-        { enableHighAccuracy: true, timeout: 10000 },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          interval: 1000,              // Request updates every 1s
+          minimumUpdateInterval: 1000,  // Accept updates as fast as 1s
+          maximumAge: 0,                // Never use cached positions
+        },
         handlePosition
       );
       watchIdRef.current = watchId;
@@ -686,13 +810,18 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
           serviceType: ServiceType.Location,
         });
       }
+
+      console.log(`[RecordingContext] Recording recovered: ${recoveredPoints.length} points`);
     } catch (error) {
       console.error('Failed to recover recording:', error instanceof Error ? error.message : String(error));
+      // Clean up invalid recovery files
+      await clearRecovery();
     }
   };
 
   const clearRecovery = async () => {
-    await deleteTempFile('recording-autosave.json');
+    await deleteTempFile(SESSION_FILE);
+    await deleteTempFile(getTempGpxFileName());
   };
 
   // Check for signal loss

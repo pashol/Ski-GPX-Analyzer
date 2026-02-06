@@ -4,6 +4,7 @@ export interface TrackPoint {
   lon: number;
   ele: number;
   time: Date;
+  accuracy?: number;
   speed?: number;
   distance?: number;
   cumulativeDistance?: number;

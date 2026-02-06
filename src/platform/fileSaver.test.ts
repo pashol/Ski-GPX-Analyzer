@@ -148,6 +148,85 @@ describe('fileSaver', () => {
 
       await expect(saveGPXFile('<gpx></gpx>', 'test.gpx')).resolves.toBeDefined();
     });
+
+    it('should auto-increment filename when file already exists on web', async () => {
+      // Create initial file
+      await filesystemMock.writeFile({
+        path: 'SkiGPXAnalyzer/2026-01-30_Zermatt.gpx',
+        data: '<gpx>original</gpx>',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      const gpxContent = '<gpx>new content</gpx>';
+      await saveGPXFile(gpxContent, '2026-01-30_Zermatt.gpx');
+
+      const storedFiles = filesystemMock.getStoredFiles();
+      // Original file should still exist
+      expect(storedFiles.has('DOCUMENTS/SkiGPXAnalyzer/2026-01-30_Zermatt.gpx')).toBe(true);
+      // New file should have _2 suffix
+      expect(storedFiles.has('DOCUMENTS/SkiGPXAnalyzer/2026-01-30_Zermatt_2.gpx')).toBe(true);
+      expect(storedFiles.get('DOCUMENTS/SkiGPXAnalyzer/2026-01-30_Zermatt_2.gpx')?.data).toBe(gpxContent);
+    });
+
+    it('should auto-increment filename when file already exists on Android', async () => {
+      mockGetPlatform.mockReturnValue('android');
+
+      // Create initial file
+      await filesystemMock.writeFile({
+        path: 'Documents/SkiGPXAnalyzer/2026-01-30_Zermatt.gpx',
+        data: '<gpx>original</gpx>',
+        directory: Directory.ExternalStorage,
+        encoding: Encoding.UTF8,
+      });
+
+      const gpxContent = '<gpx>new content</gpx>';
+      await saveGPXFile(gpxContent, '2026-01-30_Zermatt.gpx');
+
+      const storedFiles = filesystemMock.getStoredFiles();
+      // Original file should still exist
+      expect(storedFiles.has('EXTERNAL_STORAGE/Documents/SkiGPXAnalyzer/2026-01-30_Zermatt.gpx')).toBe(true);
+      // New file should have _2 suffix
+      expect(storedFiles.has('EXTERNAL_STORAGE/Documents/SkiGPXAnalyzer/2026-01-30_Zermatt_2.gpx')).toBe(true);
+      expect(storedFiles.get('EXTERNAL_STORAGE/Documents/SkiGPXAnalyzer/2026-01-30_Zermatt_2.gpx')?.data).toBe(gpxContent);
+    });
+
+    it('should increment to _3 when both original and _2 exist', async () => {
+      // Create initial files
+      await filesystemMock.writeFile({
+        path: 'SkiGPXAnalyzer/track.gpx',
+        data: '<gpx>first</gpx>',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+      await filesystemMock.writeFile({
+        path: 'SkiGPXAnalyzer/track_2.gpx',
+        data: '<gpx>second</gpx>',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      const gpxContent = '<gpx>third</gpx>';
+      await saveGPXFile(gpxContent, 'track.gpx');
+
+      const storedFiles = filesystemMock.getStoredFiles();
+      expect(storedFiles.has('DOCUMENTS/SkiGPXAnalyzer/track_3.gpx')).toBe(true);
+      expect(storedFiles.get('DOCUMENTS/SkiGPXAnalyzer/track_3.gpx')?.data).toBe(gpxContent);
+    });
+
+    it('should preserve file extension when incrementing', async () => {
+      await filesystemMock.writeFile({
+        path: 'SkiGPXAnalyzer/my-track.gpx',
+        data: '<gpx>original</gpx>',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      await saveGPXFile('<gpx>new</gpx>', 'my-track.gpx');
+
+      const storedFiles = filesystemMock.getStoredFiles();
+      expect(storedFiles.has('DOCUMENTS/SkiGPXAnalyzer/my-track_2.gpx')).toBe(true);
+    });
   });
 
   describe('readTempFile', () => {

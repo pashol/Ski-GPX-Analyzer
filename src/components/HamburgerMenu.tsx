@@ -7,9 +7,11 @@ import { useUnits, UnitSystem } from '../contexts/UnitsContext';
 
 interface HamburgerMenuProps {
   onOpenFile: () => void;
+  onNewAnalysis?: () => void;
+  canNewAnalysis?: boolean;
 }
 
-export function HamburgerMenu({ onOpenFile }: HamburgerMenuProps) {
+export function HamburgerMenu({ onOpenFile, onNewAnalysis, canNewAnalysis }: HamburgerMenuProps) {
   const { t, language, setLanguage } = useTranslation();
   const { unitSystem, setUnitSystem } = useUnits();
   const { isNative } = usePlatform();
@@ -59,6 +61,17 @@ export function HamburgerMenu({ onOpenFile }: HamburgerMenuProps) {
 
       {isOpen && (
         <div className="hamburger-dropdown">
+          {/* New Analysis - only when not recording */}
+          {canNewAnalysis && onNewAnalysis && (
+            <button 
+              className="menu-item" 
+              onClick={() => { onNewAnalysis(); setIsOpen(false); }}
+            >
+              <span className="menu-icon">🆕</span>
+              <span>{t('header.newAnalysis')}</span>
+            </button>
+          )}
+
           {/* Open File */}
           <button 
             className="menu-item" 

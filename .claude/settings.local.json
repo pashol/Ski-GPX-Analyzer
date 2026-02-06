@@ -24,7 +24,22 @@
       "Bash(.gradlew assembleDebug:*)",
       "Bash(gradlew.bat assembleDebug:*)",
       "Bash(./gradlew assembleDebug:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(if [ -f \"gradlew.bat\" ])",
+      "Bash(then echo \"Using gradlew.bat\")",
+      "Bash(else echo \"Using gradle command\")",
+      "Bash(fi:*)",
+      "Bash(if [ -d \"/c/Program Files/Android/Android Studio/jbr\" ])",
+      "Bash(then export JAVA_HOME=\"/c/Program Files/Android/Android Studio/jbr\")",
+      "Bash(elif [ -d \"/c/Users/$USER/AppData/Local/Android/Sdk/cmdline-tools\" ])",
+      "Bash(then echo \"Found SDK cmdline-tools\")",
+      "Bash(else echo \"Searching for JDK...\")",
+      "Bash(export JAVA_HOME=\"/c/Program Files/Android/Android Studio/jbr\")",
+      "Bash(./gradlew.bat assembleDebug:*)",
+      "Bash(node analyze_gaps.js:*)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)",
+      "Skill(commit-commands:commit)"
     ]
   }
 }
