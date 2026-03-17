@@ -235,13 +235,20 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Only trigger autosave if we're currently recording
       if (stateRef.current.isRecording && pointsRef.current.length > 0) {
         if (!isActive) {
-          // App going to background - mark as graceful pause
+          // App going to background - pause periodic autosave to prevent it
+          // from overwriting the graceful pause flag
+          if (autosaveIntervalRef.current) {
+            clearInterval(autosaveIntervalRef.current);
+            autosaveIntervalRef.current = null;
+          }
           console.log('[RecordingContext] App backgrounded during recording, saving state...');
           await autoSaveRef.current(true);
         } else {
-          // App coming back to foreground - mark as active again
+          // App coming back to foreground - restart periodic autosave
           console.log('[RecordingContext] App resumed, updating recording state...');
-          await autoSaveRef.current(false);
+          if (!autosaveIntervalRef.current) {
+            autosaveIntervalRef.current = setInterval(() => autoSaveRef.current(), AUTOSAVE_INTERVAL);
+          }
           // Clean up autosave file since recording is continuing normally
           try {
             await deleteTempFile('recording-autosave.json');
