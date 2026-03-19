@@ -22,10 +22,13 @@ A cross-platform application for analyzing ski adventures using GPX and FIT file
 
 ### 🗺️ Interactive Mapping
 - **Multiple Map Types** - Streets, satellite, and terrain views
-- **Speed-Colored Tracks** - Runs color-coded by speed (green → yellow → red gradient)
+- **Per-Point Speed Gradient** - Each run segment colored individually from green (slow) to red (fast), with an 80 km/h scale floor
+- **Lift Identification** - Chairlift and transit segments shown in gray, instantly distinguishable from ski runs
 - **Piste Overlay** - Toggle OpenSnowMap layer to view official ski runs and lifts
 - **Smart Markers** - Start/End markers, numbered run markers, and optional kilometer markers
-- **Run Highlighting** - Click any run to highlight it on the map and view details
+- **Run Popup** - Tap any run to see speed, elevation, heart rate, and distance from run start at the tapped point, with a direct link to run details
+- **Run Cycling** - Navigate between runs with ◀ ▶ controls; popup locks to the active run
+- **Fullscreen Mode** - Expand the map to fill the screen with safe area support on mobile
 
 ### 📈 Elevation & Speed Profiles
 - **Dual-Axis Charts** - Elevation and speed displayed simultaneously
@@ -92,28 +95,6 @@ npm run build
 
 # Preview production build locally
 npm run preview
-```
-
-### Testing
-
-```bash
-# Run tests in watch mode (for development)
-npm test
-
-# Run tests once (CI mode)
-npm run test:run
-
-# Run tests with coverage report
-npm run test:coverage
-
-# Open Vitest UI for interactive debugging
-npm run test:ui
-
-# Run a single test file
-npm test -- src/utils/gpxParser.test.ts
-
-# Run tests matching a specific pattern
-npm test -- --grep "should parse"
 ```
 
 The web app will be available at `http://localhost:5173` during development.

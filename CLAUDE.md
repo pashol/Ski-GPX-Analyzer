@@ -15,10 +15,17 @@ npm run preview      # Preview production build locally
 ### Android Development
 ```bash
 npm run build:android     # Build web app and sync to Android
-npm run android:dev       # Build, sync, and run on device
 npm run android:studio    # Open project in Android Studio
 npx cap sync android      # Sync web assets to Android
 ```
+
+**NEVER use `npm run android:dev` or `cap run android`** — `gradlew` is not in PATH and these always fail at the Gradle step.
+
+Correct build process:
+1. `npm run build` — TypeScript check + Vite build
+2. `npx cap sync android` — sync web assets to Android
+3. `cd android && ./gradlew assembleDebug` (or `assembleRelease`) — build APK
+4. APK output: `android/app/build/outputs/apk/debug/app-debug.apk`
 
 See `ANDROID_SETUP.md` for detailed Android build instructions.
 
@@ -58,7 +65,7 @@ This is a **React 18 + TypeScript + Vite + Capacitor** application for analyzing
 ### Feature Views (src/features/)
 
 - **TrackView**: Overview with stats cards and run list
-- **MapView**: Leaflet map with speed-colored run overlays, OpenSnowMap piste layer
+- **MapView**: Leaflet map with per-point speed-colored run overlays, lift segment coloring, run popup with point-level data, OpenSnowMap piste layer
 - **AnalysisView**: Speed/elevation charts and statistics
 - **ProfileView**: Elevation profile visualization
 - **RunDetailView**: Individual run analysis
@@ -74,8 +81,10 @@ This is a **React 18 + TypeScript + Vite + Capacitor** application for analyzing
   - Web: localStorage
   - Android: Capacitor Preferences API
 - **Unit Conversion**: Utilities in `gpxParser.ts` (metric/imperial)
-- **Speed Color Gradient**: HSL-based, green (slow) to red (fast)
-- **Distance Calculation**: Haversine formula
+- **Speed Color Gradient**: HSL-based, green (slow) to red (fast), 80 km/h floor; applied per-segment (point-by-point) on run overlays
+- **Map Track Rendering**: Lift/transit segments in gray (`#94a3b8`); run segments as individual per-point polylines with speed colors; selected run as solid cyan
+- **Run Popup**: Transparent wide hit-polyline per run (only created for the active run when one is selected); shows speed, elevation, heart rate, and distance from run start; uses `window.__onRunSelect` / `window.__mapRuns` globals for the "View details →" button since Leaflet popups are plain HTML strings
+- **Distance Calculation**: Haversine formula (local copy in `MapView.tsx`)
 
 ### Capacitor Integration (`src/utils/`)
 
