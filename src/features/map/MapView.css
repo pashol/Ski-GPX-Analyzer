@@ -477,6 +477,22 @@
   font-size: 0.9em;
 }
 
+.run-popup-btn {
+  margin-top: 6px;
+  background: rgba(124, 58, 237, 0.8);
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  display: inline-block;
+}
+
+.run-popup-btn:hover {
+  background: rgba(124, 58, 237, 1);
+}
+
 /* Run cycle button styling */
 .map-run-cycle .cycle-btn {
   background: rgba(0, 212, 255, 0.2);
@@ -533,6 +549,22 @@
 
 .map-point-bar-sep {
   opacity: 0.5;
+}
+
+.map-point-bar-run-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.map-point-bar-run-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 @keyframes pointBarIn {
