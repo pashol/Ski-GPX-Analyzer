@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './MapView.css';
-import { GPXData, Run } from '../../utils/gpxParser';
+import { GPXData, Run, TrackPoint } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -36,6 +36,10 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const [mapTypeMenuOpen, setMapTypeMenuOpen] = useState(false);
   const [toggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedPoint, setSelectedPoint] = useState<TrackPoint | null>(null);
+  const [pointBarVisible, setPointBarVisible] = useState(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pointMarkerRef = useRef<any>(null);
 
   // Clear cycle state when external selection changes
   useEffect(() => {
@@ -572,6 +576,43 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     }
   }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex]);
 
+  // Map click handler — show point info bar
+  useEffect(() => {
+    if (!mapRef.current || !isLeafletReady) return;
+    const L = window.L;
+    const map = mapRef.current;
+
+    const handleClick = (e: any) => {
+      const point = findNearestPoint(data.points, e.latlng.lat, e.latlng.lng);
+      if (!point) return;
+
+      if (pointMarkerRef.current) pointMarkerRef.current.remove();
+      pointMarkerRef.current = L.circleMarker([point.lat, point.lon], {
+        radius: 6,
+        color: getSpeedColor(point.speed ?? 0, speedStats.maxRunSpeed),
+        fillColor: 'white',
+        fillOpacity: 1,
+        weight: 2,
+      }).addTo(map);
+
+      setSelectedPoint(point);
+      setPointBarVisible(true);
+
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = setTimeout(() => {
+        setPointBarVisible(false);
+        if (pointMarkerRef.current) { pointMarkerRef.current.remove(); pointMarkerRef.current = null; }
+      }, 3000);
+    };
+
+    map.on('click', handleClick);
+    return () => {
+      map.off('click', handleClick);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      if (pointMarkerRef.current) { pointMarkerRef.current.remove(); pointMarkerRef.current = null; }
+    };
+  }, [data.points, isLeafletReady, speedStats]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -725,6 +766,23 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           )}
         </div>
 
+        {/* Point info pill bar - top center */}
+        {selectedPoint && pointBarVisible && (
+          <div className="map-point-bar">
+            <span>{formatSpeed(selectedPoint.speed ?? 0, 1)}</span>
+            <span className="map-point-bar-sep">·</span>
+            <span>{formatAltitude(selectedPoint.ele, 0)}</span>
+            {selectedPoint.heartRate !== undefined && (
+              <>
+                <span className="map-point-bar-sep">·</span>
+                <span>♥ {selectedPoint.heartRate}</span>
+              </>
+            )}
+            <span className="map-point-bar-sep">·</span>
+            <span>{formatDistance((selectedPoint.cumulativeDistance ?? 0) / 1000, 1)}</span>
+          </div>
+        )}
+
         {/* Run cycle controls - bottom right */}
         {data.runs.length > 0 && (
           <div className={`map-overlay-control map-run-cycle ${isExpanded ? 'expanded' : ''}`}>
@@ -815,6 +873,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       )}
     </div>
   );
+}
+
+function findNearestPoint(points: TrackPoint[], lat: number, lon: number): TrackPoint | null {
+  if (!points.length) return null;
+  let nearest = points[0];
+  let minDist = haversineDistance(lat, lon, points[0].lat, points[0].lon);
+  for (const p of points) {
+    const d = haversineDistance(lat, lon, p.lat, p.lon);
+    if (d < minDist) { minDist = d; nearest = p; }
+  }
+  return nearest;
 }
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {

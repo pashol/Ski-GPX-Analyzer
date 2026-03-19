@@ -507,6 +507,39 @@
   text-align: center;
 }
 
+/* Point info pill bar */
+.map-point-bar {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  animation: pointBarIn 0.2s ease forwards;
+}
+
+.map-point-bar-sep {
+  opacity: 0.5;
+}
+
+@keyframes pointBarIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.map-container.expanded .map-point-bar {
+  top: calc(12px + env(safe-area-inset-top));
+}
+
 @media (max-width: 768px) {
   .control-menu {
     min-width: 140px;
