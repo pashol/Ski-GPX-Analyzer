@@ -458,13 +458,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             `;
           };
 
-          const popupLayer = L.polyline(runCoords, { color: 'transparent', weight: 20, opacity: 0.001 }).addTo(map);
-          popupLayer.bindPopup(buildPopupContent(runPoints[0] ?? null));
-          popupLayer.on('click', (e: any) => {
-            const pt = findNearestPoint(runPoints, e.latlng.lat, e.latlng.lng);
-            popupLayer.setPopupContent(buildPopupContent(pt));
-          });
-          layersRef.current.push(popupLayer);
+          // Only create a hit layer when no run is active (all clickable) or this is the active run.
+          // This prevents a background run's layer from capturing clicks intended for the active run.
+          if (activeRunIndex === null || idx === activeRunIndex) {
+            const popupLayer = L.polyline(runCoords, { color: 'transparent', weight: 20, opacity: 0.001 }).addTo(map);
+            popupLayer.bindPopup(buildPopupContent(runPoints[0] ?? null));
+            popupLayer.on('click', (e: any) => {
+              const pt = findNearestPoint(runPoints, e.latlng.lat, e.latlng.lng);
+              popupLayer.setPopupContent(buildPopupContent(pt));
+            });
+            layersRef.current.push(popupLayer);
+          }
         });
       }
 
