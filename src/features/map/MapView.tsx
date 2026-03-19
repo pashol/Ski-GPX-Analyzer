@@ -439,29 +439,30 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             }
           }
 
-          const distanceStr = formatDistance(run.distance / 1000, 2);
-          const verticalStr = formatAltitude(run.verticalDrop, 0);
-          const maxSpeedStr = formatSpeed(run.maxSpeed, 1);
-          const avgSpeedStr = formatSpeed(run.avgSpeed, 1);
+          const runStartCumDist = data.points[run.startIndex].cumulativeDistance ?? 0;
 
-          const buildPopupContent = (pointSpeedStr: string) => `
-            <div class="run-popup">
-              <strong>${t('track.run')} ${idx + 1}</strong><br>
-              ${t('map.runPopup.distance')}: ${distanceStr}<br>
-              ${t('map.runPopup.vertical')}: ${verticalStr}<br>
-              Speed here: ${pointSpeedStr}<br>
-              ${t('map.runPopup.maxSpeed')}: ${maxSpeedStr}<br>
-              ${t('map.runPopup.avgSpeed')}: ${avgSpeedStr}<br>
-              ${t('map.runPopup.duration')}: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
-              ${onRunSelect ? `<br><button class="run-popup-btn" onclick="(window.__onRunSelect)(window.__mapRuns[${idx}])">View details →</button>` : ''}
-            </div>
-          `;
+          const buildPopupContent = (pt: TrackPoint | null) => {
+            const speedStr = pt ? formatSpeed(pt.speed ?? 0, 1) : '—';
+            const eleStr = pt ? formatAltitude(pt.ele, 0) : '—';
+            const hrLine = pt?.heartRate !== undefined ? `Heart rate: ${pt.heartRate} bpm<br>` : '';
+            const distFromStart = pt ? ((pt.cumulativeDistance ?? runStartCumDist) - runStartCumDist) : 0;
+            const distStr = pt ? formatDistance(distFromStart / 1000, 2) : '—';
+            return `
+              <div class="run-popup">
+                <strong>${t('track.run')} ${idx + 1}</strong><br>
+                Speed: ${speedStr}<br>
+                ${t('map.runPopup.elevation')}: ${eleStr}<br>
+                ${hrLine}Distance: ${distStr}
+                ${onRunSelect ? `<br><br><button class="run-popup-btn" onclick="(window.__onRunSelect)(window.__mapRuns[${idx}])">View details →</button>` : ''}
+              </div>
+            `;
+          };
 
           const popupLayer = L.polyline(runCoords, { color: 'transparent', weight: 20, opacity: 0.001 }).addTo(map);
-          popupLayer.bindPopup(buildPopupContent('—'));
+          popupLayer.bindPopup(buildPopupContent(runPoints[0] ?? null));
           popupLayer.on('click', (e: any) => {
-            const pt = findNearestPoint(data.points, e.latlng.lat, e.latlng.lng);
-            popupLayer.setPopupContent(buildPopupContent(formatSpeed(pt?.speed ?? 0, 1)));
+            const pt = findNearestPoint(runPoints, e.latlng.lat, e.latlng.lng);
+            popupLayer.setPopupContent(buildPopupContent(pt));
           });
           layersRef.current.push(popupLayer);
         });
