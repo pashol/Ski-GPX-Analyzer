@@ -232,6 +232,23 @@
   bottom: 30px;
 }
 
+/* Safe area offsets when map is fullscreen */
+.map-container.expanded .map-expand-control {
+  top: calc(10px + env(safe-area-inset-top));
+}
+
+.map-container.expanded .map-type-control {
+  top: calc(58px + env(safe-area-inset-top));
+}
+
+.map-container.expanded .map-toggle-control {
+  top: calc(106px + env(safe-area-inset-top));
+}
+
+.map-container.expanded .map-run-cycle {
+  bottom: calc(30px + env(safe-area-inset-bottom));
+}
+
 .map-legend {
   display: flex;
   flex-wrap: wrap;

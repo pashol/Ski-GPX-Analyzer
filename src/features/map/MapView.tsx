@@ -52,6 +52,15 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     return null;
   }, [cycledRunIndex, selectedRun, data.runs]);
 
+  // Ref to hold current fit parameters for use in effects without stale closures
+  type FitBounds = { minLat: number; maxLat: number; minLon: number; maxLon: number } | null;
+  const fitStateRef = useRef<{ activeRunIndex: number | null; bounds: FitBounds; data: GPXData }>({
+    activeRunIndex: null,
+    bounds: null,
+    data,
+  });
+  // (fitStateRef.current is fully synced below, after bounds is computed)
+
   // Run cycling handlers
   const handlePrevRun = useCallback(() => {
     if (data.runs.length === 0) return;
@@ -124,6 +133,35 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     };
   }, [isExpanded]);
 
+  // Notify Leaflet of container resize when expanding/collapsing
+  useEffect(() => {
+    if (!mapRef.current) return;
+    // Small timeout to let CSS apply before invalidating
+    const timer = setTimeout(() => {
+      if (!mapRef.current) return;
+      mapRef.current.invalidateSize();
+      // Re-fit to current selection after resize
+      const { activeRunIndex, bounds, data } = fitStateRef.current;
+      if (!bounds) return;
+      if (activeRunIndex !== null && data.runs[activeRunIndex]) {
+        const activeRun = data.runs[activeRunIndex];
+        const runPoints = data.points.slice(activeRun.startIndex, activeRun.endIndex + 1);
+        const runLats = runPoints.map(p => p.lat);
+        const runLons = runPoints.map(p => p.lon);
+        mapRef.current.fitBounds([
+          [Math.min(...runLats), Math.min(...runLons)],
+          [Math.max(...runLats), Math.max(...runLons)],
+        ], { padding: [50, 50] });
+      } else {
+        mapRef.current.fitBounds([
+          [bounds.minLat, bounds.minLon],
+          [bounds.maxLat, bounds.maxLon],
+        ], { padding: [30, 30] });
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [isExpanded]);
+
   const { bounds, center } = useMemo(() => {
     const points = data.points;
     if (points.length === 0) {
@@ -146,6 +184,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       }
     };
   }, [data.points]);
+
+  // Keep fitStateRef in sync with current render values (bounds now in scope)
+  fitStateRef.current = { activeRunIndex, bounds, data };
 
   // Calculate dynamic speed thresholds based on actual data
   const speedStats = useMemo(() => {
