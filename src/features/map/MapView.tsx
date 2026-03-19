@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './MapView.css';
-import { GPXData, Run } from '../../utils/gpxParser';
+import { GPXData, Run, TrackPoint } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -36,6 +36,11 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const [mapTypeMenuOpen, setMapTypeMenuOpen] = useState(false);
   const [toggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedPoint, setSelectedPoint] = useState<TrackPoint | null>(null);
+  const [selectedPointRun, setSelectedPointRun] = useState<Run | null>(null);
+  const [pointBarVisible, setPointBarVisible] = useState(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pointMarkerRef = useRef<any>(null);
 
   // Clear cycle state when external selection changes
   useEffect(() => {
@@ -229,7 +234,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
   // Function to get color based on speed with dynamic thresholds
   const getSpeedColor = (speed: number, maxSpeed: number): string => {
-    const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 50);
+    const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 80);
     const ratio = Math.min(speed / threshold, 1);
     const adjustedRatio = Math.pow(ratio, 1.5);
     const hue = 120 * (1 - adjustedRatio);
@@ -366,15 +371,29 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         pisteLayerRef.current.bringToFront();
       }
 
-      // Create the main track polyline
-      const trackCoords: [number, number][] = data.points.map(p => [p.lat, p.lon]);
-      
-      const trackLine = L.polyline(trackCoords, {
-        color: '#7c3aed',
-        weight: 3,
-        opacity: 0.8,
-      }).addTo(map);
-      layersRef.current.push(trackLine);
+      // Draw lift/transit segments (non-run points) in a distinct lift color.
+      // Run segments are drawn later with per-point speed colors.
+      const LIFT_COLOR = '#94a3b8';
+      const runIndices = new Set<number>();
+      data.runs.forEach(run => {
+        for (let i = run.startIndex; i <= run.endIndex; i++) runIndices.add(i);
+      });
+
+      let liftStart: number | null = null;
+      const flushLift = (end: number) => {
+        if (liftStart === null || end < liftStart) return;
+        const coords = data.points.slice(liftStart, end + 1).map(p => [p.lat, p.lon] as [number, number]);
+        layersRef.current.push(L.polyline(coords, { color: LIFT_COLOR, weight: 3, opacity: 0.75 }).addTo(map));
+        liftStart = null;
+      };
+      for (let i = 0; i < data.points.length; i++) {
+        if (runIndices.has(i)) {
+          if (liftStart !== null) flushLift(i - 1);
+        } else {
+          if (liftStart === null) liftStart = i;
+        }
+      }
+      if (liftStart !== null) flushLift(data.points.length - 1);
 
       // Find the max speed across all runs for color scaling
       const maxRunSpeed = data.runs.length > 0 
@@ -383,10 +402,15 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
       // Add run overlays if enabled
       if (showRuns && data.runs.length > 0) {
+        // Store refs for popup buttons (Leaflet popups use plain HTML strings)
+        if (onRunSelect) {
+          (window as any).__onRunSelect = onRunSelect;
+          (window as any).__mapRuns = data.runs;
+        }
+
         data.runs.forEach((run, idx) => {
-          const runCoords: [number, number][] = data.points
-            .slice(run.startIndex, run.endIndex + 1)
-            .map(p => [p.lat, p.lon]);
+          const runPoints = data.points.slice(run.startIndex, run.endIndex + 1);
+          const runCoords: [number, number][] = runPoints.map(p => [p.lat, p.lon]);
 
           const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
 
@@ -394,42 +418,57 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           const weight = isSelected ? 8 : 5;
           const opacity = isSelected ? 1 : 0.9;
 
-          const runLine = L.polyline(runCoords, {
-            color: isSelected ? '#00d4ff' : color,
-            weight: weight,
-            opacity: opacity,
-          }).addTo(map);
-          
-          let speedCategory = t('map.speedCategories.casual');
-          const speedRatio = run.maxSpeed / maxRunSpeed;
-          if (speedRatio > 0.8) speedCategory = t('map.speedCategories.fast') + ' 🔥';
-          else if (speedRatio > 0.6) speedCategory = t('map.speedCategories.quick');
-          else if (speedRatio > 0.4) speedCategory = t('map.speedCategories.moderate');
-
-          const distanceStr = formatDistance(run.distance / 1000, 2);
-          const verticalStr = formatAltitude(run.verticalDrop, 0);
-          const maxSpeedStr = formatSpeed(run.maxSpeed, 1);
-          const avgSpeedStr = formatSpeed(run.avgSpeed, 1);
-
-          runLine.bindPopup(`
-            <div class="run-popup">
-              <strong>${t('track.run')} ${idx + 1}</strong> <span style="color: ${color}">● ${speedCategory}</span><br>
-              ${t('map.runPopup.distance')}: ${distanceStr}<br>
-              ${t('map.runPopup.vertical')}: ${verticalStr}<br>
-              ${t('map.runPopup.maxSpeed')}: ${maxSpeedStr}<br>
-              ${t('map.runPopup.avgSpeed')}: ${avgSpeedStr}<br>
-              ${t('map.runPopup.duration')}: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
-              ${onRunSelect ? `<br><em>${t('map.clickForDetails')}</em>` : ''}
-            </div>
-          `);
-          
-          if (onRunSelect) {
-            runLine.on('click', () => {
-              onRunSelect(run);
-            });
+          if (isSelected) {
+            // Selected run: solid cyan highlight
+            const runLine = L.polyline(runCoords, {
+              color: '#00d4ff',
+              weight,
+              opacity,
+            }).addTo(map);
+            layersRef.current.push(runLine);
+          } else {
+            // Unselected: per-segment speed coloring
+            for (let i = 0; i < runPoints.length - 1; i++) {
+              const p1 = runPoints[i];
+              const p2 = runPoints[i + 1];
+              const seg = L.polyline(
+                [[p1.lat, p1.lon] as [number, number], [p2.lat, p2.lon] as [number, number]],
+                { color: getSpeedColor(p1.speed ?? 0, maxRunSpeed), weight, opacity }
+              ).addTo(map);
+              layersRef.current.push(seg);
+            }
           }
-          
-          layersRef.current.push(runLine);
+
+          const runStartCumDist = data.points[run.startIndex].cumulativeDistance ?? 0;
+
+          const buildPopupContent = (pt: TrackPoint | null) => {
+            const speedStr = pt ? formatSpeed(pt.speed ?? 0, 1) : '—';
+            const eleStr = pt ? formatAltitude(pt.ele, 0) : '—';
+            const hrLine = pt?.heartRate !== undefined ? `Heart rate: ${pt.heartRate} bpm<br>` : '';
+            const distFromStart = pt ? ((pt.cumulativeDistance ?? runStartCumDist) - runStartCumDist) : 0;
+            const distStr = pt ? formatDistance(distFromStart / 1000, 2) : '—';
+            return `
+              <div class="run-popup">
+                <strong>${t('track.run')} ${idx + 1}</strong><br>
+                Speed: ${speedStr}<br>
+                ${t('map.runPopup.elevation')}: ${eleStr}<br>
+                ${hrLine}Distance: ${distStr}
+                ${onRunSelect ? `<br><br><button class="run-popup-btn" onclick="(window.__onRunSelect)(window.__mapRuns[${idx}])">View details →</button>` : ''}
+              </div>
+            `;
+          };
+
+          // Only create a hit layer when no run is active (all clickable) or this is the active run.
+          // This prevents a background run's layer from capturing clicks intended for the active run.
+          if (activeRunIndex === null || idx === activeRunIndex) {
+            const popupLayer = L.polyline(runCoords, { color: 'transparent', weight: 20, opacity: 0.001 }).addTo(map);
+            popupLayer.bindPopup(buildPopupContent(runPoints[0] ?? null));
+            popupLayer.on('click', (e: any) => {
+              const pt = findNearestPoint(runPoints, e.latlng.lat, e.latlng.lng);
+              popupLayer.setPopupContent(buildPopupContent(pt));
+            });
+            layersRef.current.push(popupLayer);
+          }
         });
       }
 
@@ -462,7 +501,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             `);
           
           if (onRunSelect) {
-            startMarker.on('click', () => onRunSelect(run));
+            startMarker.on('click', (e: any) => { e.originalEvent.stopPropagation(); onRunSelect(run); });
           }
           layersRef.current.push(startMarker);
 
@@ -487,7 +526,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             `);
           
           if (onRunSelect) {
-            endMarker.on('click', () => onRunSelect(run));
+            endMarker.on('click', (e: any) => { e.originalEvent.stopPropagation(); onRunSelect(run); });
           }
           layersRef.current.push(endMarker);
         });
@@ -571,6 +610,46 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       console.error('Error updating map layers:', err instanceof Error ? err.message : String(err));
     }
   }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex]);
+
+  // Map click handler — show point info bar
+  useEffect(() => {
+    if (!mapRef.current || !isLeafletReady) return;
+    const L = window.L;
+    const map = mapRef.current;
+
+    const handleClick = (e: any) => {
+      const point = findNearestPoint(data.points, e.latlng.lat, e.latlng.lng);
+      if (!point) return;
+
+      if (pointMarkerRef.current) pointMarkerRef.current.remove();
+      pointMarkerRef.current = L.circleMarker([point.lat, point.lon], {
+        radius: 6,
+        color: getSpeedColor(point.speed ?? 0, speedStats.maxRunSpeed),
+        fillColor: 'white',
+        fillOpacity: 1,
+        weight: 2,
+      }).addTo(map);
+
+      const pointIndex = data.points.indexOf(point);
+      const containingRun = data.runs.find(r => pointIndex >= r.startIndex && pointIndex <= r.endIndex) ?? null;
+      setSelectedPoint(point);
+      setSelectedPointRun(containingRun);
+      setPointBarVisible(true);
+
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = setTimeout(() => {
+        setPointBarVisible(false);
+        if (pointMarkerRef.current) { pointMarkerRef.current.remove(); pointMarkerRef.current = null; }
+      }, 3000);
+    };
+
+    map.on('click', handleClick);
+    return () => {
+      map.off('click', handleClick);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      if (pointMarkerRef.current) { pointMarkerRef.current.remove(); pointMarkerRef.current = null; }
+    };
+  }, [data.points, isLeafletReady, speedStats]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -725,6 +804,35 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           )}
         </div>
 
+        {/* Point info pill bar - disabled for now
+        {selectedPoint && pointBarVisible && (
+          <div className="map-point-bar">
+            <span>{formatSpeed(selectedPoint.speed ?? 0, 1)}</span>
+            <span className="map-point-bar-sep">·</span>
+            <span>{formatAltitude(selectedPoint.ele, 0)}</span>
+            {selectedPoint.heartRate !== undefined && (
+              <>
+                <span className="map-point-bar-sep">·</span>
+                <span>♥ {selectedPoint.heartRate}</span>
+              </>
+            )}
+            <span className="map-point-bar-sep">·</span>
+            <span>{formatDistance((selectedPoint.cumulativeDistance ?? 0) / 1000, 1)}</span>
+            {selectedPointRun && onRunSelect && (
+              <>
+                <span className="map-point-bar-sep">·</span>
+                <button
+                  className="map-point-bar-run-btn"
+                  onClick={() => { onRunSelect(selectedPointRun); setPointBarVisible(false); }}
+                >
+                  {t('track.run')} {data.runs.indexOf(selectedPointRun) + 1} →
+                </button>
+              </>
+            )}
+          </div>
+        )}
+        */}
+
         {/* Run cycle controls - bottom right */}
         {data.runs.length > 0 && (
           <div className={`map-overlay-control map-run-cycle ${isExpanded ? 'expanded' : ''}`}>
@@ -762,13 +870,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             <span>{t('map.end')}</span>
           </div>
           {showRuns && (
-            <div className="legend-item speed-scale">
-              <div className="speed-gradient" />
-              <div className="speed-labels">
-                <span>{t('map.slow')}</span>
-                <span>{Math.round(maxRunSpeed)} {t('units.kmh')}</span>
+            <>
+              <div className="legend-item speed-scale">
+                <div className="speed-gradient" />
+                <div className="speed-labels">
+                  <span>{t('map.slow')}</span>
+                  <span>{Math.round(Math.max(maxRunSpeed, 80))} {t('units.kmh')}</span>
+                </div>
               </div>
-            </div>
+              <div className="legend-item">
+                <span className="legend-line lift" />
+                <span>Lift</span>
+              </div>
+            </>
           )}
           {showRunMarkers && data.runs.length > 0 && (
             <div className="legend-item">
@@ -815,6 +929,17 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       )}
     </div>
   );
+}
+
+function findNearestPoint(points: TrackPoint[], lat: number, lon: number): TrackPoint | null {
+  if (!points.length) return null;
+  let nearest = points[0];
+  let minDist = haversineDistance(lat, lon, points[0].lat, points[0].lon);
+  for (const p of points) {
+    const d = haversineDistance(lat, lon, p.lat, p.lon);
+    if (d < minDist) { minDist = d; nearest = p; }
+  }
+  return nearest;
 }
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {

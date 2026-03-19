@@ -348,6 +348,10 @@
   background: #00d4ff;
 }
 
+.legend-line.lift {
+  background: #94a3b8;
+}
+
 .map-stats {
   display: flex;
   flex-wrap: wrap;
@@ -473,6 +477,22 @@
   font-size: 0.9em;
 }
 
+.run-popup-btn {
+  margin-top: 6px;
+  background: rgba(124, 58, 237, 0.8);
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  display: inline-block;
+}
+
+.run-popup-btn:hover {
+  background: rgba(124, 58, 237, 1);
+}
+
 /* Run cycle button styling */
 .map-run-cycle .cycle-btn {
   background: rgba(0, 212, 255, 0.2);
@@ -505,6 +525,55 @@
   font-weight: 500;
   min-width: 90px;
   text-align: center;
+}
+
+/* Point info pill bar */
+.map-point-bar {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  animation: pointBarIn 0.2s ease forwards;
+}
+
+.map-point-bar-sep {
+  opacity: 0.5;
+}
+
+.map-point-bar-run-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.map-point-bar-run-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes pointBarIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.map-container.expanded .map-point-bar {
+  top: calc(12px + env(safe-area-inset-top));
 }
 
 @media (max-width: 768px) {
