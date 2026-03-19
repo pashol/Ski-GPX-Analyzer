@@ -348,6 +348,10 @@
   background: #00d4ff;
 }
 
+.legend-line.lift {
+  background: #94a3b8;
+}
+
 .map-stats {
   display: flex;
   flex-wrap: wrap;

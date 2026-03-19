@@ -233,7 +233,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
 
   // Function to get color based on speed with dynamic thresholds
   const getSpeedColor = (speed: number, maxSpeed: number): string => {
-    const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 50);
+    const threshold = Math.max(maxSpeed, speedStats.maxRunSpeed, 80);
     const ratio = Math.min(speed / threshold, 1);
     const adjustedRatio = Math.pow(ratio, 1.5);
     const hue = 120 * (1 - adjustedRatio);
@@ -370,15 +370,29 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         pisteLayerRef.current.bringToFront();
       }
 
-      // Create the main track polyline
-      const trackCoords: [number, number][] = data.points.map(p => [p.lat, p.lon]);
-      
-      const trackLine = L.polyline(trackCoords, {
-        color: '#7c3aed',
-        weight: 3,
-        opacity: 0.8,
-      }).addTo(map);
-      layersRef.current.push(trackLine);
+      // Draw lift/transit segments (non-run points) in a distinct lift color.
+      // Run segments are drawn later with per-point speed colors.
+      const LIFT_COLOR = '#94a3b8';
+      const runIndices = new Set<number>();
+      data.runs.forEach(run => {
+        for (let i = run.startIndex; i <= run.endIndex; i++) runIndices.add(i);
+      });
+
+      let liftStart: number | null = null;
+      const flushLift = (end: number) => {
+        if (liftStart === null || end < liftStart) return;
+        const coords = data.points.slice(liftStart, end + 1).map(p => [p.lat, p.lon] as [number, number]);
+        layersRef.current.push(L.polyline(coords, { color: LIFT_COLOR, weight: 3, opacity: 0.75 }).addTo(map));
+        liftStart = null;
+      };
+      for (let i = 0; i < data.points.length; i++) {
+        if (runIndices.has(i)) {
+          if (liftStart !== null) flushLift(i - 1);
+        } else {
+          if (liftStart === null) liftStart = i;
+        }
+      }
+      if (liftStart !== null) flushLift(data.points.length - 1);
 
       // Find the max speed across all runs for color scaling
       const maxRunSpeed = data.runs.length > 0 
@@ -388,9 +402,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       // Add run overlays if enabled
       if (showRuns && data.runs.length > 0) {
         data.runs.forEach((run, idx) => {
-          const runCoords: [number, number][] = data.points
-            .slice(run.startIndex, run.endIndex + 1)
-            .map(p => [p.lat, p.lon]);
+          const runPoints = data.points.slice(run.startIndex, run.endIndex + 1);
+          const runCoords: [number, number][] = runPoints.map(p => [p.lat, p.lon]);
 
           const color = getSpeedColor(run.maxSpeed, maxRunSpeed);
 
@@ -398,12 +411,28 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           const weight = isSelected ? 8 : 5;
           const opacity = isSelected ? 1 : 0.9;
 
-          const runLine = L.polyline(runCoords, {
-            color: isSelected ? '#00d4ff' : color,
-            weight: weight,
-            opacity: opacity,
-          }).addTo(map);
-          
+          if (isSelected) {
+            // Selected run: solid cyan highlight
+            const runLine = L.polyline(runCoords, {
+              color: '#00d4ff',
+              weight,
+              opacity,
+            }).addTo(map);
+            layersRef.current.push(runLine);
+          } else {
+            // Unselected: per-segment speed coloring
+            for (let i = 0; i < runPoints.length - 1; i++) {
+              const p1 = runPoints[i];
+              const p2 = runPoints[i + 1];
+              const seg = L.polyline(
+                [[p1.lat, p1.lon] as [number, number], [p2.lat, p2.lon] as [number, number]],
+                { color: getSpeedColor(p1.speed ?? 0, maxRunSpeed), weight, opacity }
+              ).addTo(map);
+              layersRef.current.push(seg);
+            }
+          }
+
+          // Transparent wider layer for popup (no run navigation — use numbered markers)
           let speedCategory = t('map.speedCategories.casual');
           const speedRatio = run.maxSpeed / maxRunSpeed;
           if (speedRatio > 0.8) speedCategory = t('map.speedCategories.fast') + ' 🔥';
@@ -415,7 +444,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           const maxSpeedStr = formatSpeed(run.maxSpeed, 1);
           const avgSpeedStr = formatSpeed(run.avgSpeed, 1);
 
-          runLine.bindPopup(`
+          const popupLayer = L.polyline(runCoords, { color: 'transparent', weight: 20, opacity: 0.001 }).addTo(map);
+          popupLayer.bindPopup(`
             <div class="run-popup">
               <strong>${t('track.run')} ${idx + 1}</strong> <span style="color: ${color}">● ${speedCategory}</span><br>
               ${t('map.runPopup.distance')}: ${distanceStr}<br>
@@ -423,17 +453,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
               ${t('map.runPopup.maxSpeed')}: ${maxSpeedStr}<br>
               ${t('map.runPopup.avgSpeed')}: ${avgSpeedStr}<br>
               ${t('map.runPopup.duration')}: ${Math.floor(run.duration / 60)}m ${Math.floor(run.duration % 60)}s
-              ${onRunSelect ? `<br><em>${t('map.clickForDetails')}</em>` : ''}
             </div>
           `);
-          
-          if (onRunSelect) {
-            runLine.on('click', () => {
-              onRunSelect(run);
-            });
-          }
-          
-          layersRef.current.push(runLine);
+          layersRef.current.push(popupLayer);
         });
       }
 
@@ -466,7 +488,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             `);
           
           if (onRunSelect) {
-            startMarker.on('click', () => onRunSelect(run));
+            startMarker.on('click', (e: any) => { e.originalEvent.stopPropagation(); onRunSelect(run); });
           }
           layersRef.current.push(startMarker);
 
@@ -491,7 +513,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             `);
           
           if (onRunSelect) {
-            endMarker.on('click', () => onRunSelect(run));
+            endMarker.on('click', (e: any) => { e.originalEvent.stopPropagation(); onRunSelect(run); });
           }
           layersRef.current.push(endMarker);
         });
@@ -820,13 +842,19 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
             <span>{t('map.end')}</span>
           </div>
           {showRuns && (
-            <div className="legend-item speed-scale">
-              <div className="speed-gradient" />
-              <div className="speed-labels">
-                <span>{t('map.slow')}</span>
-                <span>{Math.round(maxRunSpeed)} {t('units.kmh')}</span>
+            <>
+              <div className="legend-item speed-scale">
+                <div className="speed-gradient" />
+                <div className="speed-labels">
+                  <span>{t('map.slow')}</span>
+                  <span>{Math.round(Math.max(maxRunSpeed, 80))} {t('units.kmh')}</span>
+                </div>
               </div>
-            </div>
+              <div className="legend-item">
+                <span className="legend-line lift" />
+                <span>Lift</span>
+              </div>
+            </>
           )}
           {showRunMarkers && data.runs.length > 0 && (
             <div className="legend-item">
