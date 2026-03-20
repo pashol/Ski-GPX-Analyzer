@@ -91,9 +91,11 @@
     "advanced": "Avancé",
     "expert": "Expert",
     "clickForDetails": "Cliquer pour détails",
+    "viewDetails": "Voir les détails →",
     "loadingMap": "Chargement de la carte...",
     "mapError": "Impossible de charger la carte. Veuillez actualiser la page.",
     "runPopup": {
+      "speed": "Vitesse",
       "distance": "Distance",
       "vertical": "Dénivelé",
       "maxSpeed": "Vitesse Max",
@@ -216,6 +218,38 @@
     "m": "m",
     "ft": "ft",
     "bpm": "bpm"
+  },
+  "recording": {
+    "recording": "Enregistrement",
+    "startRecording": "Démarrer l'enregistrement",
+    "stopRecording": "Arrêter l'enregistrement",
+    "acquiringGPS": "Acquisition GPS...",
+    "permissionDenied": "La permission de localisation est requise pour l'enregistrement",
+    "startFailed": "Impossible de démarrer l'enregistrement",
+    "runsHint": "Les descentes seront disponibles après l'arrêt"
+  },
+  "onboarding": {
+    "title": "Bienvenue dans Ski GPX Analyzer",
+    "description": "Suivez et analysez vos aventures à ski avec l'enregistrement GPS et des statistiques détaillées.",
+    "recordTitle": "Enregistrez vos descentes",
+    "recordDesc": "Utilisez le GPS pour suivre automatiquement vos sessions de ski avec des statistiques en temps réel",
+    "analyzeTitle": "Analyse Détaillée",
+    "analyzeDesc": "Statistiques complètes, profils de vitesse et détection des descentes",
+    "mapTitle": "Cartes Interactives",
+    "mapDesc": "Visualisez vos parcours sur des cartes détaillées avec vue satellite",
+    "getStarted": "Commencer"
+  },
+  "home": {
+    "title": "Ski GPX Analyzer",
+    "description": "Enregistrez vos sessions de ski ou analysez des fichiers GPX/FIT",
+    "openFile": "Ouvrir un fichier GPX/FIT",
+    "continueSession": "Reprendre la session"
+  },
+  "recovery": {
+    "title": "Récupérer l'enregistrement ?",
+    "description": "Un enregistrement a été interrompu. Souhaitez-vous reprendre ou supprimer ?",
+    "resume": "Reprendre l'enregistrement",
+    "discard": "Supprimer"
   },
   "language": {
     "select": "Langue"

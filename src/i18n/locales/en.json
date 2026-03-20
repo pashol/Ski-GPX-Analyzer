@@ -128,9 +128,11 @@
     "advanced": "Advanced",
     "expert": "Expert",
     "clickForDetails": "Click for details",
+    "viewDetails": "View details →",
     "loadingMap": "Loading map...",
     "mapError": "Failed to load map library. Please refresh the page.",
     "runPopup": {
+      "speed": "Speed",
       "distance": "Distance",
       "vertical": "Vertical",
       "maxSpeed": "Max Speed",
