@@ -30,6 +30,8 @@ export interface Translations {
     heroDescription: string;
     dropzone: string;
     dropzoneHint: string;
+    nativeDropzone: string;
+    nativeDropzoneHint: string;
     fileHint: string;
     processing: string;
     pleaseWait: string;
@@ -43,6 +45,43 @@ export interface Translations {
     featureProfileDesc: string;
     featureRuns: string;
     featureRunsDesc: string;
+  };
+  recording: {
+    recording: string;
+    startRecording: string;
+    stopRecording: string;
+    acquiringGPS: string;
+    permissionDenied: string;
+    startFailed: string;
+    runsHint: string;
+  };
+  onboarding: {
+    title: string;
+    description: string;
+    recordTitle: string;
+    recordDesc: string;
+    analyzeTitle: string;
+    analyzeDesc: string;
+    mapTitle: string;
+    mapDesc: string;
+    getStarted: string;
+  };
+  home: {
+    title: string;
+    description: string;
+    openFile: string;
+    continueSession: string;
+  };
+  menu: {
+    toggle: string;
+    openFile: string;
+    supportMe: string;
+  };
+  recovery: {
+    title: string;
+    description: string;
+    resume: string;
+    discard: string;
   };
   track: {
     switchToImperial: string;
@@ -100,9 +139,11 @@ export interface Translations {
     advanced: string;
     expert: string;
     clickForDetails: string;
+    viewDetails: string;
     loadingMap: string;
     mapError: string;
     runPopup: {
+      speed: string;
       distance: string;
       vertical: string;
       maxSpeed: string;
@@ -196,6 +237,8 @@ export interface Translations {
     avgHeartRate: string;
     maxHeartRate: string;
     elevationSpeedProfile: string;
+    expandChart: string;
+    exitFullscreen: string;
     speedDistribution: string;
     comparedToSession: string;
     speedVsAvg: string;

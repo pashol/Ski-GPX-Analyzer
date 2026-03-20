@@ -91,9 +91,11 @@
     "advanced": "Fortgeschritten",
     "expert": "Experte",
     "clickForDetails": "Für Details klicken",
+    "viewDetails": "Details anzeigen →",
     "loadingMap": "Karte wird geladen...",
     "mapError": "Kartenbibliothek konnte nicht geladen werden. Bitte Seite aktualisieren.",
     "runPopup": {
+      "speed": "Geschw.",
       "distance": "Distanz",
       "vertical": "Höhenmeter",
       "maxSpeed": "Max Geschw.",
@@ -216,6 +218,38 @@
     "m": "m",
     "ft": "ft",
     "bpm": "bpm"
+  },
+  "recording": {
+    "recording": "Aufnahme",
+    "startRecording": "Aufnahme starten",
+    "stopRecording": "Aufnahme stoppen",
+    "acquiringGPS": "GPS wird ermittelt...",
+    "permissionDenied": "Standortberechtigung ist für die Aufnahme erforderlich",
+    "startFailed": "Aufnahme konnte nicht gestartet werden",
+    "runsHint": "Abfahrten werden nach dem Stoppen verfügbar sein"
+  },
+  "onboarding": {
+    "title": "Willkommen beim Ski GPX Analyzer",
+    "description": "Verfolge und analysiere deine Ski-Abenteuer mit GPS-Aufnahme und detaillierten Statistiken.",
+    "recordTitle": "Deine Abfahrten aufnehmen",
+    "recordDesc": "Nutze GPS, um deine Ski-Sessions automatisch mit Echtzeit-Statistiken zu verfolgen",
+    "analyzeTitle": "Detaillierte Analyse",
+    "analyzeDesc": "Umfassende Statistiken, Geschwindigkeitsprofile und Abfahrtserkennung",
+    "mapTitle": "Interaktive Karten",
+    "mapDesc": "Visualisiere deine Strecken auf detaillierten Karten mit Satellitenansicht",
+    "getStarted": "Loslegen"
+  },
+  "home": {
+    "title": "Ski GPX Analyzer",
+    "description": "Nimm deine Ski-Sessions auf oder analysiere GPX/FIT-Dateien",
+    "openFile": "GPX/FIT-Datei öffnen",
+    "continueSession": "Session fortsetzen"
+  },
+  "recovery": {
+    "title": "Aufnahme wiederherstellen?",
+    "description": "Eine Aufnahme wurde unterbrochen. Möchtest du fortfahren oder verwerfen?",
+    "resume": "Aufnahme fortsetzen",
+    "discard": "Verwerfen"
   },
   "language": {
     "select": "Sprache"

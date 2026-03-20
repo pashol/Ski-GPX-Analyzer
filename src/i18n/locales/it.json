@@ -91,9 +91,11 @@
     "advanced": "Avanzato",
     "expert": "Esperto",
     "clickForDetails": "Clicca per dettagli",
+    "viewDetails": "Vedi dettagli →",
     "loadingMap": "Caricamento mappa...",
     "mapError": "Impossibile caricare la mappa. Aggiorna la pagina.",
     "runPopup": {
+      "speed": "Velocità",
       "distance": "Distanza",
       "vertical": "Dislivello",
       "maxSpeed": "Vel. Max",
@@ -216,6 +218,38 @@
     "m": "m",
     "ft": "ft",
     "bpm": "bpm"
+  },
+  "recording": {
+    "recording": "Registrazione",
+    "startRecording": "Avvia registrazione",
+    "stopRecording": "Ferma registrazione",
+    "acquiringGPS": "Acquisizione GPS...",
+    "permissionDenied": "Il permesso di localizzazione è necessario per la registrazione",
+    "startFailed": "Impossibile avviare la registrazione",
+    "runsHint": "Le discese saranno disponibili dopo l'arresto"
+  },
+  "onboarding": {
+    "title": "Benvenuto in Ski GPX Analyzer",
+    "description": "Registra e analizza le tue avventure sugli sci con GPS e statistiche dettagliate.",
+    "recordTitle": "Registra le tue discese",
+    "recordDesc": "Usa il GPS per tracciare automaticamente le tue sessioni con statistiche in tempo reale",
+    "analyzeTitle": "Analisi Dettagliata",
+    "analyzeDesc": "Statistiche complete, profili di velocità e rilevamento discese",
+    "mapTitle": "Mappe Interattive",
+    "mapDesc": "Visualizza i tuoi percorsi su mappe dettagliate con vista satellitare",
+    "getStarted": "Inizia"
+  },
+  "home": {
+    "title": "Ski GPX Analyzer",
+    "description": "Registra le tue sessioni sugli sci o analizza file GPX/FIT",
+    "openFile": "Apri file GPX/FIT",
+    "continueSession": "Riprendi sessione"
+  },
+  "recovery": {
+    "title": "Recuperare la registrazione?",
+    "description": "Una registrazione è stata interrotta. Vuoi riprendere o eliminare?",
+    "resume": "Riprendi registrazione",
+    "discard": "Elimina"
   },
   "language": {
     "select": "Lingua"

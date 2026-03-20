@@ -444,16 +444,16 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
           const buildPopupContent = (pt: TrackPoint | null) => {
             const speedStr = pt ? formatSpeed(pt.speed ?? 0, 1) : '—';
             const eleStr = pt ? formatAltitude(pt.ele, 0) : '—';
-            const hrLine = pt?.heartRate !== undefined ? `Heart rate: ${pt.heartRate} bpm<br>` : '';
+            const hrLine = pt?.heartRate !== undefined ? `${t('track.heartRate')}: ${pt.heartRate} ${t('units.bpm')}<br>` : '';
             const distFromStart = pt ? ((pt.cumulativeDistance ?? runStartCumDist) - runStartCumDist) : 0;
             const distStr = pt ? formatDistance(distFromStart / 1000, 2) : '—';
             return `
               <div class="run-popup">
                 <strong>${t('track.run')} ${idx + 1}</strong><br>
-                Speed: ${speedStr}<br>
+                ${t('map.runPopup.speed')}: ${speedStr}<br>
                 ${t('map.runPopup.elevation')}: ${eleStr}<br>
-                ${hrLine}Distance: ${distStr}
-                ${onRunSelect ? `<br><br><button class="run-popup-btn" onclick="(window.__onRunSelect)(window.__mapRuns[${idx}])">View details →</button>` : ''}
+                ${hrLine}${t('map.runPopup.distance')}: ${distStr}
+                ${onRunSelect ? `<br><br><button class="run-popup-btn" onclick="(window.__onRunSelect)(window.__mapRuns[${idx}])">${t('map.viewDetails')}</button>` : ''}
               </div>
             `;
           };
