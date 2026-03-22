@@ -24,7 +24,7 @@ interface RecordingState {
 interface RecordingContextValue extends RecordingState {
   startRecording: () => Promise<boolean>;
   stopRecording: () => Promise<GPXData | null>;
-  discardRecording: () => void;
+  discardRecording: () => Promise<void>;
   checkForRecovery: () => Promise<boolean>;
   recoverRecording: () => Promise<void>;
   clearRecovery: () => Promise<void>;
@@ -42,6 +42,8 @@ const LOW_BATTERY_THRESHOLD = 0.10; // 10%
 const CRITICAL_BATTERY_THRESHOLD = 0.05; // 5%
 const MIN_STORAGE_MB = 50; // 50MB minimum
 const NOTIFICATION_ID = 1;
+// If graceful-pause autosave is older than this, treat it as a crash (reboot/force-stop)
+const GRACEFUL_PAUSE_STALE_MS = AUTOSAVE_INTERVAL * 3; // 3 minutes
 
 // Battery API type declaration
 interface BatteryManager extends EventTarget {
@@ -95,12 +97,14 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
   const hasGoodFirstPointRef = useRef(false);
   const batteryRef = useRef<BatteryManager | null>(null);
   const isAppActiveRef = useRef(true);
-  
+  // C1: Concurrency guard — prevents double-start or double-stop
+  const isTransitioningRef = useRef(false);
+
   // Refs for callbacks and state that need stable references for event listeners
   const stopRecordingRef = useRef<() => Promise<GPXData | null>>(() => Promise.resolve(null));
   const autoSaveRef = useRef<(isGracefulPause?: boolean) => Promise<void>>(() => Promise.resolve());
   const stateRef = useRef<RecordingState>(state);
-  
+
   // Keep stateRef synchronized with current state
   stateRef.current = state;
 
@@ -112,7 +116,8 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     const { stats, runs } = calculateStatsAndRuns(pointsRef.current);
     const liveData: GPXData = {
       name: stateRef.current.locationName || 'Recording',
-      points: pointsRef.current,
+      // L3: snapshot to avoid consumer mutation hazards
+      points: [...pointsRef.current],
       stats,
       runs,
     };
@@ -135,15 +140,18 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
       const duration = formatDuration(elapsedSeconds);
 
-      // Only show stats if we have points
+      // M2: Read stats from liveData (already computed by updateLiveStats) instead of
+      //     calling calculateStatsAndRuns again — avoids double CPU work every 5s.
       let body = duration;
-      if (pointsRef.current.length > 0) {
-        const { stats } = calculateStatsAndRuns(pointsRef.current);
-        const distance = (stats.skiDistance / 1000).toFixed(1);
-        const runs = stats.runCount;
+      const liveData = stateRef.current.liveData;
+      if (liveData && pointsRef.current.length > 0) {
+        const distance = (liveData.stats.skiDistance / 1000).toFixed(1);
+        const runs = liveData.stats.runCount;
         body = `${duration} • ${runs} runs • ${distance} km`;
-      } else {
+      } else if (pointsRef.current.length === 0) {
         body = `${duration} • Acquiring GPS...`;
+      } else {
+        body = duration;
       }
 
       await ForegroundService.updateForegroundService({
@@ -162,32 +170,39 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
   const handlePosition = useCallback((position: Position | null) => {
     if (!position) return;
 
+    // H3: Reject GPS callbacks that arrive after recording has been stopped/discarded
+    if (!stateRef.current.isRecording) return;
+
     const { latitude, longitude, altitude, accuracy } = position.coords;
     const timestamp = position.timestamp;
 
-    // Filter out poor accuracy points
-    if (accuracy && accuracy > GPS_ACCURACY_THRESHOLD) {
+    // M3: Filter out points with null/zero/poor accuracy
+    // accuracy=0 means "unknown" on many chipsets, not "perfect"
+    if (accuracy == null || accuracy === 0 || accuracy > GPS_ACCURACY_THRESHOLD) {
       return;
     }
 
-    // Filter out points too close in time
-    const now = Date.now();
-    if (now - lastLocationTimeRef.current < GPS_MIN_INTERVAL) {
+    // L1: Use position.timestamp for time-proximity check (handles batched GPS delivery)
+    if (timestamp - lastLocationTimeRef.current < GPS_MIN_INTERVAL) {
       return;
     }
-    lastLocationTimeRef.current = now;
+    lastLocationTimeRef.current = timestamp;
+
+    // M4: Avoid injecting sea-level (0m) when altitude is null — use previous point's ele
+    const prevEle = pointsRef.current.length > 0 ? pointsRef.current[pointsRef.current.length - 1].ele : null;
+    const ele = altitude != null ? altitude : (prevEle ?? 0);
 
     const point: TrackPoint = {
       lat: latitude,
       lon: longitude,
-      ele: altitude || 0,
+      ele,
       time: new Date(timestamp),
     };
 
     pointsRef.current.push(point);
 
     // Try to get location name from first good point (only if online)
-    if (!hasGoodFirstPointRef.current && accuracy && accuracy < 20) {
+    if (!hasGoodFirstPointRef.current && accuracy < 20) {
       hasGoodFirstPointRef.current = true;
       if (getNetworkStatus()) {
         reverseGeocode(latitude, longitude).then(name => {
@@ -202,7 +217,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
     setState(prev => ({
       ...prev,
-      gpsAccuracy: accuracy || null,
+      gpsAccuracy: accuracy,
       pointCount: pointsRef.current.length,
     }));
   }, []);
@@ -211,6 +226,9 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     if (!batteryRef.current) return;
 
     const level = batteryRef.current.level;
+
+    // L5: Ignore battery warnings when charging
+    if (batteryRef.current.charging) return;
 
     if (level <= CRITICAL_BATTERY_THRESHOLD && watchIdRef.current) {
       // Critical battery - stop and save (only if recording)
@@ -223,10 +241,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // App state listener - track when app goes to background/foreground
+  // M5: App state listener — guard against unmount race where addListener promise
+  //     resolves after the component has already been torn down.
   useEffect(() => {
     if (!isNative) return;
 
+    let mounted = true;
     let listenerHandle: { remove: () => void } | null = null;
 
     CapacitorApp.addListener('appStateChange', async ({ isActive }) => {
@@ -235,7 +255,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Only trigger autosave if we're currently recording
       if (stateRef.current.isRecording && pointsRef.current.length > 0) {
         if (!isActive) {
-          // App going to background - pause periodic autosave to prevent it
+          // App going to background — pause periodic autosave to prevent it
           // from overwriting the graceful pause flag
           if (autosaveIntervalRef.current) {
             clearInterval(autosaveIntervalRef.current);
@@ -244,26 +264,28 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
           console.log('[RecordingContext] App backgrounded during recording, saving state...');
           await autoSaveRef.current(true);
         } else {
-          // App coming back to foreground - restart periodic autosave
+          // App coming back to foreground — restart periodic autosave
           console.log('[RecordingContext] App resumed, updating recording state...');
           if (!autosaveIntervalRef.current) {
             autosaveIntervalRef.current = setInterval(() => autoSaveRef.current(), AUTOSAVE_INTERVAL);
           }
-          // Clean up autosave file since recording is continuing normally
-          try {
-            await deleteTempFile('recording-autosave.json');
-            console.log('[RecordingContext] Autosave file cleaned up after graceful resume');
-          } catch (error) {
-            // File may not exist, that's fine
-            console.log('[RecordingContext] No autosave file to clean up');
-          }
+          // Only delete the autosave once we have confirmed a new GPS point has
+          // arrived (handled by handlePosition) — for now, leave it in place and
+          // let the next periodic save overwrite it with fresh non-graceful data.
+          // This prevents deleting the only backup if the GPS watch has silently died.
         }
       }
     }).then(handle => {
-      listenerHandle = handle;
+      if (!mounted) {
+        // Component unmounted before promise resolved — clean up immediately
+        handle.remove();
+      } else {
+        listenerHandle = handle;
+      }
     });
 
     return () => {
+      mounted = false;
       if (listenerHandle) {
         listenerHandle.remove();
       }
@@ -274,24 +296,41 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     if (pointsRef.current.length === 0) return;
 
     try {
+      // M6: Snapshot the array before serializing to avoid mid-serialize mutation
       const autosaveData = {
-        points: pointsRef.current,
+        points: [...pointsRef.current],
         startTime: stateRef.current.startTime?.toISOString(),
         locationName: stateRef.current.locationName,
         timestamp: Date.now(),
         isGracefulPause,
-        // Note: filePath would be added here after recording is stopped and file is saved
       };
       await writeTempFile('recording-autosave.json', JSON.stringify(autosaveData));
     } catch (error) {
       console.error('Auto-save failed:', error instanceof Error ? error.message : String(error));
     }
   }, []);
-  
+
   // Update ref after autoSave is defined
   autoSaveRef.current = autoSave;
 
+  // H7 (L5): Battery monitoring setup extracted as helper so both startRecording
+  //          and recoverRecording can call it without duplication.
+  const setupBatteryMonitoring = useCallback(async () => {
+    // M7: Battery setup must NOT propagate errors — it's non-essential
+    if (!('getBattery' in navigator)) return;
+    try {
+      const battery = await navigator.getBattery();
+      batteryRef.current = battery;
+      battery.addEventListener('levelchange', handleBatteryChange);
+    } catch (error) {
+      console.warn('[RecordingContext] Battery API unavailable:', error instanceof Error ? error.message : String(error));
+    }
+  }, [handleBatteryChange]);
+
   const checkStorage = async (): Promise<boolean> => {
+    // L4: On native platform the WebView quota doesn't reflect ExternalStorage —
+    //     skip the estimate check; rely on write errors at save time instead.
+    if (isNative) return true;
     if (!navigator.storage || !navigator.storage.estimate) return true;
 
     try {
@@ -310,6 +349,17 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
   };
 
   const startRecording = async (): Promise<boolean> => {
+    // C1: Prevent concurrent start calls
+    if (isTransitioningRef.current) {
+      console.warn('[RecordingContext] startRecording called while already transitioning');
+      return false;
+    }
+    if (stateRef.current.isRecording) {
+      console.warn('[RecordingContext] startRecording called while already recording');
+      return false;
+    }
+    isTransitioningRef.current = true;
+
     console.log('[RecordingContext] startRecording called');
 
     // Check storage first
@@ -317,6 +367,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     if (!hasStorage) {
       console.error('[RecordingContext] Storage check failed');
       alert('Cannot start recording: insufficient storage space');
+      isTransitioningRef.current = false;
       return false;
     }
 
@@ -328,6 +379,10 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // File may not exist, that's fine
       console.log('[RecordingContext] No existing autosave file to clear');
     }
+
+    // C2: Track what was successfully started so we can roll back on partial failure
+    let foregroundStarted = false;
+    let watchId: string | null = null;
 
     try {
       // Start foreground service
@@ -356,6 +411,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
             notificationChannelId: 'ski-recording',
             serviceType: ServiceType.Location,
           });
+          foregroundStarted = true;
           console.log('[RecordingContext] Foreground service started successfully');
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : String(error);
@@ -365,25 +421,22 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
             ...prev,
             error: 'Cannot start recording: notification permission required. Check Settings.'
           }));
+          isTransitioningRef.current = false;
           return false;
         }
       }
 
       // Start GPS watch
       console.log('[RecordingContext] Starting GPS watch...');
-      const watchId = await Geolocation.watchPosition(
+      watchId = await Geolocation.watchPosition(
         { enableHighAccuracy: true, timeout: 10000 },
         handlePosition
       );
       watchIdRef.current = watchId;
       console.log('[RecordingContext] GPS watch started, ID:', watchId);
 
-      // Set up battery monitoring
-      if ('getBattery' in navigator) {
-        const battery = await navigator.getBattery();
-        batteryRef.current = battery;
-        battery.addEventListener('levelchange', handleBatteryChange);
-      }
+      // M7: Battery monitoring in its own try/catch — must not abort startup
+      await setupBatteryMonitoring();
 
       // Start timers
       const startTime = new Date();
@@ -415,19 +468,46 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       hasGoodFirstPointRef.current = false;
 
       console.log('[RecordingContext] Recording started successfully');
+      isTransitioningRef.current = false;
       return true;
     } catch (error) {
+      // C2: Roll back anything that was started
       const errorMsg = error instanceof Error ? error.message : String(error);
-      console.error('[RecordingContext] Failed to start recording:', errorMsg);
+      console.error('[RecordingContext] Failed to start recording, rolling back:', errorMsg);
+
+      if (watchId) {
+        try { await Geolocation.clearWatch({ id: watchId }); } catch { /* ignore */ }
+        watchIdRef.current = null;
+      }
+      if (foregroundStarted && isNative) {
+        try { await ForegroundService.stopForegroundService(); } catch { /* ignore */ }
+      }
+      if (elapsedIntervalRef.current) { clearInterval(elapsedIntervalRef.current); elapsedIntervalRef.current = null; }
+      if (statsIntervalRef.current) { clearInterval(statsIntervalRef.current); statsIntervalRef.current = null; }
+      if (autosaveIntervalRef.current) { clearInterval(autosaveIntervalRef.current); autosaveIntervalRef.current = null; }
+      if (notificationIntervalRef.current) { clearInterval(notificationIntervalRef.current); notificationIntervalRef.current = null; }
+      if (batteryRef.current) {
+        try { batteryRef.current.removeEventListener('levelchange', handleBatteryChange); } catch { /* ignore */ }
+        batteryRef.current = null;
+      }
+
       alert(`Failed to start recording: ${errorMsg}`);
       setState(prev => ({ ...prev, error: 'Failed to start recording' }));
+      isTransitioningRef.current = false;
       return false;
     }
   };
 
   const stopRecording = async (): Promise<GPXData | null> => {
+    // C1: Prevent concurrent stop calls
+    if (isTransitioningRef.current) {
+      console.warn('[RecordingContext] stopRecording called while already transitioning');
+      return null;
+    }
+    isTransitioningRef.current = true;
+
     const cleanupErrors: string[] = [];
-    
+
     // Clear all timers and watchers with error handling
     if (watchIdRef.current) {
       try {
@@ -487,6 +567,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     // Calculate final stats
     if (pointsRef.current.length === 0) {
       setState(prev => ({ ...prev, isRecording: false }));
+      isTransitioningRef.current = false;
       return null;
     }
 
@@ -501,10 +582,15 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     // Generate and save GPX
     let savedSuccessfully = false;
     try {
-      const date = new Date();
-      const dateStr = date.toISOString().split('T')[0];
+      // H4: Use recording start time for the filename date, not stop time
+      const recordingStart = stateRef.current.startTime || new Date();
+      const dateStr = recordingStart.toISOString().split('T')[0];
+      // H5: Include time in filename to avoid collisions for same-day same-location recordings
+      const timeStr = recordingStart.toISOString().slice(11, 19).replace(/:/g, '-');
       const location = stateRef.current.locationName || 'Unknown';
-      const fileName = `${dateStr}_${location.replace(/[^a-z0-9]/gi, '_')}.gpx`;
+      // L2: Truncate sanitized location name to 50 chars to respect filesystem limits
+      const sanitizedLocation = location.replace(/[^a-z0-9]/gi, '_').slice(0, 50);
+      const fileName = `${dateStr}_${timeStr}_${sanitizedLocation}.gpx`;
 
       const gpxContent = generateGPX(pointsRef.current, finalData.name);
       await saveGPXFile(gpxContent, fileName);
@@ -520,6 +606,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
         error: 'Failed to save GPX file. Recording data is still available.'
       }));
       // Keep the recording data and autosave file for recovery
+      isTransitioningRef.current = false;
       return finalData;
     }
 
@@ -535,16 +622,25 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       pointsRef.current = [];
     }
 
+    isTransitioningRef.current = false;
     return finalData;
   };
-  
+
   // Update ref after stopRecording is defined
   stopRecordingRef.current = stopRecording;
 
-  const discardRecording = () => {
-    if (watchIdRef.current) {
-      Geolocation.clearWatch({ id: watchIdRef.current });
-      watchIdRef.current = null;
+  // H2: discardRecording must be async to properly await cleanup operations
+  const discardRecording = async (): Promise<void> => {
+    // Set watchIdRef to null first so handlePosition rejects incoming points immediately
+    const currentWatchId = watchIdRef.current;
+    watchIdRef.current = null;
+
+    if (currentWatchId) {
+      try {
+        await Geolocation.clearWatch({ id: currentWatchId });
+      } catch (error) {
+        console.error('[RecordingContext] Failed to clear GPS watch on discard:', error);
+      }
     }
 
     if (elapsedIntervalRef.current) {
@@ -568,10 +664,27 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (isNative) {
-      ForegroundService.stopForegroundService();
+      try {
+        await ForegroundService.stopForegroundService();
+      } catch (error) {
+        console.error('[RecordingContext] Failed to stop foreground service on discard:', error);
+      }
     }
 
-    deleteTempFile('recording-autosave.json');
+    if (batteryRef.current) {
+      try {
+        batteryRef.current.removeEventListener('levelchange', handleBatteryChange);
+      } catch (error) {
+        console.error('[RecordingContext] Failed to remove battery listener on discard:', error);
+      }
+      batteryRef.current = null;
+    }
+
+    try {
+      await deleteTempFile('recording-autosave.json');
+    } catch (error) {
+      // File may not exist
+    }
 
     setState({
       isRecording: false,
@@ -586,6 +699,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     });
 
     pointsRef.current = [];
+    isTransitioningRef.current = false;
   };
 
   const checkForRecovery = async (): Promise<boolean> => {
@@ -607,11 +721,18 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Parse autosave data to check graceful pause flag
       const autosaveData = JSON.parse(result.data as string);
 
-      // If the app was gracefully paused (backgrounded), don't show recovery
-      // This means the recording is still active and the app just resumed
+      // H6: If the app was gracefully paused (backgrounded) BUT the save is stale
+      // (phone rebooted, force-stopped after backgrounding), offer recovery anyway.
       if (autosaveData.isGracefulPause === true) {
-        console.log('[RecordingContext] Autosave found but app was gracefully paused, no recovery needed');
-        return false;
+        const ageMs = Date.now() - (autosaveData.timestamp || 0);
+        if (ageMs < GRACEFUL_PAUSE_STALE_MS) {
+          // Recent graceful pause — app just resumed, no recovery needed
+          console.log('[RecordingContext] Autosave found but app was gracefully paused recently, no recovery needed');
+          return false;
+        }
+        // Stale graceful pause — device was likely rebooted or force-stopped
+        console.log('[RecordingContext] Stale graceful-pause autosave found (age: ' + Math.round(ageMs / 1000) + 's), offering recovery');
+        return true;
       }
 
       // Otherwise, show recovery (true crash or force quit)
@@ -632,18 +753,39 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       });
 
       const data = JSON.parse(result.data as string);
+
+      // L6: Validate autosave data structure before using it
+      if (!Array.isArray(data.points) || data.points.length === 0) {
+        console.error('[RecordingContext] Autosave data is invalid or empty, cannot recover');
+        await deleteTempFile('recording-autosave.json');
+        return;
+      }
+
       const recoveredPoints: TrackPoint[] = data.points.map((p: any) => ({
         ...p,
         time: new Date(p.time),
       }));
 
       pointsRef.current = recoveredPoints;
+      lastLocationTimeRef.current = 0;
+      hasGoodFirstPointRef.current = !!data.locationName;
+
+      // C4: Delete the stale autosave immediately so a second crash in the next
+      //     60s window doesn't replay old data. Periodic autosave creates a fresh one.
+      try {
+        await deleteTempFile('recording-autosave.json');
+      } catch (error) {
+        console.warn('[RecordingContext] Could not delete autosave after recovery:', error);
+      }
+
+      const recoveredStartTime = data.startTime ? new Date(data.startTime) : new Date();
 
       setState({
         isRecording: true,
         points: recoveredPoints,
-        startTime: data.startTime ? new Date(data.startTime) : new Date(),
-        elapsedSeconds: Math.floor((Date.now() - new Date(data.startTime).getTime()) / 1000),
+        startTime: recoveredStartTime,
+        // M1: Use wall-clock formula to avoid drift (matches startRecording behavior)
+        elapsedSeconds: Math.floor((Date.now() - recoveredStartTime.getTime()) / 1000),
         liveData: null,
         locationName: data.locationName || null,
         error: null,
@@ -653,9 +795,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
       // Restart timers
       elapsedIntervalRef.current = setInterval(() => {
+        // M1: Wall-clock calculation avoids drift
         setState(prev => ({
           ...prev,
-          elapsedSeconds: prev.elapsedSeconds + 1,
+          elapsedSeconds: prev.startTime
+            ? Math.floor((Date.now() - prev.startTime.getTime()) / 1000)
+            : prev.elapsedSeconds + 1,
         }));
       }, 1000);
 
@@ -669,6 +814,9 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
         handlePosition
       );
       watchIdRef.current = watchId;
+
+      // C3: Battery monitoring was missing in recoverRecording
+      await setupBatteryMonitoring();
 
       // Restart foreground service
       if (isNative) {
@@ -695,6 +843,38 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Failed to recover recording:', error instanceof Error ? error.message : String(error));
+
+      // L7: If recovery fails after setState({isRecording:true}), reset to avoid stuck UI
+      setState(prev => {
+        if (prev.isRecording) {
+          return {
+            isRecording: false,
+            points: [],
+            startTime: null,
+            elapsedSeconds: 0,
+            liveData: null,
+            locationName: null,
+            error: 'Recovery failed. Starting fresh.',
+            gpsAccuracy: null,
+            pointCount: 0,
+          };
+        }
+        return prev;
+      });
+
+      // Clean up any partially-started resources
+      if (watchIdRef.current) {
+        try { await Geolocation.clearWatch({ id: watchIdRef.current }); } catch { /* ignore */ }
+        watchIdRef.current = null;
+      }
+      if (elapsedIntervalRef.current) { clearInterval(elapsedIntervalRef.current); elapsedIntervalRef.current = null; }
+      if (statsIntervalRef.current) { clearInterval(statsIntervalRef.current); statsIntervalRef.current = null; }
+      if (autosaveIntervalRef.current) { clearInterval(autosaveIntervalRef.current); autosaveIntervalRef.current = null; }
+      if (notificationIntervalRef.current) { clearInterval(notificationIntervalRef.current); notificationIntervalRef.current = null; }
+      if (isNative) {
+        try { await ForegroundService.stopForegroundService(); } catch { /* ignore */ }
+      }
+      pointsRef.current = [];
     }
   };
 
@@ -702,7 +882,8 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
     await deleteTempFile('recording-autosave.json');
   };
 
-  // Check for signal loss
+  // H1: Signal loss detection — use stateRef.current.error inside callback to avoid
+  //     stale closure + prevent interval teardown/recreation on every error change.
   useEffect(() => {
     if (!state.isRecording) return;
 
@@ -710,15 +891,16 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       const timeSinceLastLocation = Date.now() - lastLocationTimeRef.current;
       if (timeSinceLastLocation > SIGNAL_LOSS_THRESHOLD) {
         setState(prev => ({ ...prev, error: 'GPS signal lost' }));
-      } else if (state.error === 'GPS signal lost') {
+      } else if (stateRef.current.error === 'GPS signal lost') {
         // Only clear the error if it's specifically the GPS signal lost error
-        // Don't clear other errors like battery warnings
         setState(prev => ({ ...prev, error: null }));
       }
     }, 5000);
 
     return () => clearInterval(checkSignal);
-  }, [state.isRecording, state.error]);
+  // Only depend on isRecording — not on state.error, which previously caused
+  // the interval to reset on every error change (stale closure / missed detections).
+  }, [state.isRecording]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const value: RecordingContextValue = {
     ...state,

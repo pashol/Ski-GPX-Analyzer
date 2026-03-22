@@ -61,6 +61,20 @@ export interface Run {
 
 // Calculate stats and runs from track points - used by both GPX and FIT parsers
 export function calculateStatsAndRuns(points: TrackPoint[]): { stats: GPXStats; runs: Run[] } {
+  // M8: Guard against empty or single-point arrays to prevent NaN/division-by-zero
+  if (points.length < 2) {
+    const now = points.length === 1 ? points[0].time : new Date();
+    const ele = points.length === 1 ? points[0].ele : 0;
+    const emptyStats: GPXStats = {
+      totalDistance: 0, skiDistance: 0, totalAscent: 0, totalDescent: 0,
+      skiVertical: 0, maxSpeed: 0, avgSpeed: 0, avgSkiSpeed: 0,
+      maxAltitude: ele, minAltitude: ele, elevationDelta: 0,
+      duration: 0, avgSlope: 0, maxSlope: 0, runCount: 0,
+      startTime: now, endTime: now,
+    };
+    return { stats: emptyStats, runs: [] };
+  }
+
   // Calculate derived data with smoothing for speed
   let totalDistance = 0;
   let totalAscent = 0;
