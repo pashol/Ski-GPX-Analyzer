@@ -5,6 +5,8 @@ export interface TrackPoint {
   ele: number;
   time: Date;
   speed?: number;
+  gpsSpeed?: number;
+  accuracy?: number;
   distance?: number;
   cumulativeDistance?: number;
   slope?: number;
@@ -93,20 +95,44 @@ export function calculateStatsAndRuns(points: TrackPoint[]): { stats: GPXStats; 
   let heartRateCount = 0;
   let maxHeartRate = 0;
 
-  // First pass: calculate basic metrics
+  // Smooth elevations for gain/loss calculation (21-point centered moving average)
+  const eleSmoothed: number[] = new Array(points.length);
+  const eleSmoothWindow = 10; // half-window: 10 points each side = 21-point window
+  for (let i = 0; i < points.length; i++) {
+    let sum = 0, cnt = 0;
+    for (let j = Math.max(0, i - eleSmoothWindow); j <= Math.min(points.length - 1, i + eleSmoothWindow); j++) {
+      sum += points[j].ele;
+      cnt++;
+    }
+    eleSmoothed[i] = sum / cnt;
+  }
+
+  // First pass: calculate distance and elevation metrics
+  const eleDeadband = 5; // metres — ignore changes smaller than this
+  let lastSignificantEle = eleSmoothed[0];
+
   for (let i = 1; i < points.length; i++) {
     const prev = points[i - 1];
     const curr = points[i];
 
+    // Distance: skip unreliable GPS fixes (accuracy > 30m) and jitter
     const dist = haversineDistance(prev.lat, prev.lon, curr.lat, curr.lon);
+    if (curr.accuracy !== undefined && curr.accuracy > 30) {
+      curr.cumulativeDistance = totalDistance;
+      continue;
+    }
     totalDistance += dist;
     curr.cumulativeDistance = totalDistance;
 
-    const eleDiff = curr.ele - prev.ele;
-    if (eleDiff > 0) {
-      totalAscent += eleDiff;
-    } else {
-      totalDescent += Math.abs(eleDiff);
+    // Elevation gain/loss with smoothing + deadband
+    const eleDiff = eleSmoothed[i] - lastSignificantEle;
+    if (Math.abs(eleDiff) >= eleDeadband) {
+      if (eleDiff > 0) {
+        totalAscent += eleDiff;
+      } else {
+        totalDescent += Math.abs(eleDiff);
+      }
+      lastSignificantEle = eleSmoothed[i];
     }
   }
 
@@ -118,7 +144,10 @@ export function calculateStatsAndRuns(points: TrackPoint[]): { stats: GPXStats; 
   const windowSize = 5; // Use 5-point window for smoothing
 
   for (let i = 0; i < points.length; i++) {
-    if (i < windowSize) {
+    // Prefer GPS-reported speed (Doppler-based, more accurate)
+    if (points[i].gpsSpeed !== undefined) {
+      points[i].speed = points[i].gpsSpeed;
+    } else if (i < windowSize) {
       // Not enough points for smoothing, use simple calculation
       if (i > 0) {
         const prev = points[i - 1];
@@ -288,7 +317,23 @@ export function parseGPX(content: string): GPXData {
       if (isNaN(heartRate) || heartRate <= 0) heartRate = undefined;
     }
 
-    points.push({ lat, lon, ele, time, heartRate });
+    // Parse GPS-reported speed from extensions (m/s, convert to km/h)
+    let gpsSpeed: number | undefined;
+    const speedEl = pt.querySelector('extensions speed');
+    if (speedEl && speedEl.textContent) {
+      const s = parseFloat(speedEl.textContent) * 3.6;
+      if (!isNaN(s) && s >= 0) gpsSpeed = s;
+    }
+
+    // Parse GPS accuracy from extensions
+    let accuracy: number | undefined;
+    const accEl = pt.querySelector('extensions accuracy');
+    if (accEl && accEl.textContent) {
+      const a = parseFloat(accEl.textContent);
+      if (!isNaN(a) && a > 0) accuracy = a;
+    }
+
+    points.push({ lat, lon, ele, time, heartRate, gpsSpeed, accuracy });
   });
 
   // Use shared stats calculation
