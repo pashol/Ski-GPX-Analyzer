@@ -189,8 +189,8 @@ export function calculateStatsAndRuns(points: TrackPoint[]): { stats: GPXStats; 
   }
 
   const elevations = points.map(p => p.ele);
-  const maxAltitude = Math.max(...elevations);
-  const minAltitude = Math.min(...elevations);
+  const maxAltitude = arrayMax(elevations);
+  const minAltitude = arrayMin(elevations);
   const elevationDelta = maxAltitude - minAltitude;
 
   const startTime = points[0]?.time || new Date();
@@ -312,6 +312,24 @@ export function toRad(deg: number): number {
   return deg * (Math.PI / 180);
 }
 
+/** Safe Math.min for large arrays (avoids stack overflow from spread operator) */
+export function arrayMin(arr: number[]): number {
+  let min = Infinity;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] < min) min = arr[i];
+  }
+  return min;
+}
+
+/** Safe Math.max for large arrays (avoids stack overflow from spread operator) */
+export function arrayMax(arr: number[]): number {
+  let max = -Infinity;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] > max) max = arr[i];
+  }
+  return max;
+}
+
 interface RawRun {
   startIndex: number;
   endIndex: number;
@@ -420,8 +438,8 @@ export function detectRuns(points: TrackPoint[]): Run[] {
           rawSegments.push({
             startIndex: runStart,
             endIndex: endIndex,
-            startElevation: Math.max(...segmentElevations),
-            endElevation: Math.min(...segmentElevations),
+            startElevation: arrayMax(segmentElevations),
+            endElevation: arrayMin(segmentElevations),
             startTime: points[runStart].time,
             endTime: points[endIndex].time,
           });
@@ -475,8 +493,8 @@ export function detectRuns(points: TrackPoint[]): Run[] {
       last.endTime = current.endTime;
       // Recalculate elevations for combined segment
       const combinedElevations = smoothedEle.slice(last.startIndex, last.endIndex + 1);
-      last.startElevation = Math.max(...combinedElevations);
-      last.endElevation = Math.min(...combinedElevations);
+      last.startElevation = arrayMax(combinedElevations);
+      last.endElevation = arrayMin(combinedElevations);
     } else {
       combinedSegments.push({ ...current });
     }
@@ -492,8 +510,8 @@ export function detectRuns(points: TrackPoint[]): Run[] {
     
     // Recalculate actual elevation stats from the segment
     const segmentElevations = smoothedEle.slice(segment.startIndex, segment.endIndex + 1);
-    const actualMaxEle = Math.max(...segmentElevations);
-    const actualMinEle = Math.min(...segmentElevations);
+    const actualMaxEle = arrayMax(segmentElevations);
+    const actualMinEle = arrayMin(segmentElevations);
     const verticalDrop = actualMaxEle - actualMinEle;
     
     // Apply minimum duration and vertical drop filters
@@ -511,11 +529,11 @@ export function detectRuns(points: TrackPoint[]): Run[] {
 
     const speeds = runPoints.map(p => p.speed || 0).filter(s => s > 0 && s < 150);
     const avgRunSpeed = speeds.length > 0 ? speeds.reduce((a, b) => a + b, 0) / speeds.length : 0;
-    const maxRunSpeed = Math.max(...speeds, 0);
+    const maxRunSpeed = speeds.length > 0 ? arrayMax(speeds) : 0;
 
-    // Calculate average slope for the run
-    const slopeRadians = Math.atan2(verticalDrop, runDistance);
-    const avgRunSlope = slopeRadians * (180 / Math.PI);
+    // Calculate average slope using per-point slopes (consistent with global stats method)
+    const runSlopes = runPoints.map(p => p.slope).filter((s): s is number => s !== undefined && s > 0);
+    const avgRunSlope = runSlopes.length > 0 ? runSlopes.reduce((a, b) => a + b, 0) / runSlopes.length : 0;
 
     runs.push({
       id: runs.length + 1,

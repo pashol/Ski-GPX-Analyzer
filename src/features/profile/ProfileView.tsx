@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import './ProfileView.css';
-import { GPXData, Run, formatDurationLong, metersToFeet, kmhToMph } from '../../utils/gpxParser';
+import { GPXData, Run, formatDurationLong, metersToFeet, kmhToMph, arrayMin, arrayMax } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -167,11 +167,11 @@ export function ProfileView({ data, selectedRun, onRunSelect }: ProfileViewProps
     const endTime = chartData[chartData.length - 1]?.time.getTime() || 0;
 
     return {
-      minEle: Math.min(...elevations),
-      maxEle: Math.max(...elevations),
-      maxSpeed: Math.max(...speeds, 1),
-      maxHeartRate: heartRates.length > 0 ? Math.max(...heartRates) * 1.1 : 200,
-      maxDistance: Math.max(...distances, 1),
+      minEle: arrayMin(elevations),
+      maxEle: arrayMax(elevations),
+      maxSpeed: Math.max(arrayMax(speeds), 1),
+      maxHeartRate: heartRates.length > 0 ? arrayMax(heartRates) * 1.1 : 200,
+      maxDistance: Math.max(arrayMax(distances), 1),
       totalDuration: (endTime - startTime) / 1000,
     };
   }, [chartData]);

@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import './AnalysisView.css';
-import { GPXData, formatDuration, formatDurationLong, metersToFeet, kmhToMph, metersToMiles } from '../../utils/gpxParser';
+import { GPXData, formatDuration, formatDurationLong, metersToFeet, kmhToMph, metersToMiles, arrayMax } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -54,7 +54,7 @@ export function AnalysisView({ data }: AnalysisViewProps) {
       }
     });
 
-    const max = Math.max(...buckets.map(b => b.count));
+    const max = arrayMax(buckets.map(b => b.count));
     return buckets.map(b => ({ ...b, percentage: max > 0 ? (b.count / max) * 100 : 0 }));
   }, [data.points, unitSystem, t]);
 
@@ -129,7 +129,7 @@ export function AnalysisView({ data }: AnalysisViewProps) {
     });
 
     const totalWithHR = zones.reduce((sum, z) => sum + z.count, 0);
-    const max = Math.max(...zones.map(z => z.count));
+    const max = arrayMax(zones.map(z => z.count));
 
     return {
       zones: zones.map(z => ({

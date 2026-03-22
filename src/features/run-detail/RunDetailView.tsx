@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import './RunDetailView.css';
-import { GPXData, Run, formatDurationLong, metersToFeet, metersToMiles, kmhToMph } from '../../utils/gpxParser';
+import { GPXData, Run, formatDurationLong, metersToFeet, metersToMiles, kmhToMph, arrayMin, arrayMax } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -107,15 +107,15 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
     const endTime = chartData[chartData.length - 1]?.time.getTime() || 0;
     
     // Add padding to elevation range
-    const minE = Math.min(...elevations);
-    const maxE = Math.max(...elevations);
+    const minE = arrayMin(elevations);
+    const maxE = arrayMax(elevations);
     const elePadding = (maxE - minE) * 0.1 || 10;
     
     return {
       minEle: minE - elePadding,
       maxEle: maxE + elePadding,
-      maxSpeed: Math.max(...speeds, 1) * 1.1,
-      maxDistance: Math.max(...distances, 1),
+      maxSpeed: Math.max(arrayMax(speeds), 1) * 1.1,
+      maxDistance: Math.max(arrayMax(distances), 1),
       totalDuration: (endTime - startTime) / 1000,
     };
   }, [chartData]);
@@ -318,7 +318,7 @@ export function RunDetailView({ data, run, onBack, onViewOnMap }: RunDetailViewP
       }
     });
 
-    const max = Math.max(...buckets.map(b => b.count));
+    const max = arrayMax(buckets.map(b => b.count));
     return buckets.map(b => ({ ...b, percentage: max > 0 ? (b.count / max) * 100 : 0 }));
   }, [runPoints, unitSystem]);
 

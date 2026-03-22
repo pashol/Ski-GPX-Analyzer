@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './MapView.css';
-import { GPXData, Run, TrackPoint } from '../../utils/gpxParser';
+import { GPXData, Run, TrackPoint, arrayMin, arrayMax } from '../../utils/gpxParser';
 import { useTranslation } from '../../i18n';
 import { useUnits } from '../../contexts/UnitsContext';
 
@@ -24,6 +24,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
   const mapWrapperRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layersRef = useRef<any[]>([]);
+  const tileLayerRef = useRef<any>(null);
   const pisteLayerRef = useRef<any>(null);
   const [mapType, setMapType] = useState<'streets' | 'satellite' | 'terrain'>('streets');
   const [showRuns, setShowRuns] = useState(true);
@@ -154,8 +155,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         const runLats = runPoints.map(p => p.lat);
         const runLons = runPoints.map(p => p.lon);
         mapRef.current.fitBounds([
-          [Math.min(...runLats), Math.min(...runLons)],
-          [Math.max(...runLats), Math.max(...runLons)],
+          [arrayMin(runLats), arrayMin(runLons)],
+          [arrayMax(runLats), arrayMax(runLons)],
         ], { padding: [50, 50] });
       } else {
         mapRef.current.fitBounds([
@@ -176,16 +177,16 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     const lats = points.map(p => p.lat);
     const lons = points.map(p => p.lon);
 
+    const minLat = arrayMin(lats);
+    const maxLat = arrayMax(lats);
+    const minLon = arrayMin(lons);
+    const maxLon = arrayMax(lons);
+
     return {
-      bounds: {
-        minLat: Math.min(...lats),
-        maxLat: Math.max(...lats),
-        minLon: Math.min(...lons),
-        maxLon: Math.max(...lons),
-      },
+      bounds: { minLat, maxLat, minLon, maxLon },
       center: {
-        lat: (Math.min(...lats) + Math.max(...lats)) / 2,
-        lon: (Math.min(...lons) + Math.max(...lons)) / 2,
+        lat: (minLat + maxLat) / 2,
+        lon: (minLon + maxLon) / 2,
       }
     };
   }, [data.points]);
@@ -200,7 +201,7 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       return { maxRunSpeed: 60, avgMaxSpeed: 40 };
     }
     
-    const maxRunSpeed = Math.max(...runSpeeds);
+    const maxRunSpeed = arrayMax(runSpeeds);
     const avgMaxSpeed = runSpeeds.reduce((a, b) => a + b, 0) / runSpeeds.length;
     
     return { maxRunSpeed, avgMaxSpeed };
@@ -290,6 +291,61 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     return () => {};
   }, [bounds, isLeafletReady]);
 
+  // Manage tile layer separately to avoid flicker on overlay state changes
+  useEffect(() => {
+    if (!mapRef.current || !isLeafletReady) return;
+
+    const L = window.L;
+    const map = mapRef.current;
+
+    // Remove existing tile layer
+    if (tileLayerRef.current) {
+      if (map.hasLayer(tileLayerRef.current)) {
+        map.removeLayer(tileLayerRef.current);
+      }
+      tileLayerRef.current = null;
+    }
+
+    let tileUrl: string;
+    let attribution: string;
+
+    switch (mapType) {
+      case 'satellite':
+        tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+        attribution = 'Tiles &copy; Esri';
+        break;
+      case 'terrain':
+        tileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+        attribution = 'Map data: &copy; OpenStreetMap, SRTM | Style: &copy; OpenTopoMap';
+        break;
+      default:
+        tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        attribution = '&copy; OpenStreetMap contributors';
+    }
+
+    tileLayerRef.current = L.tileLayer(tileUrl, {
+      attribution,
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Ensure piste overlay and track layers stay on top
+    if (showPisteOverlay && pisteLayerRef.current) {
+      pisteLayerRef.current.bringToFront();
+    }
+    layersRef.current.forEach(layer => {
+      if (layer.bringToFront) {
+        layer.bringToFront();
+      }
+    });
+
+    return () => {
+      if (tileLayerRef.current && map.hasLayer(tileLayerRef.current)) {
+        map.removeLayer(tileLayerRef.current);
+        tileLayerRef.current = null;
+      }
+    };
+  }, [mapType, isLeafletReady]);
+
   // Handle piste overlay toggle
   useEffect(() => {
     if (!mapRef.current || !isLeafletReady) return;
@@ -334,42 +390,13 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     const map = mapRef.current;
 
     try {
-      // Clear existing layers (except piste overlay)
+      // Clear existing overlay layers (tile layer is managed separately)
       layersRef.current.forEach(layer => {
         if (map.hasLayer(layer)) {
           map.removeLayer(layer);
         }
       });
       layersRef.current = [];
-
-      // Add tile layer based on map type
-      let tileUrl: string;
-      let attribution: string;
-
-      switch (mapType) {
-        case 'satellite':
-          tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-          attribution = 'Tiles &copy; Esri';
-          break;
-        case 'terrain':
-          tileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-          attribution = 'Map data: &copy; OpenStreetMap, SRTM | Style: &copy; OpenTopoMap';
-          break;
-        default:
-          tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-          attribution = '&copy; OpenStreetMap contributors';
-      }
-
-      const tileLayer = L.tileLayer(tileUrl, {
-        attribution,
-        maxZoom: 18,
-      }).addTo(map);
-      layersRef.current.push(tileLayer);
-
-      // Re-add piste overlay on top of base layer if enabled
-      if (showPisteOverlay && pisteLayerRef.current) {
-        pisteLayerRef.current.bringToFront();
-      }
 
       // Draw lift/transit segments (non-run points) in a distinct lift color.
       // Run segments are drawn later with per-point speed colors.
@@ -396,8 +423,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       if (liftStart !== null) flushLift(data.points.length - 1);
 
       // Find the max speed across all runs for color scaling
-      const maxRunSpeed = data.runs.length > 0 
-        ? Math.max(...data.runs.map(r => r.maxSpeed))
+      const maxRunSpeed = data.runs.length > 0
+        ? arrayMax(data.runs.map(r => r.maxSpeed))
         : 60;
 
       // Add run overlays if enabled
@@ -585,8 +612,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
         const runLats = runPoints.map(p => p.lat);
         const runLons = runPoints.map(p => p.lon);
         map.fitBounds([
-          [Math.min(...runLats), Math.min(...runLons)],
-          [Math.max(...runLats), Math.max(...runLons)]
+          [arrayMin(runLats), arrayMin(runLons)],
+          [arrayMax(runLats), arrayMax(runLons)]
         ], { padding: [50, 50] });
       } else {
         map.fitBounds([
@@ -598,18 +625,18 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       // Ensure piste overlay stays on top of base layer but below track
       if (showPisteOverlay && pisteLayerRef.current) {
         pisteLayerRef.current.bringToFront();
-        // Then bring track layers to front
-        layersRef.current.forEach(layer => {
-          if (layer.bringToFront && layer !== tileLayer) {
-            layer.bringToFront();
-          }
-        });
       }
+      // Bring track layers to front
+      layersRef.current.forEach(layer => {
+        if (layer.bringToFront) {
+          layer.bringToFront();
+        }
+      });
 
     } catch (err) {
       console.error('Error updating map layers:', err instanceof Error ? err.message : String(err));
     }
-  }, [data, bounds, mapType, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex]);
+  }, [data, bounds, showRuns, showRunMarkers, showKmMarkers, selectedRun, isLeafletReady, onRunSelect, kmMarkers, speedStats, activeRunIndex, cycledRunIndex, formatSpeed, formatDistance, formatAltitude]);
 
   // Map click handler — show point info bar
   useEffect(() => {
@@ -664,6 +691,9 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
       }
       layersRef.current = [];
       pisteLayerRef.current = null;
+      tileLayerRef.current = null;
+      delete (window as any).__onRunSelect;
+      delete (window as any).__mapRuns;
     };
   }, []);
 
@@ -690,8 +720,8 @@ export function MapView({ data, selectedRun, onRunSelect }: MapViewProps) {
     );
   }
 
-  const maxRunSpeed = data.runs.length > 0 
-    ? Math.max(...data.runs.map(r => r.maxSpeed))
+  const maxRunSpeed = data.runs.length > 0
+    ? arrayMax(data.runs.map(r => r.maxSpeed))
     : 60;
 
   return (
