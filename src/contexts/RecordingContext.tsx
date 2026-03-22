@@ -428,8 +428,8 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
       // Start GPS watch
       console.log('[RecordingContext] Starting GPS watch...');
-      watchId = await Geolocation.watchPosition(
-        { enableHighAccuracy: true, timeout: 10000 },
+      const watchId = await Geolocation.watchPosition(
+        { enableHighAccuracy: true, timeout: 10000, interval: 1000, minimumUpdateInterval: 1000 },
         handlePosition
       );
       watchIdRef.current = watchId;
@@ -810,7 +810,7 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
 
       // Restart GPS watch
       const watchId = await Geolocation.watchPosition(
-        { enableHighAccuracy: true, timeout: 10000 },
+        { enableHighAccuracy: true, timeout: 10000, interval: 1000, minimumUpdateInterval: 1000 },
         handlePosition
       );
       watchIdRef.current = watchId;

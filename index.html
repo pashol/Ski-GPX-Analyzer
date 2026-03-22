@@ -10,22 +10,28 @@
   <meta name="keywords" content="ski, GPX, FIT, analyzer, run detection, elevation profile, speed analysis, interactive map, ski tracking, winter sports, Garmin, Strava" />
   <meta name="theme-color" content="#1a1a2e" />
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://ski-gpx-analyzer.vercel.app/" />
+
   <!-- Open Graph Meta Tags -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ski-gsx-analyzer.vercel.app/" />
+  <meta property="og:url" content="https://ski-gpx-analyzer.vercel.app/" />
   <meta property="og:title" content="Ski GPX Analyzer - Free Ski Run Analysis Tool" />
   <meta property="og:description" content="Analyze your ski adventures with automatic run detection, speed/elevation profiles, and interactive mapping. Supports GPX and FIT files from Garmin, Strava, and other GPS devices." />
   <meta property="og:site_name" content="Ski GPX Analyzer" />
-  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://ski-gpx-analyzer.vercel.app/og-image.png" />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ski GPX Analyzer - interactive map and run statistics" />
 
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Ski GPX Analyzer - Analyze Your Ski Runs" />
   <meta name="twitter:description" content="Free web and Android app for analyzing GPX/FIT files. Get automatic run detection, speed profiles, elevation analysis, and interactive maps." />
-  <meta name="twitter:image" content="/og-image.png" />
+  <meta name="twitter:image" content="https://ski-gpx-analyzer.vercel.app/og-image.png" />
+  <meta name="twitter:image:alt" content="Ski GPX Analyzer - interactive map and run statistics" />
 
   <!-- Additional SEO Meta Tags -->
   <meta name="author" content="Ski GPX Analyzer" />
@@ -35,6 +41,33 @@
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>Ski GPX Analyzer - Free GPX & FIT File Analysis Tool</title>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Ski GPX Analyzer",
+    "url": "https://ski-gpx-analyzer.vercel.app/",
+    "description": "Free web and Android app for analyzing GPX and FIT files from ski sessions. Features automatic ski run detection, speed and elevation profiles, interactive maps, and detailed performance analytics.",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "Web, Android",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Automatic ski run detection",
+      "Speed and elevation profile charts",
+      "Interactive Leaflet map with speed color gradient",
+      "GPX and FIT file support",
+      "OpenSnowMap piste layer",
+      "Android app via Capacitor"
+    ],
+    "screenshot": "https://ski-gpx-analyzer.vercel.app/og-image.png"
+  }
+  </script>
 </head>
 <body>
   <div id="app"></div>
