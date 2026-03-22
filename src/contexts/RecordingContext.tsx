@@ -235,21 +235,12 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       // Only trigger autosave if we're currently recording
       if (stateRef.current.isRecording && pointsRef.current.length > 0) {
         if (!isActive) {
-          // App going to background - pause periodic autosave to prevent it
-          // from overwriting the graceful pause flag
-          if (autosaveIntervalRef.current) {
-            clearInterval(autosaveIntervalRef.current);
-            autosaveIntervalRef.current = null;
-          }
+          // App going to background - immediately save with graceful flag
           console.log('[RecordingContext] App backgrounded during recording, saving state...');
           await autoSaveRef.current(true);
         } else {
-          // App coming back to foreground - restart periodic autosave
-          console.log('[RecordingContext] App resumed, updating recording state...');
-          if (!autosaveIntervalRef.current) {
-            autosaveIntervalRef.current = setInterval(() => autoSaveRef.current(), AUTOSAVE_INTERVAL);
-          }
-          // Clean up autosave file since recording is continuing normally
+          // App coming back to foreground - clean up autosave (recording continues normally)
+          console.log('[RecordingContext] App resumed, cleaning up autosave...');
           try {
             await deleteTempFile('recording-autosave.json');
             console.log('[RecordingContext] Autosave file cleaned up after graceful resume');
@@ -395,7 +386,10 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }, 1000);
 
       statsIntervalRef.current = setInterval(updateLiveStats, STATS_UPDATE_INTERVAL);
-      autosaveIntervalRef.current = setInterval(autoSave, AUTOSAVE_INTERVAL);
+      autosaveIntervalRef.current = setInterval(
+        () => autoSaveRef.current(!isAppActiveRef.current),
+        AUTOSAVE_INTERVAL
+      );
       notificationIntervalRef.current = setInterval(updateNotification, NOTIFICATION_UPDATE_INTERVAL);
 
       setState({
@@ -660,7 +654,10 @@ export function RecordingProvider({ children }: { children: React.ReactNode }) {
       }, 1000);
 
       statsIntervalRef.current = setInterval(updateLiveStats, STATS_UPDATE_INTERVAL);
-      autosaveIntervalRef.current = setInterval(autoSave, AUTOSAVE_INTERVAL);
+      autosaveIntervalRef.current = setInterval(
+        () => autoSaveRef.current(!isAppActiveRef.current),
+        AUTOSAVE_INTERVAL
+      );
       notificationIntervalRef.current = setInterval(updateNotification, NOTIFICATION_UPDATE_INTERVAL);
 
       // Restart GPS watch
