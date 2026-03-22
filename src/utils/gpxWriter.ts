@@ -5,8 +5,8 @@ export function generateGPX(points: TrackPoint[], name: string): string {
     throw new Error('Cannot generate GPX from empty points array');
   }
 
-  const date = new Date();
-  const dateStr = date.toISOString();
+  // L9: Use the actual track start time for metadata, not the current time
+  const dateStr = points[0].time.toISOString();
 
   let gpx = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Ski GPX Analyzer" xmlns="http://www.topografix.com/GPX/1/1">

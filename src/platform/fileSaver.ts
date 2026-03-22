@@ -56,7 +56,12 @@ export async function readTempFile(fileName: string): Promise<string | null> {
   }
 }
 
+// C5: Atomic autosave write — write to a .tmp file first, then rename to the real
+//     file. If the app crashes mid-write, the real file remains intact (previous save).
 export async function writeTempFile(fileName: string, content: string): Promise<void> {
+  const tmpFileName = `${fileName}.tmp`;
+
+  // Ensure directory exists
   try {
     await Filesystem.mkdir({
       path: APP_FOLDER,
@@ -67,11 +72,19 @@ export async function writeTempFile(fileName: string, content: string): Promise<
     // Folder may already exist
   }
 
+  // Write to temp file first
   await Filesystem.writeFile({
-    path: `${APP_FOLDER}/${fileName}`,
+    path: `${APP_FOLDER}/${tmpFileName}`,
     data: content,
     directory: Directory.Data,
     encoding: Encoding.UTF8,
+  });
+
+  // Atomically replace the real file by renaming
+  await Filesystem.rename({
+    from: `${APP_FOLDER}/${tmpFileName}`,
+    to: `${APP_FOLDER}/${fileName}`,
+    toDirectory: Directory.Data,
   });
 }
 
